@@ -33,25 +33,55 @@
 	</servlet-mapping>
 	
 	<servlet>
-	<servlet-name> TrabajoRealizadoServlet</servlet-name>
+	<servlet-name>TrabajoRealizadoServlet</servlet-name>
 	<servlet-class>com.alejandro.reformatec.web.controller.TrabajoRealizadoServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-	<servlet-name> TrabajoRealizadoServlet</servlet-name>
+	<servlet-name>TrabajoRealizadoServlet</servlet-name>
 	<url-pattern>/trabajoRealizado</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>
-	<servlet-name> ProyectoServlet</servlet-name>
-	<servlet-class>com.alejandro.reformatec.web.controller.ProyectoServlet</servlet-class>
+	<servlet-name>PrivadoTrabajoRealizadoServlet</servlet-name>
+	<servlet-class>com.alejandro.reformatec.web.controller.PrivadoTrabajoRealizadoServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>
-	<servlet-name> ProyectoServlet</servlet-name>
-	<url-pattern>/proyecto</url-pattern>
+	<servlet-name>PrivadoTrabajoRealizadoServlet</servlet-name>
+	<url-pattern>/privado/trabajoRealizado</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+	<servlet-name>PrivadoProyectoServlet</servlet-name>
+	<servlet-class>com.alejandro.reformatec.web.controller.PrivadoProyectoServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	<servlet-name>PrivadoProyectoServlet</servlet-name>
+	<url-pattern>/privado/proyecto</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+	<servlet-name> PrivadoPresupuestoServlet</servlet-name>
+	<servlet-class>com.alejandro.reformatec.web.controller.PrivadoPresupuestoServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	<servlet-name> PrivadoPresupuestoServlet</servlet-name>
+	<url-pattern>/privado/presupuesto</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+	<servlet-name>PrivadoValoracionServlet</servlet-name>
+	<servlet-class>com.alejandro.reformatec.web.controller.PrivadoValoracionServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+	<servlet-name> PrivadoValoracionServlet</servlet-name>
+	<url-pattern>/privado/valoracion</url-pattern>
+	</servlet-mapping>
 	
 	<filter>
 	<filter-name>RequestLogFilter</filter-name>

@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
 import com.alejandro.reformatec.model.Especializacion;
+import com.alejandro.reformatec.model.EspecializacionCriteria;
 import com.alejandro.reformatec.service.EspecializacionService;
 import com.alejandro.reformatec.service.impl.EspecializacionServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
@@ -26,7 +27,8 @@ import com.google.gson.Gson;
 
 @WebServlet("/especializacion-service")
 public class EspecializacionWebServiceServlet extends HttpServlet {       
-
+	private static final long serialVersionUID = 1L;
+	
 	private static Logger logger = LogManager.getLogger(EspecializacionWebServiceServlet.class);
 
 	private EspecializacionService especializacionService = null;
@@ -48,15 +50,24 @@ public class EspecializacionWebServiceServlet extends HttpServlet {
 		if (ActionNames.SEARCH_ESPECIALIZACION.equals(methodStr)) {
 
 			try {
-
-				List<Especializacion> especializaciones = especializacionService.findByAll();
+				
+				EspecializacionCriteria criteria = new EspecializacionCriteria();
+				criteria.setIdEspecializacion(null);
+				criteria.setIdProyecto(null);
+				criteria.setIdTrabajoRealizado(null);
+				criteria.setIdUsuario(null);
+				List<Especializacion> especializaciones = especializacionService.findByCriteria(criteria);
 				wsResponse.setData(especializaciones);				
 
 			} catch (DataException de) {
-				logger.error(de);				
+				if (logger.isErrorEnabled()) {
+					logger.error(de);
+				}
 
 			} catch (ServiceException se) {
-				logger.error(se);
+				if (logger.isErrorEnabled()) {
+					logger.error(se);
+				}
 			}
 			
 			String json = gson.toJson(wsResponse);

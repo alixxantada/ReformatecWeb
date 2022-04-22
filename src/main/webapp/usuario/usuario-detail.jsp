@@ -20,20 +20,20 @@
 										<input type="hidden" name="<%=(ParameterNames.ACTION)%>" value="<%=(ActionNames.SEARCH_USUARIO)%>"/>
 										<div class="search3_item">
 											<div>Descripción</div>
-											<input type="text" name="<%=(ParameterNames.DESCRIPCION)%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
+											<input type="text" name="<%=(ParameterNames.BUSCAR_DESCRIPCION)%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
 											onkeyup="buscarProveedores()"/>
 										</div>
 										<div id="proveedores-results" class="cuadro-proveedores-results">
 										</div>
 										<div class="search3_item">
 											<div>Especializacion</div>
-											<select name="<%=(ParameterNames.ESPECIALIZACION_ID)%>" id="especializacion-select" class="dropdown_item_select search3_input">
+											<select name="<%=(ParameterNames.ID_ESPECIALIZACION)%>" id="especializacion-select" class="dropdown_item_select search3_input">
 													<option disabled selected>Selecciona una especialización</option>
 											</select>
 										</div>
 										<div class="search3_item">
 											<div>Provincia</div>
-											<select name="<%=(ParameterNames.PROVINCIA_ID)%>" id="provincia-select" class="dropdown_item_select search3_input">
+											<select name="<%=(ParameterNames.ID_PROVINCIA)%>" id="provincia-select" class="dropdown_item_select search3_input">
 													<option disabled selected>Selecciona una provincia</option>
 											</select>
 										</div>
@@ -63,8 +63,10 @@
 				</div>
 				<%
 				//Lios de usuarios: u = proveedor
-					UsuarioDTO u = (UsuarioDTO) request.getAttribute(AttributeNames.USUARIO);
-				{
+					Results<UsuarioDTO> results = (Results<UsuarioDTO>) request.getAttribute(AttributeNames.USUARIO);
+					List<UsuarioDTO> usuarios = results.getData();
+	
+					for (UsuarioDTO u : usuarios) {
 					
 				%>
 					<!-- Detalle Proveedor Start -->
@@ -84,6 +86,8 @@
 											
 													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia()/2);											
 										%>
+										
+										<div class="offer3_reviews_rating text-center"><%=u.getValoracionMedia() %></div>
 										<div class="proveedor_detail_estrellas">
 											<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
 												<i></i>
@@ -92,7 +96,7 @@
 												<i></i>
 												<i></i>
 											</div>
-										</div>								
+										</div>						
 										<%	
 											}
 										}
@@ -122,14 +126,14 @@
 										</div>
 									</div>
 									<div class="hotel_title_button ml-lg-auto text-lg-right">
-										<div class="button book_button trans_200"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.SEARCH_TRABAJO%>&<%=ParameterNames.DESCRIPCION%>=<%=u.getNombrePerfil()%>">Ver Trabajos<span></span><span></span><span></span></a></div>
+										<div class="button book_button trans_200"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.SEARCH_TRABAJO%>&<%=ParameterNames.ID_USUARIO_CREADOR_TRABAJO%>=<%=u.getIdUsuario()%>">Ver Trabajos<span></span><span></span><span></span></a></div>
 									</div>									
 								</div>
 										<!-- Listing Image -->
 								<div class="row">
 									<div class="resultado_foto_detail">
 									<div class="offers2_image_container">
-										<div class="offers2_image_background" style="background-image:url(<%=context%>/images/proveedorportada.jpg)" alt="Foto portada proveedor"></div>
+										<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)" alt="Foto portada proveedor"></div>
 									</div>
 								</div>
 									<div class="proveedor_caja_detail">
@@ -185,8 +189,10 @@
 								//Lios de usuarios: usuario = usuario en sesion(Logueado)
 									if (usuario != null) {
 								
-									List<ValoracionDTO> valoraciones = (List<ValoracionDTO>) request.getAttribute(AttributeNames.VALORACION);
-									for(ValoracionDTO v : valoraciones ){
+										Results<ValoracionDTO> resultsValoraciones = (Results<ValoracionDTO>) request.getAttribute(AttributeNames.VALORACION);
+										List<ValoracionDTO> valoraciones = resultsValoraciones.getData();
+										
+										for (ValoracionDTO v : valoraciones) {
 								%>
 									<!-- Reviews -->
 								<div class="reviews">

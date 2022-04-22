@@ -27,7 +27,8 @@ import com.google.gson.Gson;
 
 @WebServlet("/provincia-service")
 public class ProvinciaWebServiceServlet extends HttpServlet {
-
+	private static final long serialVersionUID = 1L;
+	
 	private static Logger logger = LogManager.getLogger(ProvinciaWebServiceServlet.class);
 
 	private ProvinciaService provinciaService = null;
@@ -50,16 +51,20 @@ public class ProvinciaWebServiceServlet extends HttpServlet {
 		if (ActionNames.SEARCH_PROVINCIA.equals(methodStr)) {
 
 			try {
-
-				List<Provincia> provincias = provinciaService.findByAll();
+				
+				List<Provincia> provincias = provinciaService.findByCriteria(null);
 				wsResponse.setData(provincias);				
 
 			} catch (DataException de) {
-				logger.error(de);
+				if (logger.isErrorEnabled()) {
+					logger.error(de);
+				}
 				wsResponse.setErrorCode(ErroresNames.ERROR_DATA);
 
 			} catch (ServiceException se) {
-				logger.error(se);
+				if (logger.isErrorEnabled()) {
+					logger.error(se);
+				}
 				wsResponse.setErrorCode(ErroresNames.ERROR_SERVICE);
 			}
 

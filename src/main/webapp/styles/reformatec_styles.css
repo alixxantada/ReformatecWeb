@@ -1,6 +1,14 @@
 /*********************************
 8. Stats
 *********************************/
+::selection{
+	color: #fff;
+	background: #28395a; 
+}
+::-moz-selection{
+	color: #fff;
+	background: #28395a; 
+}
 .stats
 {
 	padding-top: 100px;
@@ -1619,6 +1627,27 @@ background: #966A08;
 	-o-transform: translateY(-4px);
 	transform: translateY(-4px);
 }
+.offer3_reviews_rating
+{
+	display: inline-block;
+	width: 62px;
+	height: 57px;
+	font-size: 28px;
+	font-weight: 700;
+	color: #FFFFFF;
+	line-height: 57px;
+	background: #966A08;
+	vertical-align: middle;
+	border-radius: 45%;
+	-webkit-transform: translateY(-4px);
+	-moz-transform: translateY(-4px);
+	-ms-transform: translateY(-4px);
+	-o-transform: translateY(-4px);
+	transform: translateY(-4px);
+	position: relative;
+    float: left;
+    margin-right: 5px;
+}
 /*********************************
 6. Section Title
 *********************************/
@@ -3110,8 +3139,12 @@ font-weight: 700;
 	background-image: url(../images/dropdown.png);
 	background-position: center right;
 	background-repeat: no-repeat;
-	border: solid 1px #FFFFFF;
-	margin-top: 20px;
+	padding:5px;
+	color: #28395a;
+	font-size: 12px;
+	border:1px solid ;
+	border-radius: .25rem;
+	border-color: #28395a ;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -3126,6 +3159,43 @@ font-weight: 700;
 	border: solid 1px #966A08 ;
 }
 .dropdown2_item_select:focus
+{
+	outline-color: #966A08 ;
+}
+
+.dropdown3_item_select
+{
+	-webkit-appearance:none;
+    -moz-appearance:none;
+    -ms-appearance:none;
+    -o-appearance:none;
+    appearance:none;
+    display:none;
+	-webkit-box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+	-webkit-user-select: none;
+	background-image: url(../images/dropdown.png);
+	background-position: center right;
+	background-repeat: no-repeat;
+	padding:5px;
+	color: #28395a;
+	font-size: 12px;
+	border:1px solid ;
+	border-radius: .25rem;
+	border-color: #28395a ;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.dropdown3_item_select::-ms-expand
+{
+    display: none;
+}
+.dropdown3_item_select:hover
+{
+	border: solid 1px #966A08 ;
+}
+.dropdow3_item_select:focus
 {
 	outline-color: #966A08 ;
 }
@@ -3307,9 +3377,26 @@ flex-direction: column; }
 .card-deck .card {
 margin-bottom: 10px; }
 
+.fotoperfil{
+	min-width: 250px;
+	width:30%;
+	position:relative;
+	float:left;
+}
+.fotoperfil label{
+	font-size: 16px;
+	font-weight: 600;
+	color: #28395a;
+}
+.descripcionUsuario{
+	width:60%;
+	position:relative;
+	float:left;
+}
 .fotoperfil img {
 width: 250px;
 border-radius: 5%;
+margin-bottom:10px;
 }
 .formregistro1{
 	
@@ -3446,6 +3533,10 @@ border-radius: 5%;
 	font-size: 12px;
     font-weight: 600;
 }
+.form-group{
+	
+margin-top: 20px;
+}
 .form-group p{
 	font-size: 12px;
     font-weight: 600;
@@ -3454,14 +3545,50 @@ border-radius: 5%;
 .form-group label{
 	font-size: 16px;
     font-weight: 600;
+    width:100%;
     color: #28395a;
 }
+
+#direccionEditarPerfil{
+	display:none;
+}
+#direccionEditarPerfil p{
+	font-size: 12px;
+    font-weight: 600;
+    color: #28395a;
+}
+#direccionEditarPerfil label{
+	padding:5px;
+	color: #28395a;
+	font-size: 16px;
+	border:1px solid ;
+	border-radius: .25rem;
+	border-color: #28395a ;
+}
+#codPostalEditarPerfil{
+	display:none;
+}
+#codPostalEditarPerfil p{
+	font-size: 12px;
+    font-weight: 600;
+    color: #28395a;
+}
+#codPostalEditarPerfil label{
+	padding:5px;
+	color: #28395a;
+	font-size: 16px;
+	border:1px solid ;
+	border-radius: .25rem;
+	border-color: #28395a ;
+}
+
 .perfil-caja-izq{
 	width: 250px;
 	position:relative;
 	float:left;
 	box-sizing: border-box;
 	display: block;
+	margin-bottom: 10px;
 }
 .perfil-caja-der{
 	width: calc(100% - 250px);
@@ -3469,9 +3596,16 @@ border-radius: 5%;
 	padding-left: 10px;
 	float:left;
 }
+.perfil-caja-der label{
+	font-size: 16px;
+	font-weight: 600;
+	width: 100%;
+	color: #28395a;
+}
 .btn-info{
 	color: #fff;
     background-color: #28395a ;
+    margin-bottom: 10px;
     border-color: #966A08;
 }
 .btn-info:hover{
@@ -3524,7 +3658,8 @@ border-radius: 5%;
     border-color: #28395a;
 }
 .perfil-caja-izq img{
-	width:100%
+	width:100%;
+	border-radius: 5%;
 }
 .caja_paginacion{
 	margin-top: 50px;
@@ -3556,6 +3691,12 @@ border-radius: 5%;
     font-weight: 600; 
     border-radius: 10px;
 }
+#nuevaDireccion{
+	display:none;
+}
+#nuevoCodPostal{
+	display:none
+}
 .paginacion li a{
 	color: #28395a;
 	font-size: 16px;
@@ -3570,4 +3711,18 @@ border-radius: 5%;
 }
 .username_trabajo_detail{
 	font-size: 20px;
+}
+.custom-file{
+	width:100%;
+}
+.custom-file-label{
+	padding:5px;
+	color: #28395a;
+	font-size: 16px;
+	border:1px solid ;
+	border-radius: .25rem;
+	border-color: #28395a ;
+}
+.custom-file-input{
+	display: none;
 }

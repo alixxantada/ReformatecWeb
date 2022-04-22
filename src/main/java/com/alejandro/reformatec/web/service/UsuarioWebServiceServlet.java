@@ -9,13 +9,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alejandro.reformatec.dao.util.ConfigurationManager;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
-import com.alejandro.reformatec.model.ProveedorCriteria;
 import com.alejandro.reformatec.model.Results;
+import com.alejandro.reformatec.model.UsuarioCriteria;
 import com.alejandro.reformatec.model.UsuarioDTO;
 import com.alejandro.reformatec.service.UsuarioService;
 import com.alejandro.reformatec.service.impl.UsuarioServiceImpl;
@@ -28,7 +30,8 @@ import com.google.gson.Gson;
 
 @WebServlet("/usuario-service")
 public class UsuarioWebServiceServlet extends HttpServlet {
-
+	private static final long serialVersionUID = 1L;
+	
 	private static Logger logger = LogManager.getLogger(UsuarioWebServiceServlet.class);
 
 	private UsuarioService usuarioService = null;
@@ -38,7 +41,7 @@ public class UsuarioWebServiceServlet extends HttpServlet {
 	private static int PAGE_SIZE = 8; 
 	private static int START_INDEX = 1;
 
-
+	
 	public UsuarioWebServiceServlet() {
 		super();
 		usuarioService = new UsuarioServiceImpl();
@@ -55,13 +58,23 @@ public class UsuarioWebServiceServlet extends HttpServlet {
 		// TODO rest style>
 		if (ActionNames.SEARCH_USUARIO.equals(actionStr)) {
 
-			String descripcionStr = request.getParameter(ParameterNames.DESCRIPCION);
-
-			//TODO Esto esta sin validar looocoo
-			try {
-
-				ProveedorCriteria criteria = new ProveedorCriteria();
+			String descripcionStr = request.getParameter(ParameterNames.BUSCAR_DESCRIPCION);
+			
+			UsuarioCriteria criteria = new UsuarioCriteria();
+			
+			//Validar datos
+			if (!StringUtils.isBlank(descripcionStr)) {
+				// aquí hay mucho que hacer, ver txt
+				descripcionStr.trim();
 				criteria.setDescripcion(descripcionStr);
+			}
+			
+			
+			if (logger.isTraceEnabled()) {
+				logger.trace("Busqueda usuario: "+criteria);
+			}
+			
+			try {
 
 				Results<UsuarioDTO> results= usuarioService.findByCriteria(criteria, START_INDEX, PAGE_SIZE);					
 
@@ -69,11 +82,15 @@ public class UsuarioWebServiceServlet extends HttpServlet {
 
 
 			} catch (DataException de) {
-				logger.error(de);
+				if (logger.isErrorEnabled()) {
+					logger.error(de);
+				}
 				wsResponse.setErrorCode(ErroresNames.ERROR_DATA);
 
 			} catch (ServiceException se) {
-				logger.error(se);
+				if (logger.isErrorEnabled()) {
+					logger.error(se);
+				}
 				wsResponse.setErrorCode(ErroresNames.ERROR_SERVICE);
 			}
 

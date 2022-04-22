@@ -68,6 +68,7 @@ public class Validator {
 	 * @param s
 	 * @return El valor integer o null si no cumple el formato de número integer.
 	 */
+	
 	public static final Integer validaInteger(String integerStr) {
 		
 		Integer i = null;
@@ -85,7 +86,7 @@ public class Validator {
 		}
 		return i;
 	}
-
+	
 
 
 
@@ -157,6 +158,57 @@ public class Validator {
 	
 	
 	
+	public static String validaTitulo(String tituloStr) {
+			
+			String s = null;
+			
+			if (!StringUtils.isBlank(tituloStr)) {
+				tituloStr = tituloStr.trim();
+				// Los titulos en bbdd son de max 40
+				if (tituloStr.length()<=0 || tituloStr.length()>40) {
+					s=null;
+				}else {
+					s = tituloStr;
+				}
+			}
+			return s;
+		}
+	
+	
+	
+	public static String validaDescripcion(String descripcionStr) {
+		
+		String s = null;
+		
+		if (!StringUtils.isBlank(descripcionStr)) {
+			descripcionStr = descripcionStr.trim();
+			// Las descripciones en bbdd son de max 256
+			if (descripcionStr.length()<=0 || descripcionStr.length()>256) {
+				s=null;
+			}else {
+				s = descripcionStr;
+			}
+		}
+		return s;
+	}
+	
+	
+	public static String validaNombreOApellido(String nombreOApellidoStr) {
+			
+			String s = null;
+			
+			if (!StringUtils.isBlank(nombreOApellidoStr)) {
+				nombreOApellidoStr = nombreOApellidoStr.trim();
+				// El nombre/nombrePerfil/apellido1/apellido2 son de max 80
+				if (nombreOApellidoStr.length()<=0 || nombreOApellidoStr.length()>80) {
+					s=null;
+				}else {
+					s = nombreOApellidoStr;
+				}
+			}
+			return s;
+		}
+	
 	
 	/**
 	 * Convierte un string a un Long.
@@ -213,7 +265,193 @@ public class Validator {
 	}
 
 
+	public static Integer validaStatusCuenta (String statusCuentaStr) {
+		
+		Integer i = null;
+		
+		if (!StringUtils.isBlank(statusCuentaStr)) {
 
+			statusCuentaStr = statusCuentaStr.trim();
+
+			try{
+				i = Integer.parseInt(statusCuentaStr);
+				//Hay 3 estados
+				if (i<=0 || i>3) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;	
+	}
+
+	
+	public static Integer validaStatusProyecto (String statusProyectoStr) {
+		
+		Integer i = null;
+		
+		if (!StringUtils.isBlank(statusProyectoStr)) {
+
+			statusProyectoStr = statusProyectoStr.trim();
+
+			try{
+				i = Integer.parseInt(statusProyectoStr);
+				//Hay 3 estados
+				if (i<=0 || i>3) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;	
+	}
+
+	public static Integer validaPoblacion (String idPoblacionStr) {
+			
+			Integer i = null;
+			
+			if (!StringUtils.isBlank(idPoblacionStr)) {
+	
+				idPoblacionStr = idPoblacionStr.trim();
+	
+				try{
+					i = Integer.parseInt(idPoblacionStr);
+					//Hay 8 poblaciones
+					if (i<=0 || i>8) {
+	
+						i=null;
+					}
+	
+				} catch (NumberFormatException nfe) {
+					// No hace falta tracear
+				}
+			}		
+			return i;	
+		}
+	
+	public static Integer validaProvincia (String idProvinciaStr) {
+		
+		Integer i = null;
+		
+		if (!StringUtils.isBlank(idProvinciaStr)) {
+
+			idProvinciaStr = idProvinciaStr.trim();
+
+			try{
+				i = Integer.parseInt(idProvinciaStr);
+				//Hay 4 provincias
+				if (i<=0 || i>4) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;	
+	}
+	
+	
+	public static Integer validaNotaValoracion (String notaValoracionStr) {
+			
+			Integer i = null;
+			
+			if (!StringUtils.isBlank(notaValoracionStr)) {
+	
+				notaValoracionStr = notaValoracionStr.trim();
+	
+				try{
+					i = Integer.parseInt(notaValoracionStr);
+					//Se valora de 0 a 5.
+					if (i<0 || i>5) {
+	
+						i=null;
+					}
+	
+				} catch (NumberFormatException nfe) {
+					// No hace falta tracear
+				}
+			}		
+			return i;	
+		}
+	
+	
+	
+	public static Integer validaStatusTrabajo (String statusTrabajoStr) {
+
+		Integer i = null;
+		
+		if (!StringUtils.isBlank(statusTrabajoStr)) {
+
+			statusTrabajoStr = statusTrabajoStr.trim();
+
+			try{
+				i = Integer.parseInt(statusTrabajoStr);
+				//Hay 2 estados
+				if (i<=0 || i>2) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;		
+	}
+	
+	public static Integer validaStatusPresupuesto (String statusPresupuestoStr) {
+	
+		Integer i = null;
+		
+		if (!StringUtils.isBlank(statusPresupuestoStr)) {
+
+			statusPresupuestoStr = statusPresupuestoStr.trim();
+
+			try{
+				i = Integer.parseInt(statusPresupuestoStr);
+				//Hay 4 estados
+				if (i<=0 || i>4) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;		
+	}
+	
+	public static Integer validaStatusValoracion (String statusValoracionStr) {
+		
+		Integer i = null;
+		
+		if (!StringUtils.isBlank(statusValoracionStr)) {
+
+			statusValoracionStr = statusValoracionStr.trim();
+
+			try{
+				i = Integer.parseInt(statusValoracionStr);
+				//Hay 3 estados
+				if (i<=0 || i>3) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;
+	}
 
 	public static Integer validaEspecializacion (String especializacionStr) {
 
@@ -238,6 +476,54 @@ public class Validator {
 		return i;
 	}
 
+	
+	
+	public static Integer validaPresupuestoMax (String presupuestoMaxStr) {
+
+		Integer i = null;
+
+		if (!StringUtils.isBlank(presupuestoMaxStr)) {
+
+			presupuestoMaxStr = presupuestoMaxStr.trim();
+
+			try{
+				i = Integer.parseInt(presupuestoMaxStr);
+				//Hay 12 especializaciones
+				if (i<=0) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;
+	}
+	
+	
+	public static Double validaImporteLinea (String importeLineaStr) {
+
+		Double i = null;
+
+		if (!StringUtils.isBlank(importeLineaStr)) {
+
+			importeLineaStr = importeLineaStr.trim();
+
+			try{
+				i = Double.parseDouble(importeLineaStr);
+
+				if (i<0) {
+
+					i=null;
+				}
+
+			} catch (NumberFormatException nfe) {
+				// No hace falta tracear
+			}
+		}		
+		return i;
+	}
 
 
 	public static Integer validaPresupuestoMaxMinimo (String presupuestoMaxMinimoStr) {
@@ -331,7 +617,6 @@ public class Validator {
 		}
 		return orderByStr;
 	}
-
 
 
 

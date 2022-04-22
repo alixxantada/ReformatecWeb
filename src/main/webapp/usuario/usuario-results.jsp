@@ -22,20 +22,20 @@
 												<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_USUARIO%>"/>
 												<div class="search3_item">
 													<div>Descripción</div>
-													<input type="text" name="<%=ParameterNames.DESCRIPCION%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
+													<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
 													onkeyup="buscarProveedores()"/>
 												</div>
 												<div id="proveedores-results" class="cuadro-proveedores-results">
 												</div>
 												<div class="search3_item">
 													<div>Especializacion</div>
-													<select name="<%=ParameterNames.ESPECIALIZACION_ID%>" id="especializacion-select" class="dropdown_item_select search3_input">
+													<select name="<%=ParameterNames.ID_ESPECIALIZACION%>" id="especializacion-select" class="dropdown_item_select search3_input">
 														-	<option disabled selected>Selecciona una especialización</option>
 													</select>
 												</div>
 												<div class="search3_item">
 													<div>Provincia</div>
-													<select name="<%=ParameterNames.PROVINCIA_ID%>" id="provincia-select" class="dropdown_item_select search3_input">
+													<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select" class="dropdown_item_select search3_input">
 															<option disabled selected>Selecciona una provincia</option>
 													</select>
 												</div>
@@ -64,6 +64,10 @@
 						</div>
 					</div>
 					<div class="col-lg-9 caja_resultados_usuarios">
+							<%						
+							if (usuario != null) {
+												
+							%>
 							<!-- offers2 Sorting -->
 						<div class="col-lg-11 ordenar_por">
 							<div class="offers2_sorting_container">
@@ -71,14 +75,19 @@
 									<li>
 										<span class="sorting_text">Ordenar Por</span>
 										<i class="fa fa-chevron-down"></i>
-										<ul>
-											<li class="sort_btn" data-isotope-option='{ "sortBy": "valoracion" }'><span>Valoraciones</span></li>
-											<li class="sort_btn" data-isotope-option='{ "sortBy": "visualizaciones" }'><span>Visualizaciones</span></li>
+										<ul name="<%=ParameterNames.ORDER_BY%>" >
+											<select name="<%=ParameterNames.ORDER_BY%>" id="orderby-select" class="dropdown_item_select search3_input">
+												<option value ="NV">Numero de visualizaciones</option>
+												<option value ="VAL">Valoracion Media</option>
+											</select>
 										</ul>
 									</li>
 								</ul>
 							</div>
 						</div>
+						<%
+							}
+						%>
 						</form>
 						<div class="col-lg-11 usuario_resultados">
 
@@ -98,7 +107,7 @@
 												if(u.getValoracionMedia()==null) {
 	
 												} else {
-											
+												//cambiar datos maestros, ahora las valoraciones solo seran de 0 a 5 .
 													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia()/2);
 											
 												%>
@@ -168,13 +177,13 @@
 								</div>
 							</div>
 							<div class="col-lg-12 nombre_perfil_resultados">
-								<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.USUARIO_ID%>=<%=u.getIdUsuario()%>"><%=u.getNombrePerfil() %></a><span></span>
+								<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePerfil() %></a><span></span>
 							</div>
 							<div class="row">
 								<div class="resultado_foto">
 									<div class="offers2_image_container">
-										<div class="offers2_image_background" style="background-image:url(<%=context%>/images/proveedorportada.jpg)" alt="Foto portada proveedor"></div>
-										<div class="offer_name"><a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.USUARIO_ID%>=<%=u.getIdUsuario()%>"><%=u.getNombrePoblacion()%></a></div>
+										<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)" alt="Foto portada proveedor"></div>
+										<div class="offer_name"><a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePoblacion()%></a></div>
 									</div>
 								</div>
 								<div class=" col-lg-8 resultado_datos">									
@@ -211,7 +220,7 @@
 									parameters.remove(ParameterNames.PAGE); // para que no arrastre el valor anterior
 									
 									// Ya viene terminada en &
-									String baseURL = ParameterUtils.getURL(request.getContextPath()+"/"+ControllerNames.USUARIO, parameters);
+									String baseURL = ParameterUtils.getURL(request.getContextPath()+ControllerNames.USUARIO, parameters);
 	
 									
 									// Primera

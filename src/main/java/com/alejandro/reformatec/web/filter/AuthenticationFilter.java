@@ -22,7 +22,8 @@ import com.alejandro.reformatec.web.util.ViewNames;
 
 
 public class AuthenticationFilter extends HttpFilter implements Filter {
-
+	private static final long serialVersionUID = 1L;
+	
 	private static Logger logger = LogManager.getLogger(AuthenticationFilter.class);
 
 	public AuthenticationFilter() {

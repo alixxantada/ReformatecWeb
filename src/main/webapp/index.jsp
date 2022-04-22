@@ -19,18 +19,18 @@
 									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_USUARIO%>"/>
 									<div class="search_item">
 										<div>Búsqueda</div>
-										<input type="text" name="<%=ParameterNames.DESCRIPCION%>" id="descripcion-proveedor"class="destination search_input" placeholder="¿Qué necesitas?"
+										<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-proveedor"class="destination search_input" placeholder="¿Qué necesitas?"
 											onkeyup="buscarProveedores()"/>
 									</div>
 									<div class="search_item">
 										<div>Especializacion</div>
-										<select name="<%=ParameterNames.ESPECIALIZACION_ID%>" id="especializacion-select" class="dropdown_item_select search_input">
+										<select name="<%=ParameterNames.ID_ESPECIALIZACION%>" id="especializacion-select" class="dropdown_item_select search_input">
 											<option disabled selected>Selecciona una especialización</option>
 										</select>
 									</div>
 									<div class="search_item">
 										<div>Provincia</div>
-										<select name="<%=ParameterNames.PROVINCIA_ID%>" id="provincia-select" class="dropdown_item_select search_input">
+										<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select" class="dropdown_item_select search_input">
 											<option disabled selected>Selecciona una provincia</option>
 										</select>
 									</div>
@@ -43,18 +43,18 @@
 									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_TRABAJO%>"/>
 									<div class="search_item">
 										<div>Descripción</div>
-										<input type="text" name="<%=ParameterNames.DESCRIPCION%>" id="descripcion-trabajo" class="destination search_input" placeholder="¿Qué quieres ver?"
+										<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" class="destination search_input" placeholder="¿Qué quieres ver?"
 										onkeyup="buscarTrabajos()"/>
 									</div>
 									<div class="search_item">
 										<div>Especializacion</div>
-										<select name="<%=ParameterNames.ESPECIALIZACION_ID%>" id="especializacion-select" class="dropdown_item_select search_input">
+										<select name="<%=ParameterNames.ID_ESPECIALIZACION%>" id="especializacion2-select" class="dropdown_item_select search_input">
 											<option disabled selected>Selecciona una especialización</option>
 										</select>
 									</div>
 									<div class="search_item">
 										<div>Provincia</div>
-										<select name="<%=ParameterNames.PROVINCIA_ID%>" id="provincia-select" class="dropdown_item_select search_input">
+										<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia2-select" class="dropdown_item_select search_input">
 											<option disabled selected>Selecciona una provincia</option>
 										</select>
 									</div>

@@ -55,7 +55,7 @@
 									</li>
 									<li class="contact_info_item d-flex flex-row">
 										<div><div class="contact_info_icon"><img src="<%=context%>/images/message.svg" alt=""></div></div>
-										<div class="contact_info_text"><a href="pruebafp@gmail.com?Subject=Hello" target="_top">pruebafp@gmail.com</a></div>
+										<div class="contact_info_text"><a href="mailto:pruebafp@gmail.com?Subject=Hello" target="_top">pruebafp@gmail.com</a></div>
 									</li>
 								</ul>
 							</div>

@@ -62,7 +62,9 @@ public class CommandManager {
 				actionsByName.put(actionName, action);
 			} catch (Exception e) {
 				//  hay que meter un common errors entiendo
-				logger.error(e);
+				if (logger.isErrorEnabled()) {
+					logger.error(e);
+				}
 			}			
 		}
 		// Registro el comando(en caso de que hiciera falta)

@@ -21,22 +21,24 @@
 										<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_TRABAJO%>"/>
 										<div class="search3_item">
 											<div>Descripción</div>
-											<input type="text" name="<%=ParameterNames.DESCRIPCION%>" id="descripcion-trabajo" class="destination search2_input" placeholder="¿Qué quieres ver?"
+											<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" placeholder="¿Qué estás buscando?" class="destination search3_input"
 											onkeyup="buscarTrabajos()"/>
+										</div>	
+										<div id="proveedores-results" class="cuadro-proveedores-results">
 										</div>
 										<div class="search3_item">
-											<div>Especialización</div>
-											<select name="<%=ParameterNames.ESPECIALIZACION_ID%>" id="especializacion-select"  class="dropdown_item_select search2_input">
-												<option disabled selected>Selecciona una especialización</option>														
+											<div>Especializacion</div>
+											<select name="<%=ParameterNames.ID_ESPECIALIZACION%>" id="especializacion-select" class="dropdown_item_select search3_input">
+												-	<option disabled selected>Selecciona una especialización</option>
 											</select>
 										</div>
 										<div class="search3_item">
 											<div>Provincia</div>
-											<select name="<%=ParameterNames.PROVINCIA_ID%>" id="provincia-select" class="dropdown_item_select search2_input">
+											<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select" class="dropdown_item_select search3_input">
 													<option disabled selected>Selecciona una provincia</option>
 											</select>
-										</div>
-										<button class="button search2_button">Buscar<span></span><span></span><span></span></button>
+										</div>											
+										<button class="button search2_button">Buscar<span></span><span></span><span></span></button>												
 									</div>
 								</div>
 							</div>
@@ -45,8 +47,11 @@
 				</div>
 			</div>
 			<%
-				TrabajoRealizadoDTO tr = (TrabajoRealizadoDTO) request.getAttribute(AttributeNames.TRABAJO);
-			{
+			Results<TrabajoRealizadoDTO> results = (Results<TrabajoRealizadoDTO>) request.getAttribute(AttributeNames.TRABAJO);
+			List<TrabajoRealizadoDTO> trabajos = results.getData();
+			
+			for (TrabajoRealizadoDTO tr : trabajos) {
+
 			%>
 				<!-- Single Listing -->
 			<div class="col-lg-7 col-md-12 col-sm-12 caja_trabajo_detail">
@@ -61,14 +66,13 @@
 										<h1 class="hotel_title"><%=tr.getTitulo()%><span class="username_trabajo_detail"> (<%=tr.getNombrePerfilUsuarioCreadorTrabajo()%>)</span></h1>
 										<%						
 										if (usuario != null) {
-											if(tr.getNotaMedia()==null) {
+											if(tr.getNotaValoracion()==null) {
 
 											} else {
-										
-												int valoracionMediaEntera = (int) Math.round(tr.getNotaMedia());											
+																					
 										%>
 										<div class="proveedor_detail_estrellas">
-											<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
+											<div class="rating_r rating_r_<%=tr.getNotaValoracion()%> offers2_rating" data-rating="<%=tr.getNotaValoracion()%>">
 												<i></i>
 												<i></i>
 												<i></i>
@@ -106,12 +110,12 @@
 										<div class="hotel_location"><%=tr.getNombrePoblacion()%> (<%=tr.getNombreProvincia()%>)</div>
 									</div>
 									<div class="hotel_title_button ml-lg-auto text-lg-right">
-										<div class="button book_button trans_200"><a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.USUARIO_ID%>=<%=tr.getIdUsuarioCreadorTrabajo()%>">Ir al Proveedor<span></span><span></span><span></span></a></div>
+										<div class="button book_button trans_200"><a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=tr.getIdUsuarioCreadorTrabajo()%>">Ir al Proveedor<span></span><span></span><span></span></a></div>
 									</div>
 								</div>
 									<!-- Listing Image -->
 								<div class="hotel_image">
-									<img src="<%=context%>/images/listing_hotel.jpg" alt="">
+									<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-1.jpg" alt="Foto Principal Trabajo Realizado">
 								</div>								
 									<!-- Hotel Gallery -->
 								<div class="hotel_gallery">
@@ -119,56 +123,56 @@
 										<div class="owl-carousel owl-theme hotel_slider">
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_1.jpg">
-													<img src="<%=context%>/images/listing_thumb_1.jpg" alt="https://unsplash.com/@jbriscoe">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-1.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-1.jpg" alt="Foto Trabajo Realizado 1">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_2.jpg">
-													<img src="<%=context%>/images/listing_thumb_2.jpg" alt="https://unsplash.com/@grovemade">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-2.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-2.jpg" alt="Foto Trabajo Realizado 2">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_3.jpg">
-													<img src="<%=context%>/images/listing_thumb_3.jpg" alt="https://unsplash.com/@fransaraco">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-3.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-3.jpg" alt="Foto Trabajo Realizado 3">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_4.jpg">
-													<img src="<%=context%>/images/listing_thumb_4.jpg" alt="https://unsplash.com/@workweek">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-4.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-4.jpg" alt="Foto Trabajo Realizado 4">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_5.jpg">
-													<img src="<%=context%>/images/listing_thumb_5.jpg" alt="https://unsplash.com/@workweek">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-5.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-5.jpg" alt="Foto Trabajo Realizado 5">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_6.jpg">
-													<img src="<%=context%>/images/listing_thumb_6.jpg" alt="https://unsplash.com/@avidenov">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-6.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-6.jpg" alt="Foto Trabajo Realizado 6">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_7.jpg">
-													<img src="<%=context%>/images/listing_thumb_7.jpg" alt="https://unsplash.com/@pietruszka">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-7.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-7.jpg" alt="Foto Trabajo Realizado 7">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_8.jpg">
-													<img src="<%=context%>/images/listing_thumb_8.jpg" alt="https://unsplash.com/@rktkn">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-8.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-8.jpg" alt="Foto Trabajo Realizado 8">
 												</a>
 											</div>
 												<!-- Hotel Gallery Slider Item -->
 											<div class="owl-item">
-												<a class="colorbox cboxElement" href="<%=context%>/images/listing_9.jpg">
-													<img src="<%=context%>/images/listing_thumb_9.jpg" alt="https://unsplash.com/@mindaugas">
+												<a class="colorbox cboxElement" href="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-9.jpg">
+													<img src="<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-9.jpg" alt="Foto Trabajo Realizado 9">
 												</a>
 											</div>
 										</div>
@@ -179,7 +183,7 @@
 												<defs>
 													<linearGradient id='hotel_grad_prev'>
 														<stop offset='0%' stop-color='#28395a'/>
-														<stop offset='100%' stop-color='#966A08'/>
+														<stop offset='100%' stop-color='#966	A08'/>
 													</linearGradient>
 												</defs>
 												<path class="nav_path" fill="#F3F6F9" d="M19,0H9C4.029,0,0,4.029,0,9v15c0,4.971,4.029,9,9,9h10c4.97,0,9-4.029,9-9V9C28,4.029,23.97,0,19,0z
@@ -218,8 +222,11 @@
 							//Lios de usuarios: usuario = usuario en sesion(Logueado)
 								if (usuario != null) {
 							
-								List<ValoracionDTO> valoraciones = (List<ValoracionDTO>) request.getAttribute(AttributeNames.VALORACION);
-								for(ValoracionDTO v : valoraciones ){
+									Results<ValoracionDTO> resultsValoraciones = (Results<ValoracionDTO>) request.getAttribute(AttributeNames.VALORACION);
+									List<ValoracionDTO> valoraciones = resultsValoraciones.getData();
+									
+									for (ValoracionDTO v : valoraciones) {	
+									
 							%>													
 								<!-- Reviews -->
 							<div class="reviews">
@@ -244,7 +251,7 @@
 													</div>
 													<div class="review_name"><%=v.getNombrePerfilUsuarioValora()%></div>
 													<%
-														DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, (Locale) SessionManager.get(request, AttributeNames.LOCALE));
+															DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, (Locale) SessionManager.get(request, AttributeNames.LOCALE));
 													%>
 													<div class="review_date"><%=df.format(v.getFechaHoraCreacion())%></div>
 												</div>

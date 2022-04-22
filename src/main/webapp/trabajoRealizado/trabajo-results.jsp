@@ -22,23 +22,25 @@
 												<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_TRABAJO%>"/>
 												<div class="search3_item">
 													<div>Descripción</div>
-													<input type="text" name="<%=ParameterNames.DESCRIPCION%>" id="descripcion-trabajo" class="destination search2_input" placeholder="¿Qué quieres ver?"
+													<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" placeholder="¿Qué estás buscando?" class="destination search3_input"
 													onkeyup="buscarTrabajos()"/>
 												</div>
+												<div id="proveedores-results" class="cuadro-proveedores-results">
+												</div>
 												<div class="search3_item">
-													<div>Especialización</div>
-													<select name="<%=ParameterNames.ESPECIALIZACION_ID%>" id="especializacion-select"  class="dropdown_item_select search2_input">
-														<option disabled selected>Selecciona una especialización</option>														
+													<div>Especializacion</div>
+													<select name="<%=ParameterNames.ID_ESPECIALIZACION%>" id="especializacion-select" class="dropdown_item_select search3_input">
+														-	<option disabled selected>Selecciona una especialización</option>
 													</select>
 												</div>
 												<div class="search3_item">
 													<div>Provincia</div>
-													<select name="<%=ParameterNames.PROVINCIA_ID%>" id="provincia-select" class="dropdown_item_select search2_input">
+													<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select" class="dropdown_item_select search3_input">
 															<option disabled selected>Selecciona una provincia</option>
 													</select>
-												</div>
-												<button class="button search2_button">Buscar<span></span><span></span><span></span></button>
-											</div>
+												</div>											
+												<button class="button search2_button">Buscar<span></span><span></span><span></span></button>												
+											</div>											
 										</div>
 									</div>
 								</div>	
@@ -78,14 +80,12 @@
 									<div class="offers2_content">
 										<%						
 											if (usuario != null) {
-												if(tr.getNotaMedia()==null) {
+												if(tr.getNotaValoracion()==null) {
 	
 												} else {
-											
-													int valoracionMediaEntera = (int) Math.round(tr.getNotaMedia()/2);
-											
+																						
 												%>
-											<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
+											<div class="rating_r rating_r_<%=tr.getNotaValoracion()%> offers2_rating" data-rating="<%=tr.getNotaValoracion()%>">
 												<i></i>
 												<i></i>
 												<i></i>
@@ -122,7 +122,7 @@
 												<%						
 													if (usuario != null) {
 												%>
-													<div class="offer2_reviews_rating text-center"><%=tr.getNotaMedia()%></div>
+													<div class="offer2_reviews_rating text-center"><%=tr.getNotaValoracion()%></div>
 												<%
 													}
 												%>																								
@@ -134,13 +134,13 @@
 								<div class="row">
 									<div class="resultado_foto2">
 										<div class="offers2_image_container">
-											<div class="offers2_image_background" style="background-image:url(<%=context%>/images/proveedorportada.jpg)" alt="Foto Trabajo"></div>
-											<div class="offer2_name"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_TRABAJO%>&<%=ParameterNames.TRABAJO_REALIZADO_ID%>=<%=tr.getIdTrabajoRealizado()%>">Ver Detalle</a></div>									
+											<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-1.jpg)" alt="Foto Principal Trabajo"></div>
+											<div class="offer2_name"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_TRABAJO%>&<%=ParameterNames.ID_TRABAJO_REALIZADO%>=<%=tr.getIdTrabajoRealizado()%>">Ver Detalle</a></div>									
 										</div>
 									</div>
 									<div class="col-lg-8 resultado_datos">
 										<div class="offers2_content">
-											<div class="offers2_price"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_TRABAJO%>&<%=ParameterNames.TRABAJO_REALIZADO_ID%>=<%=tr.getIdTrabajoRealizado()%>"><%=tr.getTitulo()%></a><span></span></div>
+											<div class="offers2_price"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_TRABAJO%>&<%=ParameterNames.ID_TRABAJO_REALIZADO%>=<%=tr.getIdTrabajoRealizado()%>"><%=tr.getTitulo()%></a><span></span></div>
 											<div class="rating_r rating_r_3 offers2_rating" data-rating="5">																					
 											<p class="offers2_text"><%=tr.getDescripcion()%></p>											
 										</div>
@@ -166,7 +166,7 @@
 									parameters.remove(ParameterNames.PAGE); // para que no arrastre el valor anterior
 									
 									// Ya viene terminada en &
-									String baseURL = ParameterUtils.getURL(request.getContextPath()+"/"+ControllerNames.USUARIO, parameters);
+									String baseURL = ParameterUtils.getURL(request.getContextPath()+ControllerNames.TRABAJO_REALIZADO, parameters);
 	
 									
 									// Primera

@@ -2,7 +2,6 @@ package com.alejandro.reformatec.web.util;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
