@@ -14,11 +14,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alejandro.reformatec.exception.CodeInvalidException;
 import com.alejandro.reformatec.exception.DataException;
+import com.alejandro.reformatec.exception.EmailPendienteValidacionException;
 import com.alejandro.reformatec.exception.InvalidUserOrPasswordException;
 import com.alejandro.reformatec.exception.MailException;
 import com.alejandro.reformatec.exception.ServiceException;
 import com.alejandro.reformatec.exception.UserAlreadyExistsException;
+import com.alejandro.reformatec.exception.UserLowInTheSystemException;
+import com.alejandro.reformatec.exception.UserNotFoundException;
 import com.alejandro.reformatec.model.Results;
 import com.alejandro.reformatec.model.TipoUsuario;
 import com.alejandro.reformatec.model.UsuarioCriteria;
@@ -44,7 +48,7 @@ import com.alejandro.reformatec.web.util.WebPagingUtils;
 public class UsuarioServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private static Logger logger = LogManager.getLogger(UsuarioServlet.class);
 
 	// TODO sacar de configuracion
@@ -137,7 +141,7 @@ public class UsuarioServlet extends HttpServlet {
 				uc.setOrderBy(orderByStr);
 			}
 
-			
+
 			if (logger.isTraceEnabled()) {
 				logger.trace("Busqueda usuario: "+uc);
 			}
@@ -195,23 +199,23 @@ public class UsuarioServlet extends HttpServlet {
 
 			UsuarioCriteria uc = new UsuarioCriteria();
 			ValoracionCriteria vc = new ValoracionCriteria();	
-			
+
 			//Validar y convertir datos
 			Long idUsuario = null;
 			if  (!StringUtils.isBlank(idUsuarioStr)) {
 				idUsuario = Validator.validaLong(idUsuarioStr);
-							
+
 				if (idUsuario!=null) {
 					uc.setIdUsuario(idUsuario);
 					vc.setIdProveedorValorado(idUsuario);
-					
+
 				} else {
 					if (logger.isErrorEnabled()) {
 						logger.error("Formato incorrecto idUsuario: "+idUsuarioStr);
 					}
 					errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_FORMATO_INCORRECTO);	
 				}
-				
+
 			} else {
 				if (logger.isErrorEnabled()) {
 					logger.error("Dato null/blanco idUsuario: "+idUsuarioStr);
@@ -219,31 +223,31 @@ public class UsuarioServlet extends HttpServlet {
 				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);	
 			}
 
-			
+
 			if (logger.isTraceEnabled()) {
 				logger.trace("Id del usuario: "+idUsuario);
 			}
 
-				
-			
+
+
 			//Acceder a la capa de negocio(si no hay errores)
 			if(!errors.hasErrors()) {
 				try {
-									
+
 					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, 1, 1);
 					request.setAttribute(AttributeNames.USUARIO, usuario);
-					
-					
+
+
 					usuarioService.visualizaUsuario(idUsuario);
 
-					
+
 					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-					
+
 					Results<ValoracionDTO> valoraciones = valoracionService.findByCriteria(vc, (currentPage-1)*PAGE_SIZE +1, PAGE_SIZE);
 
 					request.setAttribute(AttributeNames.VALORACION, valoraciones);
 
-					
+
 					// Dirigir a...
 					targetView =ViewNames.USUARIO_DETAIL;
 
@@ -297,7 +301,7 @@ public class UsuarioServlet extends HttpServlet {
 				}
 			}
 
-			
+
 
 			if (StringUtils.isBlank(passwordStr)) {
 				if (logger.isDebugEnabled()) {
@@ -314,8 +318,8 @@ public class UsuarioServlet extends HttpServlet {
 				}			
 			}			
 
-			
-			
+
+
 			Boolean keepAuthenticated = null;		
 			if (!StringUtils.isBlank(keepAuthenticatedStr)) {
 				if (Validator.validaBoolean(keepAuthenticatedStr)) {
@@ -327,14 +331,14 @@ public class UsuarioServlet extends HttpServlet {
 				}
 			}
 
-			
-			
+
+
 			if (logger.isTraceEnabled()) {
 				logger.trace("Email: "+emailStr+", KeepAuthenticated: "+keepAuthenticated);
 			}
 
-			
-			
+
+
 			//Acceder a la capa de negocio(si no hay errores)
 			try {
 
@@ -355,7 +359,18 @@ public class UsuarioServlet extends HttpServlet {
 
 				// Dirigir a...
 				targetView = ViewNames.HOME;
-				
+
+			}catch (EmailPendienteValidacionException epve) {
+				if (logger.isErrorEnabled()) {
+					logger.error("EmailPendienteValidacionException: "+epve.getMessage(), epve);
+				}
+				errors.addCommonError(ErroresNames.ERROR_EMAIL_SIN_VALIDAR);				
+
+			}catch (UserLowInTheSystemException ulise) {
+				if (logger.isErrorEnabled()) {
+					logger.error("UserLowInTheSystemException: "+ulise.getMessage(), ulise);
+				}
+				errors.addCommonError(ErroresNames.ERROR_USER_LOW_IN_SYSTEM);
 
 			}catch (InvalidUserOrPasswordException iope) {
 				if (logger.isErrorEnabled()) {
@@ -412,12 +427,12 @@ public class UsuarioServlet extends HttpServlet {
 			String servicio24Str = request.getParameter(ParameterNames.SERVICIO_24);			
 			String [] idsEspecializacionesStr = request.getParameterValues(ParameterNames.ID_ESPECIALIZACION);
 			//TODO Falta la descripcion del usuario
-			
+
 			UsuarioDTO usuario = new UsuarioDTO();
-			
+
 			List<Integer> idsEspecializaciones = new ArrayList<Integer>();
 
-			
+
 			// Validar y Convertir Datos
 			Integer idTipoUsuario = null;
 			if (!StringUtils.isBlank(idTipoUsuarioStr)) {				
@@ -478,7 +493,7 @@ public class UsuarioServlet extends HttpServlet {
 				}
 
 
-				//TODO Me hago una clase que valide 2 iguales?
+
 				if (StringUtils.isBlank(emailStr)) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Dato null/blanco email: "+emailStr);
@@ -734,7 +749,7 @@ public class UsuarioServlet extends HttpServlet {
 				Integer idPoblacion = null;
 				if (!StringUtils.isBlank(idPoblacionStr)) {
 					idPoblacion = Validator.validaPoblacion(idPoblacionStr);
-					
+
 					if(idPoblacion!=null) {
 						usuario.setIdPoblacion(idPoblacion);				
 					} else {
@@ -743,7 +758,7 @@ public class UsuarioServlet extends HttpServlet {
 						}
 						errors.addParameterError(ParameterNames.ID_POBLACION, ErroresNames.ERROR_ID_POBLACION_FORMATO_INCORRECTO);
 					}
-					
+
 				} else {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Dato null/blanco idpoblacion: "+idPoblacionStr);
@@ -751,8 +766,8 @@ public class UsuarioServlet extends HttpServlet {
 					errors.addParameterError(ParameterNames.ID_POBLACION, ErroresNames.ERROR_ID_POBLACION_OBLIGATORIO);
 				}
 
-		
-				
+
+
 				if (idTipoUsuario==TipoUsuario.USUARIO_PROVEEDOR) {
 
 					if (!StringUtils.isBlank(cifStr)) {
@@ -793,14 +808,14 @@ public class UsuarioServlet extends HttpServlet {
 							errors.addParameterError(ParameterNames.SERVICIO_24, ErroresNames.ERROR_SERVICIO_24_FORMATO_INCORRECTO);
 						}
 					}
-					
-					
+
+
 					if (idsEspecializacionesStr.length>0 ) {
-						
+
 						for (int i=0;i<idsEspecializacionesStr.length;i++) {
 							if (!StringUtils.isBlank(idsEspecializacionesStr[i])) {
 								Integer idEspecializacion = Validator.validaEspecializacion(idsEspecializacionesStr[i]);
-								
+
 								if(idEspecializacion!=null) {
 									idsEspecializaciones.add(idEspecializacion);
 								} else {
@@ -809,7 +824,7 @@ public class UsuarioServlet extends HttpServlet {
 									}
 									errors.addParameterError(ParameterNames.ID_ESPECIALIZACION, ErroresNames.ERROR_ID_ESPECIALIZACION_FORMATO_INCORRECTO);
 								}
-								
+
 							} else {
 								if (logger.isDebugEnabled()) {
 									logger.debug("Dato obligatorio idEspecializacion: "+idsEspecializacionesStr[i]);
@@ -820,19 +835,19 @@ public class UsuarioServlet extends HttpServlet {
 					}
 
 				}					
-				
 
 
-				usuario.setCodigoRegistro(RandomStringUtils.randomAlphabetic(10));
-				
-				String url = request.getScheme()+"://"+request.getServerName()+":"+request.getLocalPort()+"/"
-						+request.getContextPath()+"/"+ControllerNames.USUARIO+"?"
-						+ParameterNames.ACTION+"="+ActionNames.VALIDAR_EMAIL
-						+"&"+usuario.getEmail()
-						+"&"+usuario.getCodigoRegistro();
-						
-				
+				//creo el codigo aleatorio y lo meto en bbdd
+				usuario.setCodigoRegistro(RandomStringUtils.randomAlphabetic(10).toUpperCase());
+
+				String url = request.getScheme()+"://"+request.getServerName()+":"+request.getLocalPort()
+				+request.getContextPath()+ControllerNames.USUARIO+"?"
+				+ParameterNames.ACTION+"="+ActionNames.VALIDAR_EMAIL
+				+"&"+ParameterNames.EMAIL+"="+usuario.getEmail()
+				+"&"+ParameterNames.COD_REGISTRO+"="+usuario.getCodigoRegistro();
+
 				if (logger.isTraceEnabled()) {
+					logger.trace("url: "+url);
 					logger.trace("Usuario: "+usuario);
 					logger.trace("Especializaciones: "+idsEspecializaciones);
 				}
@@ -851,6 +866,8 @@ public class UsuarioServlet extends HttpServlet {
 						// Dirigir a..
 						targetView =ViewNames.USUARIO_LOGIN;
 						forward = false;
+
+
 
 					}catch (UserAlreadyExistsException uaee) {
 						if (logger.isErrorEnabled()) {
@@ -884,8 +901,115 @@ public class UsuarioServlet extends HttpServlet {
 					}
 				}
 			}
-			
-		}else {
+
+		}else if (ActionNames.VALIDAR_EMAIL.equalsIgnoreCase(action)) {
+
+			//Dirección de la vista predefinida(en caso de error)
+			targetView=ViewNames.HOME;
+
+			// Recoger los datos que enviamos desde la jsp
+			String codRegistroStr = request.getParameter(ParameterNames.COD_REGISTRO);
+			String emailStr = request.getParameter(ParameterNames.EMAIL);
+
+
+			//Validar y convertir datos
+			if (StringUtils.isBlank(emailStr)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco email: "+emailStr);
+				}
+				errors.addParameterError(ParameterNames.EMAIL, ErroresNames.ERROR_EMAIL_OBLIGATORIO);
+			} else {
+				emailStr=emailStr.trim();
+				emailStr= emailStr.toUpperCase();
+
+				if (!Validator.VALIDA_EMAIL.isValid(emailStr)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto email: "+emailStr);
+					}
+					errors.addParameterError(ParameterNames.EMAIL, ErroresNames.ERROR_EMAIL_FORMATO_INCORRECTO);
+				}
+			}
+
+
+			if (StringUtils.isBlank(codRegistroStr)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco codRegistro: "+codRegistroStr);
+				}
+				errors.addParameterError(ParameterNames.COD_REGISTRO, ErroresNames.ERROR_COD_REGISTRO_OBLIGATORIO);
+
+			} else {
+				codRegistroStr = Validator.validaString(codRegistroStr);
+				if (codRegistroStr==null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto codRegistro: "+codRegistroStr);
+					}
+					errors.addParameterError(ParameterNames.COD_REGISTRO, ErroresNames.ERROR_COD_REGISTRO_FORMATO_INCORRECTO);
+				}
+			}
+
+
+			if (logger.isTraceEnabled()) {
+				logger.trace("Email: "+emailStr+", codRegistro: "+codRegistroStr);
+				//logger.trace("keepAutenticated: "+keepAutenticatedStr);
+			}
+
+
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+					UsuarioDTO u = usuarioService.validaEmail(emailStr, codRegistroStr);
+
+					if (logger.isInfoEnabled()) {
+						logger.info("User "+emailStr+" validation sucessfully.");
+					}
+
+					SessionManager.set(request, AttributeNames.USUARIO, u);
+
+					// Dirigir a...
+					targetView = ViewNames.HOME;
+
+					
+				}catch (UserLowInTheSystemException ulise) {
+					if (logger.isErrorEnabled()) {
+						logger.error("UserLowInTheSystemException: "+ulise.getMessage(), ulise);
+					}
+					errors.addCommonError(ErroresNames.ERROR_USER_LOW_IN_SYSTEM);
+
+				}catch (CodeInvalidException cie) {
+					if (logger.isErrorEnabled()) {
+						logger.error("CodeInvalidException: "+cie.getMessage(), cie);
+					}
+					errors.addCommonError(ErroresNames.ERROR_CODE_SINGUP_INVALID);
+
+				}catch (UserNotFoundException unfe) {
+					if (logger.isErrorEnabled()) {
+						logger.error("UserNotFoundException: "+unfe.getMessage(), unfe);
+					}
+					errors.addCommonError(ErroresNames.ERROR_USER_NOT_FOUND);
+
+				}catch (DataException de) {
+					if (logger.isErrorEnabled()) {
+						logger.error("DataException: "+de.getMessage(), de);
+					}
+					errors.addCommonError(ErroresNames.ERROR_DATA);
+
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error("ServiceException: "+se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error("Exception: "+e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+
+
+		}else{
 			//SACAR UN ERROR?
 			targetView = ViewNames.HOME;
 		}

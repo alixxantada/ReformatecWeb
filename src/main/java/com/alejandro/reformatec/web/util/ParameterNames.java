@@ -7,6 +7,7 @@ public class ParameterNames {
 	
 	public static final String KEEP_AUTHENTICATED = "keep-authenticated";
 	
+	public static final String COD_REGISTRO = "cod-registro";
 	public static final String ID_USUARIO = "id-usuario";	
 	public static final String NOMBRE_PERFIL = "nombre-perfil";
 	public static final String EMAIL = "email";

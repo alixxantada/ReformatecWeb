@@ -130,6 +130,10 @@ public class ErroresNames {
 	
 	public static final String ERROR_USER_ALREADY_EXISTS="El usuario ya existe";
 	
+	public static final String ERROR_USER_NOT_FOUND="El usuario no existe";
+	
+	public static final String ERROR_CODE_SINGUP_INVALID="El codigo introducido no es correcto";
+	
 	public static final String ERROR_USUARIO_PASSWORD_INVALID="El usuario y/o la contraseña no son correctos...";
 	
 	public static final String ERROR_DATA="Ha un ocurrido un problema al consultar sus datos, inténtelo de nuevo más tarde.";
@@ -140,6 +144,10 @@ public class ErroresNames {
 	
 	public static final String ERROR_KEEP_AUTHENTICATED_FORMATO_INCORRECTO="El formato del keep authenticated es incorrecto";
 	
+	public static final String ERROR_EMAIL_SIN_VALIDAR ="Debe validar su email para poder usar su cuenta, revise sus correos recibidos.";
 	
+	public static final String ERROR_USER_LOW_IN_SYSTEM ="El usuario se encuentra de baja.";
 	
+	public static final String ERROR_COD_REGISTRO_OBLIGATORIO = "El cod registro es obligatorio";
+	public static final String ERROR_COD_REGISTRO_FORMATO_INCORRECTO = "El formato del cod registro es incorrecto";
 }

@@ -10,7 +10,7 @@
 								<div class="todaviano">
 									<span class="text-claro">¿Ya tienes cuenta? </span>
 									<a href="<%=context%>/usuario/usuario-login.jsp" class="offers-link">Iniciar Sesión</a>
-								</div>
+								</div> 
 								<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off" method="post" id="registro-cliente" class="contact2_form text-center">
 								<%@include file="/common/common-errors.jsp"%>
 								<div class="formregistro1">								

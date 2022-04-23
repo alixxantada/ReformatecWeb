@@ -6,8 +6,12 @@
 3. Cargar Poblaciones
 4. Buscar Proveedores
 5. Buscar Trabajos
-6. Paso1 (Formulario Registro)
-7. Volver Paso1 (Formulario Registro)
+6. Buscar Proyectos
+7. Paso1 (Formulario Registro)
+8. Volver Paso1 (Formulario Registro)
+9. Cargar Provincias Editar Perfil
+10. Cargar Poblaciones Editar Perfil
+11. Cargar Nueva Direccion y nuevo codigo postal Editar Perfil
 */
 
 /*
@@ -130,13 +134,13 @@ function buscarProveedores() {
 	}
 }
 
-
+/*
 $('#descripcion-proveedor').blur(function(){
 	alert("A");
 	$('#descripcion-proveedor').val("");
 });
 
-
+*/
 
 /* 
 
@@ -171,11 +175,43 @@ function buscarTrabajos() {
 	}
 }
 
+/*
+
+6. Buscar Proyectos
+
+*/
+function buscarProyectos() {
+	var descripcion = $('#descripcion-proyecto').val();	
+	if (descripcion.length>0) {
+		var url = "/ReformatecWeb/proyecto-service";
+		$.ajax({
+		    	type: "GET", 
+		    	url: url,                    
+		    	data: "action=search-proyecto&buscar-descripcion="+descripcion,
+		       	success: function(response) {
+			    	   if (response.errorCode != null && response.errorCode!= '') {
+			    		   $('#proveedores-results').append('<p><b>'+response.errorCode+"</b><p>");
+			    	   } else {
+		 	    	 	   $('#proveedores-results').empty();
+		 	    	 	   var data = response.data;
+			         	   for (i = 0; i<data.length; i++) {
+			         	 		$('#proveedores-results').append('<p><b>'+data[i].titulo+'</b> de '+data[i].nombrePoblacion+'</p>');
+			           	   }
+			    	   }
+		       }
+		     });
+	} else {
+    	$('#proveedores-results').empty();
+	}
+}
+
+
+
 
 
 /*
 
-6. Paso 1 (Formulario Registro)
+7. Paso 1 (Formulario Registro)
 
 */
 function initPaso1()
@@ -190,7 +226,7 @@ function initPaso1()
 
 /*
 
-7. Volver Paso 1 (Formulario Registro)
+8. Volver Paso 1 (Formulario Registro)
 
 */
 function initVolverPaso1()
@@ -205,7 +241,7 @@ function initVolverPaso1()
 
 /*
 
-8. Cargar Provincias Editar Perfil
+9. Cargar Provincias Editar Perfil
 
 */	
 function cargarProvinciasPerfil() {
@@ -229,7 +265,7 @@ function cargarProvinciasPerfil() {
 
 /*
 
-9. Cargar Poblaciones Editar Perfil
+10. Cargar Poblaciones Editar Perfil
 
 */
 function cargarPoblacionesPerfil() {
@@ -257,7 +293,7 @@ function cargarPoblacionesPerfil() {
 }	
 /*
 
-9. Cargar Nueva Direccion y nuevo codigo postal Editar Perfil
+11. Cargar Nueva Direccion y nuevo codigo postal Editar Perfil
 
 */
 function cargarDireccionPerfil() {
