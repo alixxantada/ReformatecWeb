@@ -7,7 +7,7 @@
 								<!-- Contact Form -->
 							<div class="contact3_form_container">
 								<div class="contact_title text-center">Iniciar Sesión</div>
-								<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off"  method="post" id="contact3_form" class="contact3_form text-center">
+								<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off"  method="post" class="contact3_form text-center">
 									<%@include file="/common/common-errors.jsp"%>
 									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.LOGIN%>"/>
 									<input name="<%=ParameterNames.EMAIL%>" type="email" id="contact3_form_subject" class="contact3_form_subject input_field" placeholder="E-mail" data-error="Necesitamos tu E-mail..." required="required" value=" <%=ParameterUtils.print(request.getParameter(ParameterNames.EMAIL))%>"/>

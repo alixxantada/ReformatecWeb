@@ -69,152 +69,18 @@
 			</div>
 				<!-- Buscador End-->
 				<!-- Proveedores Top Start -->
-			<div class="offers">
-				<div class="container">
-					<div class="row">
-						<div class="col text-center">
-							<h2 class="section_title">Proveedores TOP</h2>
-						</div>
-					</div>
-					<div class="row offers_items">
-							<!-- Offers Item -->
-						<div class="col-lg-6 offers_col">
-							<div class="offers_item">
-								<div class="row">
-									<div class="col-lg-6">
-										<div class="offers_image_container">
-											<div class="offers_image_background" style="background-image:url(<%=context%>/images/proveedortopindex.jpg)"></div>
-											<div class="offer_name"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Poblacion</a></div>
-										</div>
-									</div>
-									<div class="col-lg-6">
-										<div class="offers_content">
-											<div class="offers_price">Nombre Perfil</br><span>Numero valoraciones</span></div>
-											<div class="rating_r rating_r_4 offers_rating">
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-											</div>
-											<p class="offers_text">Aquí estaría la descripción que tenga el proveedor con un máximo caracteres...</p>
-											<div class="offers_icons">
-												<ul class="offers_icons_list">
-													<li class="offers_icons_item"><img src="<%=context%>/images/post.png" alt=""></li>
-													<li class="offers_icons_item"><img src="<%=context%>/images/compass.png" alt=""></li>
-													<li class="offers_icons_item"><img src="<%=context%>/images/bicycle.png" alt=""></li>
-												</ul>
-											</div>
-											<div class="offers_link"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Ver Perfil</a></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>						
-							<!-- Offers Item -->
-						<div class="col-lg-6 offers_col">
-							<div class="offers_item">
-								<div class="row">
-									<div class="col-lg-6">
-										<div class="offers_image_container">
-											<div class="offers_image_background" style="background-image:url(<%=context%>/images/proveedortopindex.jpg)"></div>
-											<div class="offer_name"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Poblacion</a></div>
-										</div>
-									</div>
-									<div class="col-lg-6">
-										<div class="offers_content">
-											<div class="offers_price">Nombre Perfil</br><span>Numero valoraciones</span></div>
-											<div class="rating_r rating_r_4 offers_rating">
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-											</div>
-											<p class="offers_text">Aquí estaría la descripción que tenga el proveedor con un máximo caracteres...</p>
-											<div class="offers_icons">
-												<ul class="offers_icons_list">
-													<li class="offers_icons_item"><img src="<%=context%>/images/post.png" alt=""></li>
-													<li class="offers_icons_item"><img src="<%=context%>/images/compass.png" alt=""></li>
-													<li class="offers_icons_item"><img src="<%=context%>/images/bicycle.png" alt=""></li>
-												</ul>
-											</div>
-											<div class="offers_link"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Ver Perfil</a></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-							<!-- Offers Item -->
-						<div class="col-lg-6 offers_col">
-							<div class="offers_item">
-								<div class="row">
-									<div class="col-lg-6">
-										<div class="offers_image_container">
-											<div class="offers_image_background" style="background-image:url(<%=context%>/images/proveedortopindex.jpg)"></div>
-											<div class="offer_name"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Poblacion</a></div>
-										</div>
-									</div>
-									<div class="col-lg-6">
-										<div class="offers_content">
-											<div class="offers_price">Nombre Perfil</br><span>Numero valoraciones</span></div>
-											<div class="rating_r rating_r_4 offers_rating">
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-											</div>
-											<p class="offers_text">Aquí estaría la descripción que tenga el proveedor con un máximo caracteres...</p>
-											<div class="offers_icons">
-												<ul class="offers_icons_list">
-													<li class="offers_icons_item"><img src="<%=context%>/images/post.png" alt=""></li>
-												</ul>
-											</div>
-											<div class="offers_link"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Ver Perfil</a></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-							<!-- Offers Item -->
-						<div class="col-lg-6 offers_col">
-							<div class="offers_item">
-								<div class="row">
-									<div class="col-lg-6">
-										<div class="offers_image_container">
-											<div class="offers_image_background" style="background-image:url(<%=context%>/images/proveedortopindex.jpg)"></div>
-											<div class="offer_name"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Poblacion</a></div>
-										</div>
-									</div>
-									<div class="col-lg-6">
-										<div class="offers_content">
-											<div class="offers_price">Nombre Perfil</br><span>Numero valoraciones</span></div>
-											<div class="rating_r rating_r_4 offers_rating">
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-											</div>
-											<p class="offers_text">Aquí estaría la descripción que tenga el proveedor con un máximo caracteres...</p>
-											<div class="offers_icons">
-												<ul class="offers_icons_list">
-													<li class="offers_icons_item"><img src="<%=context%>/images/post.png" alt=""></li>
-													<li class="offers_icons_item"><img src="<%=context%>/images/compass.png" alt=""></li>
-												</ul>
-											</div>
-											<div class="offers_link"><a href="<%=context+ViewNames.USUARIO_DETAIL%>">Ver Perfil</a></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-			</div>
-				<!-- Proveedores Top End -->
+			<%
+			//lio de usuarios, este indica si tiene sesion iniciada.
+			if (usuario != null) {
+			
+			%>
+				
+			<%@include file="/common/proveedores-top.jsp"%>
+			
+			<%
+			}
+			%>
+				<!-- Proveedores Top End -->			
 				<!-- Valoraciones Trabajos Start -->
 			<div class="testimonials">
 				<div class="test_border"></div>
@@ -226,6 +92,8 @@
 					</div>
 					<div class="row">
 						<div class="col">
+						
+						
 								<!-- Valoracion Slider -->
 							<div class="test_slider_container">
 								<div class="owl-carousel owl-theme test_slider">
@@ -369,6 +237,7 @@
 <script>
 	$(document).ready(cargarProvincias());
 	$(document).ready(cargarEspecializaciones());
+	//$(document).ready(cargarUsuariosIndex());
 </script>
 				
 <%@include file="/common/footer.jsp"%>

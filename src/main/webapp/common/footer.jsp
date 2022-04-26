@@ -6,7 +6,7 @@
 						<div class="col-lg-4 footer_column">
 							<div class="footer_col">
 								<div class="footer_content footer_about">
-										<div class="logofooter"><a href="<%=context+ViewNames.HOME%>"><img src="/ReformatecWeb/images/logo/logoreformatecjusto.png" alt="Logo Reformatec"></a></div>
+										<div class="logofooter"><a href="<%=context+ControllerNames.USUARIO%>"><img src="/ReformatecWeb/images/logo/logoreformatecjusto.png" alt="Logo Reformatec"></a></div>
 									<p class="footer_about_text">Siguenos también en</p>
 									<ul class="lista_footer">
 										<li class="footer_social_item"><a href="#"><i class="fa fa-facebook-f"></i></a></li>

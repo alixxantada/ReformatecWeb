@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alejandro.reformatec.dao.util.ConfigurationManager;
+import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
 import com.alejandro.reformatec.model.Results;
@@ -24,6 +26,8 @@ import com.alejandro.reformatec.service.impl.TrabajoRealizadoServiceImpl;
 import com.alejandro.reformatec.service.impl.ValoracionServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
 import com.alejandro.reformatec.web.util.AttributeNames;
+import com.alejandro.reformatec.web.util.ConfigNames;
+import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
 import com.alejandro.reformatec.web.util.Validator;
@@ -36,13 +40,15 @@ public class TrabajoRealizadoServlet extends HttpServlet {
 
 	private static Logger logger = LogManager.getLogger(TrabajoRealizadoServlet.class);
 
-	private static int PAGE_SIZE = 3; 
-	private static int PAGE_COUNT = 5;
+	private static final String CFGM_PFX = ConfigNames.PFX;
+	private static final String PAGE_SIZE_DETAIL = CFGM_PFX + ConfigNames.PAGE_SIZE_DETAIL;
+	private static final String PAGE_SIZE_SEARCH = CFGM_PFX +  ConfigNames.PAGE_SIZE_SEARCH;
+	private static final String PAGE_COUNT = CFGM_PFX + ConfigNames.PAGE_COUNT;
+	private ConfigurationManager cfgM = ConfigurationManager.getInstance();	
 
 	private TrabajoRealizadoService trabajoRealizadoService = null;
 	private ValoracionService valoracionService = null;
-
-
+	
 	public TrabajoRealizadoServlet() {
 		super();   
 		trabajoRealizadoService = new TrabajoRealizadoServiceImpl();	
@@ -70,7 +76,8 @@ public class TrabajoRealizadoServlet extends HttpServlet {
 		if (ActionNames.SEARCH_TRABAJO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String buscarStr = request.getParameter(ParameterNames.BUSCAR_DESCRIPCION);
@@ -120,20 +127,20 @@ public class TrabajoRealizadoServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-					Results<TrabajoRealizadoDTO> results = trabajoRealizadoService.findByCriteria(trc, (currentPage-1)*PAGE_SIZE +1, PAGE_SIZE);
+					Results<TrabajoRealizadoDTO> results = trabajoRealizadoService.findByCriteria(trc, (currentPage-1)*Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)) +1, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 
 					request.setAttribute(AttributeNames.TRABAJO, results);
 
-					// Atributos para paginacion
-					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), PAGE_SIZE);
+					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 					request.setAttribute(AttributeNames.TOTAL_PAGES, totalPages);
 					request.setAttribute(AttributeNames.CURRENT_PAGE, currentPage);				
-					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, PAGE_COUNT, totalPages));
-					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, PAGE_COUNT, totalPages));
+					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
 
 					// Dirigir a...
 					targetView= ViewNames.TRABAJO_RESULTS;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -160,8 +167,8 @@ public class TrabajoRealizadoServlet extends HttpServlet {
 		} else if (ActionNames.DETAIL_TRABAJO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String idTrabajoRealizadoStr = request.getParameter(ParameterNames.ID_TRABAJO_REALIZADO);
@@ -205,7 +212,7 @@ public class TrabajoRealizadoServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 					
-					Results<TrabajoRealizadoDTO> trabajo = trabajoRealizadoService.findByCriteria(trc, 1, 1);
+					Results<TrabajoRealizadoDTO> trabajo = trabajoRealizadoService.findByCriteria(trc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 
 					request.setAttribute(AttributeNames.TRABAJO, trabajo);
 
@@ -219,6 +226,7 @@ public class TrabajoRealizadoServlet extends HttpServlet {
 
 					// Dirigir a...
 					targetView =ViewNames.TRABAJO_DETAIL;
+					forward = true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {

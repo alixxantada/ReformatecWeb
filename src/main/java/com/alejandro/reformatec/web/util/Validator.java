@@ -19,12 +19,12 @@ public class Validator {
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);	
 
 
-	private static final String DNI_REGEX = "[0-9]{8}+[a-zA-Z]{1}";
+	private static final String DNI_REGEX = "^(X(-|\\.)?0?\\d{7}(-|\\.)?[A-Z]|[A-Z](-|\\.)?\\d{7}(-|\\.)?[0-9A-Z]|\\d{8}(-|\\.)?[A-Z])$";
 
 	private static final Pattern DNI_PATTERN = Pattern.compile(DNI_REGEX);
 
 
-	private static final String DIRECCION_WEB_REGEX = "/^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$/";
+	private static final String DIRECCION_WEB_REGEX = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$";
 
 	private static final Pattern DIRECCION_WEB_PATTERN = Pattern.compile(DIRECCION_WEB_REGEX);
 

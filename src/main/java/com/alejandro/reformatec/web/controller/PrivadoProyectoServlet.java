@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alejandro.reformatec.dao.util.ConfigurationManager;
+import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
 import com.alejandro.reformatec.model.ProyectoCriteria;
@@ -22,6 +24,8 @@ import com.alejandro.reformatec.service.ProyectoService;
 import com.alejandro.reformatec.service.impl.ProyectoServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
 import com.alejandro.reformatec.web.util.AttributeNames;
+import com.alejandro.reformatec.web.util.ConfigNames;
+import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
 import com.alejandro.reformatec.web.util.Validator;
@@ -35,9 +39,11 @@ public class PrivadoProyectoServlet extends HttpServlet {
 
 	private static Logger logger = LogManager.getLogger(PrivadoProyectoServlet.class);
 
-	// TODO sacar de configuracion
-	private static int PAGE_SIZE = 3; 
-	private static int PAGE_COUNT = 5;
+	private static final String CFGM_PFX = ConfigNames.PFX;
+	private static final String PAGE_SIZE_DETAIL = CFGM_PFX + ConfigNames.PAGE_SIZE_DETAIL;
+	private static final String PAGE_SIZE_SEARCH = CFGM_PFX +  ConfigNames.PAGE_SIZE_SEARCH;
+	private static final String PAGE_COUNT = CFGM_PFX + ConfigNames.PAGE_COUNT;
+	private ConfigurationManager cfgM = ConfigurationManager.getInstance();	
 
 	private ProyectoService proyectoService = null;
 
@@ -67,8 +73,8 @@ public class PrivadoProyectoServlet extends HttpServlet {
 		if (ActionNames.SEARCH_PROYECTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String buscarStr = request.getParameter(ParameterNames.BUSCAR_DESCRIPCION);
@@ -140,20 +146,22 @@ public class PrivadoProyectoServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-					Results<ProyectoDTO> results = proyectoService.findByCriteria(pc, (currentPage-1)*PAGE_SIZE +1, PAGE_SIZE);
+					Results<ProyectoDTO> results = proyectoService.findByCriteria(pc, (currentPage-1)*Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)) +1, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 
 					request.setAttribute(AttributeNames.PROYECTO, results);
 
 					// Atributos para paginacion
-					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), PAGE_SIZE);
+					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 					request.setAttribute(AttributeNames.TOTAL_PAGES, totalPages);
 					request.setAttribute(AttributeNames.CURRENT_PAGE, currentPage);					
-					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, PAGE_COUNT, totalPages));
-					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, PAGE_COUNT, totalPages));
+					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+
 
 					//Dirigir a...
 					targetView = ViewNames.PROYECTO_RESULTS;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -178,8 +186,8 @@ public class PrivadoProyectoServlet extends HttpServlet {
 		} else if (ActionNames.DETAIL_PROYECTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recogemos los datos de la jsp
 			String idProyectoStr = request.getParameter(ParameterNames.ID_PROYECTO);
@@ -219,14 +227,15 @@ public class PrivadoProyectoServlet extends HttpServlet {
 			//Acceder a la capa de negocio(si no hay errores)
 			if(!errors.hasErrors()) {
 				try {
-
-					Results<ProyectoDTO> results = proyectoService.findByCriteria(pc, 1, 1);
+					
+					Results<ProyectoDTO> results = proyectoService.findByCriteria(pc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 
 					request.setAttribute(AttributeNames.PROYECTO, results);
 
 					//Dirigir a...
 					targetView = ViewNames.PROYECTO_DETAIL;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -250,8 +259,9 @@ public class PrivadoProyectoServlet extends HttpServlet {
 
 		} else if(ActionNames.CREATE_PROYECTO.equalsIgnoreCase(action)) {
 
-			//Falta crear aun la vista de crear proyecto
-			targetView = ViewNames.HOME;
+			// Vista en caso de error
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String tituloStr = request.getParameter(ParameterNames.TITULO_PROYECTO);
@@ -415,15 +425,15 @@ public class PrivadoProyectoServlet extends HttpServlet {
 				try {
 
 					proyectoService.create(proyecto,idsEspecializaciones);
+					
 					if (logger.isInfoEnabled()) {
 						logger.info("Proyecto Creado: "+proyecto);
 					}
 
-					request.setAttribute(AttributeNames.PROYECTO, proyecto);
-
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_MIS_PROYECTOS;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -459,8 +469,8 @@ public class PrivadoProyectoServlet extends HttpServlet {
 			ProyectoDTO proyecto = new ProyectoDTO();
 
 			List<Integer> idsEspecializaciones = new ArrayList<Integer>();
-			
-			
+
+
 			// Validar y convertir los datos
 			Long idProyecto = null;
 			if (!StringUtils.isBlank(idProyectoStr)) {				
@@ -569,11 +579,11 @@ public class PrivadoProyectoServlet extends HttpServlet {
 
 
 			if (idsEspecializacionesStr.length>0 ) {
-				
+
 				for (int i=0;i<idsEspecializacionesStr.length;i++) {
 					if (!StringUtils.isBlank(idsEspecializacionesStr[i])) {
 						Integer idEspecializacion = Validator.validaEspecializacion(idsEspecializacionesStr[i]);
-						
+
 						if(idEspecializacion!=null) {
 							idsEspecializaciones.add(idEspecializacion);
 						} else {
@@ -582,7 +592,7 @@ public class PrivadoProyectoServlet extends HttpServlet {
 							}
 							errors.addParameterError(ParameterNames.ID_ESPECIALIZACION, ErroresNames.ERROR_ID_ESPECIALIZACION_FORMATO_INCORRECTO);
 						}
-						
+
 					} else {
 						if (logger.isDebugEnabled()) {
 							logger.debug("Dato obligatorio idEspecializacion: "+idsEspecializacionesStr[i]);
@@ -603,16 +613,19 @@ public class PrivadoProyectoServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 
+					
 					proyectoService.update(proyecto, idsEspecializaciones);
+					
 					if (logger.isInfoEnabled()) {
 						logger.info("Proyecto actualizado: "+proyecto);
 					}
 
-					//TODO es necesario? :S
+
 					request.setAttribute(AttributeNames.PROYECTO, proyecto);
 
-					// Dirigir a..
-					targetView =ViewNames.HOME;
+					// Dirigir a...
+					targetView = ControllerNames.USUARIO;
+					forward = false;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -637,8 +650,9 @@ public class PrivadoProyectoServlet extends HttpServlet {
 		} else if (ActionNames.UPDATE_STATUS_PROYECTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			//targetView = request.getContextPath()+ViewNames.HOME;
-			targetView = ViewNames.HOME;
+			// Dirigir a...
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 
 			// Recoger los datos que enviamos desde la jsp
@@ -688,8 +702,8 @@ public class PrivadoProyectoServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_MIS_PROYECTOS;
-					forward = false;
-
+					forward = true;
+					
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -712,8 +726,9 @@ public class PrivadoProyectoServlet extends HttpServlet {
 			}
 
 		} else {
-			//SACAR UN ERROR?
-			targetView = ViewNames.HOME;
+			// Dirigir a...
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 		}
 
 		if (logger.isInfoEnabled()) {

@@ -14,11 +14,7 @@
 11. Cargar Nueva Direccion y nuevo codigo postal Editar Perfil
 */
 
-/*
 
-1. Cargar Especializaciones
-
-*/
 /*
 window.addEventListener('load', cargarEspecializaciones);
 window.addEventListener('load', cargarProvincias);
@@ -29,6 +25,12 @@ window.addEventListener('load', initPaso1);
 window.addEventListener('load', initVolverPaso1);
 */
 
+
+/*
+
+1. Cargar Especializaciones
+
+*/
 function cargarEspecializaciones() {
 	var url = "/ReformatecWeb/especializacion-service";
     $.ajax({                        
@@ -55,6 +57,31 @@ function cargarEspecializaciones() {
 
 /*
 
+1. Cargar EspecializacionesRegistroProveedor
+
+*/
+function cargarEspecializacionesRegistro() {
+	var url = "/ReformatecWeb/especializacion-service";
+    $.ajax({                        
+	       type: "GET",                 
+	       url: url,                    
+	       data: "action=search-especializacion",
+	       success: function(response) {
+		    	  $('#especializacion-select').empty();
+		    	  var data = response.data;
+		    	  var data2 = response.data;
+		    	  for (var i=0; i<data.length;i++){
+		    		 $('#especializacion-select').append('<option value='+data[i].idEspecializacion+'>'+data[i].nombre+'</option>');
+		    	  }
+		    	  for (var i=0; i<data2.length;i++){
+		    		 $('#especializacion2-select').append('<option value='+data[i].idEspecializacion+'>'+data[i].nombre+'</option>');
+		    	  }
+	       }
+	     });
+}
+
+/*
+
 2. Cargar Provincias
 
 */	
@@ -78,13 +105,98 @@ function cargarProvincias() {
 	 	});
 }
 	
+
+
+
+
+
+/*
+
+2. Cargar Provincias Editar Perfil
+
+*/	
+function cargarProvinciasPerfil() {
+	var url = "/ReformatecWeb/provincia-service";
+	$("#poblacionActual").hide();
+	$("#provincia-select-perfil").show();
+
+	$.ajax({                        
+	       type: "GET",                 
+	       url: url,                    
+	       data: "action=search-provincia",
+	       success: function(response) {
+		    	  $('#provincia-select-perfil').empty();
+		    	  $('#provincia-select-perfil').append('<option disabled selected>Selecciona una provincia</option>');
+		    	  $('#provincia2-select-perfil').empty();
+		    	  $('#provincia2-select-perfil').append('<option disabled selected>Selecciona una provincia</option>');
+		    	  var data = response.data;
+		    	  for (var i=0; i<data.length;i++){
+		    		 $('#provincia-select-perfil').append('<option value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
+		    		  $('#provincia2-select-perfil').append('<option value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
+		    	  }
+	       }
+	 	});
+}
+
+
+
+
 	
 /*
 
+3. Cargar Poblaciones Editar Perfil
+
+*/
+function cargarPoblacionesPerfil() {
+	
+	$("#poblacion-select-perfil").show();
+	$("#codPostalEditarPerfilLabel").show();	
+	$("#direccionEditarPerfilLabel").show();
+	$("#codPostalEditarPerfil").show();
+	$("#direccionEditarPerfil").show();
+
+
+	var provinciaId = $('#provincia-select-perfil').val();
+	var url = "/ReformatecWeb/poblacion-service";
+	    $.ajax({                        
+		       type: "GET",                 
+		       url: url,                    
+		       data: "action=search-poblacion&id-provincia="+provinciaId,
+		       success: function(response) {
+		 	    	  $('#poblacion-select-perfil').empty();			 
+					  
+			         $('#poblacion-select-perfil').append('<option disabled selected>Selecciona una poblacion</option>');
+			         var data = response.data;
+			         for (var i = 0; i<data.length; i++) {
+			         	$('#poblacion-select-perfil').append('<option value='+data[i].idPoblacion+'>'+data[i].nombre+'</option>');
+			         }
+			       }
+		     });
+}	
+
+
+
+
+/**
+
+Cargar Cambiar Contraseña
+ */
+function cargarCambioPass() {
+	$("#cambioDePass").hide();
+	$("#caja-pass").show();
+	
+}
+
+
+
+
+
+/*
 3. Cargar Poblaciones
 
 */
 function cargarPoblaciones() {
+	$("#poblacion-select").show()
 	var provinciaId = $('#provincia-select').val();
 	var url = "/ReformatecWeb/poblacion-service";
 	    $.ajax({                        
@@ -104,8 +216,8 @@ function cargarPoblaciones() {
 
 
 
-/*
 
+/*
 4. Buscar Proveedores
 
 */
@@ -175,6 +287,9 @@ function buscarTrabajos() {
 	}
 }
 
+
+
+
 /*
 
 6. Buscar Proyectos
@@ -224,79 +339,158 @@ function initPaso1()
 	
 
 
+
 /*
 
 8. Volver Paso 1 (Formulario Registro)
 
 */
 function initVolverPaso1()
-{
+{	
 	$("#volverpaso1").click(function(){
 		$(".formregistro2").hide(500);
 		$(".formregistro1").show(500);
+	});
+	
+}
+
+
+
+
+/*
+
+Paso 2 (Formulario Registro Proveedor)
+
+ */
+function initPaso2()
+{
+	
+	$("#paso2").click(function(){
+		$(".formregistro2").hide(500);
+		$(".formregistro3").show(500);
 	});
 }
 
 
 
+
+
 /*
 
-9. Cargar Provincias Editar Perfil
+Volver Paso 2 (Formulario Registro Proveedor)
 
-*/	
-function cargarProvinciasPerfil() {
-	var url = "/ReformatecWeb/provincia-service";
-	$.ajax({                        
-	       type: "GET",                 
-	       url: url,                    
-	       data: "action=search-provincia",
-	       success: function(response) {
-		    	  $('#provincia-selectPerfil').empty();
-		    	  $('#provincia-selectPerfil').append('<option disabled selected>Actualizar Direccion</option>');
-		    	  var data = response.data;
-		    	  for (var i=0; i<data.length;i++){
-		    		 $('#provincia-selectPerfil').append('<option value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
-		    	  }
-	       }
-	 	});
+*/
+ function initVolverPaso2()
+{	
+	$("#volverpaso2").click(function(){
+		$(".formregistro3").hide(500);
+		$(".formregistro2").show(500);
+	});
+}
+ 
+ 
+ 
+ 
+ /*
+
+Paso 3 (Formulario Registro Proveedor)
+
+ */
+function initPaso3()
+{
+	$("#paso3").click(function(){
+		$(".formregistro3").hide(500);
+		$(".formregistro4").show(500);
+	});
 }
 
 
 
+
+
 /*
 
-10. Cargar Poblaciones Editar Perfil
+Volver Paso 3 (Formulario Registro Proveedor)
 
 */
-function cargarPoblacionesPerfil() {
-	var provinciaId = $('#provincia-selectPerfil').val();
-	$("#poblacion-selectPerfil").show();
-	$("#poblacionActual").hide();
+ function initVolverPaso3()
+{
+	$("#volverpaso3").click(function(){
+		$(".formregistro4").hide(500);
+		$(".formregistro3").show(500);
+	});
+}
+ 
+
+ 
+ 
+
+
+
+/*
+
+Editar Perfil mostar eliminar cuenta
+
+*/
+
+function eliminarCuenta(){
+	$("#eliminar-usuario").click(function(){
+		$("#eliminar-usuario").hide();
+		$(".eliminar-usuario-definitivo").show();
+	});
+}
+
+
+/*
+
+Añadir especializaciones
+
+*/
+function comenzar(){
+    usuariosASeleccionar = document.getElementById("especializacion-select");
+    usuariosSeleccionados = document.getElementById("especializacionesSeleccionadas");
+
+    usuariosASeleccionar.addEventListener("click",pasar,false);
+    usuariosSeleccionados.addEventListener("click",regresar,false);
+
+
+}
+
+
+
+function pasar(){
+    let seleccionadas = usuariosASeleccionar.selectedOptions;
+    let destino = usuariosSeleccionados;
+    if(seleccionadas.length>0){
+        while(seleccionadas.length>0){
+            destino.add(seleccionadas[0]);
+        }
+      }
+    }
+
+
+
+function regresar(){
+    let seleccionadas = usuariosSeleccionados.selectedOptions;
+    let destino = usuariosASeleccionar;
+    if(seleccionadas.length>0){
+        while(seleccionadas.length>0){
+            destino.add(seleccionadas[0]);
+        }
+    }
+}
+
+
+
+
+
+/**
+
+Cargar Index
+
+ */
+function cargarUsuariosIndex(){
 	
-	var url = "/ReformatecWeb/poblacion-service";
-	    $.ajax({                        
-		       type: "GET",                 
-		       url: url,                    
-		       data: "action=search-poblacion&id-provincia="+provinciaId,
-		       success: function(response) {
-		 	    	  $('#poblacion-selectPerfil').empty();
-			         $('#poblacion-selectPerfil').append('<option disabled selected>Selecciona una poblacion</option>');
-			         var data = response.data;
-			         for (var i = 0; i<data.length; i++) {
-			         	$('#poblacion-selectPerfil').append('<option value='+data[i].idPoblacion+'>'+data[i].nombre+'</option>');
-			         }
-			       },
-			       error: function (jqXHR, textStatus, errorThrown) {
-			        	alert(textStatus);
-			 	   }
-		     });
-}	
-/*
-
-11. Cargar Nueva Direccion y nuevo codigo postal Editar Perfil
-
-*/
-function cargarDireccionPerfil() {
-	$("#direccionEditarPerfil").show();
-	$("#codPostalEditarPerfil").show();
+	
+	
 }

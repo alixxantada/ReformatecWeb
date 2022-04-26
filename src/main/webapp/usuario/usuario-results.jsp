@@ -107,8 +107,8 @@
 												if(u.getValoracionMedia()==null) {
 	
 												} else {
-												//cambiar datos maestros, ahora las valoraciones solo seran de 0 a 5 .
-													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia()/2);
+							
+													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());
 											
 												%>
 											<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">

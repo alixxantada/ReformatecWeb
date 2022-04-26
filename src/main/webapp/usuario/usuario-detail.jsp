@@ -84,7 +84,7 @@
 	
 												} else {
 											
-													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia()/2);											
+													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());											
 										%>
 										
 										<div class="offer3_reviews_rating text-center"><%=u.getValoracionMedia() %></div>
@@ -210,7 +210,7 @@
 													<div class="review_content">
 														<div class="review_title_container">
 															<div class="review_title"><%=v.getTitulo() %></div>
-															<div class="review_rating"><%=v.getNotaValoracion() %></div>
+															<div class="review_rating"><%=v.getNotaValoracion()*2 %></div>
 														</div>
 														<div class="review_text">
 															<p><%=v.getDescripcion()%></p>

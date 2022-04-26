@@ -1,12 +1,5 @@
 <%@include file="/common/header.jsp"%>
-<!-- Perfil Menu Start-->
-			<div class="container">
-				<div class="menuusuario">
-					<div><a href="<%=context+ViewNames.USUARIO_MIS_PROVEEDORES%>">Mis Proveedores</a></div>
-					<div><a href="<%=context+ViewNames.USUARIO_MIS_PROYECTOS%>">Mis Proyectos</a></div>
-					<div><a href="<%=context+ViewNames.USUARIO_PERFIL%>">Mi Perfil</a></div>
-				</div>
-					<!-- Perfil Menu End-->
+<%@include file="/common/menu-usuario.jsp"%>
 					<!-- Editar Perfil Start-->
 				<div class="page-wrapper">                
 					<div class="container-fluid">
@@ -26,7 +19,7 @@
 										</div>
 										<div class="perfil-caja-der">
 											<%
-												if (usuario.getIdTipoUsuario()==2){
+												if (usuario.getIdTipoUsuario()==TipoUsuario.USUARIO_PROVEEDOR){
 													if (usuario.getDescripcion()!=null){
 											%>
 											<label>Tu Descripcion:</label>
@@ -72,21 +65,19 @@
 											<%
 												}
 											
-												if (usuario.getIdTipoUsuario()==2) {
+												if (usuario.getIdTipoUsuario()==TipoUsuario.USUARIO_PROVEEDOR) {
 													
-													if (usuario.getDireccionWeb()!=null){
-												
+								
 											%>
+											<div class="form-group">
+												<label for="position-top-right">Cif: </label>
+												<p><%=ParameterUtils.print(usuario.getCif())%></p>
+											</div>
 											<div class="form-group">
 												<label for="position-top-right">Direccion Web: </label>
 												<p><%=ParameterUtils.print(usuario.getDireccionWeb())%></p>
 											</div>
-												<%
-												}												
-													
-													if (usuario.getServicio24()!=null){
-													
-												%>
+					
 											<div class="form-group">
 												<label for="position-top-right">Servicio 24: </label>
 													<%
@@ -103,7 +94,6 @@
 											</div>
 											<%
 														}
-													}
 												}	
 											}
 											%>

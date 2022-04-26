@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alejandro.reformatec.dao.util.ConfigurationManager;
+import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
 import com.alejandro.reformatec.model.LineaPresupuestoDTO;
@@ -23,6 +25,8 @@ import com.alejandro.reformatec.service.PresupuestoService;
 import com.alejandro.reformatec.service.impl.PresupuestoServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
 import com.alejandro.reformatec.web.util.AttributeNames;
+import com.alejandro.reformatec.web.util.ConfigNames;
+import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
 import com.alejandro.reformatec.web.util.Validator;
@@ -35,10 +39,12 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 
 	private static Logger logger = LogManager.getLogger(PrivadoPresupuestoServlet.class);	
 
-	// TODO sacar de configuracion
-	private static int PAGE_SIZE = 3; 
-	private static int PAGE_COUNT = 5;
-
+	private static final String CFGM_PFX = ConfigNames.PFX;
+	private static final String PAGE_SIZE_DETAIL = CFGM_PFX + ConfigNames.PAGE_SIZE_DETAIL;
+	private static final String PAGE_SIZE_SEARCH = CFGM_PFX +  ConfigNames.PAGE_SIZE_SEARCH;
+	private static final String PAGE_COUNT = CFGM_PFX + ConfigNames.PAGE_COUNT;
+	private ConfigurationManager cfgM = ConfigurationManager.getInstance();	
+	
 	private PresupuestoService presupuestoService = null;
 
 	public PrivadoPresupuestoServlet() {
@@ -66,8 +72,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 		if (ActionNames.SEARCH_PRESUPUESTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String idPresupuestoStr = request.getParameter(ParameterNames.ID_PRESUPUESTO);
@@ -121,20 +127,21 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-					Results<PresupuestoDTO> results = presupuestoService.findByCriteria(pc, (currentPage-1)*PAGE_SIZE +1, PAGE_SIZE);
+					Results<PresupuestoDTO> results = presupuestoService.findByCriteria(pc, (currentPage-1)*Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)) +1, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 
 					request.setAttribute(AttributeNames.PRESUPUESTO, results);
 
 					// Atributos para paginacion
-					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), PAGE_SIZE);
+					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 					request.setAttribute(AttributeNames.TOTAL_PAGES, totalPages);
 					request.setAttribute(AttributeNames.CURRENT_PAGE, currentPage);					
-					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, PAGE_COUNT, totalPages));
-					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, PAGE_COUNT, totalPages));
+					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
 
 					//Dirigir a...
 					targetView = ViewNames.PRESUPUESTO_RESULTS;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -157,8 +164,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 		} else if (ActionNames.DETAIL_PRESUPUESTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String idPresupuestoStr = request.getParameter(ParameterNames.ID_PRESUPUESTO);
@@ -197,13 +204,13 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 
-					Results<PresupuestoDTO> results = presupuestoService.findByCriteria(pc, 1, 1);
+					Results<PresupuestoDTO> results = presupuestoService.findByCriteria(pc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 
 					request.setAttribute(AttributeNames.PRESUPUESTO, results);
 
 					//Dirigir a...
 					targetView = ViewNames.PRESUPUESTO_DETAIL;
-
+					forward = true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -230,8 +237,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 		} else if (ActionNames.CREATE_PRESUPUESTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp para presupuesto
 			String tituloStr = request.getParameter(ParameterNames.TITULO_PRESUPUESTO);
@@ -241,6 +248,7 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 
 			List<LineaPresupuestoDTO> lineas = new ArrayList<LineaPresupuestoDTO>();			
 			PresupuestoDTO presupuesto = new PresupuestoDTO();
+			
 			
 			// Validar y convertir los datos
 			if (!StringUtils.isBlank(tituloStr)) {
@@ -427,7 +435,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_PERFIL;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -453,8 +462,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 		} else if (ActionNames.UPDATE_PRESUPUESTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String idPresupuestoStr = request.getParameter(ParameterNames.ID_PRESUPUESTO);
@@ -666,6 +675,7 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 				try {
 
 					presupuestoService.update(presupuesto, lineas);
+					
 					if (logger.isInfoEnabled()) {
 						logger.info("Presupuesto actualizado: "+presupuesto);
 					}
@@ -674,7 +684,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_PERFIL;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -700,14 +711,14 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 		} else if (ActionNames.UPDATE_STATUS_PRESUPUESTO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = request.getContextPath()+ViewNames.HOME;
-			//targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String idPresupuestoStr = request.getParameter(ParameterNames.ID_PRESUPUESTO);
 			String idEstadoStr = request.getParameter(ParameterNames.ID_STATUS_PRESUPUESTO);
 
-			//TODO el de proyecto es distinto
+			
 			// Validar y convertir los datos
 			Long idPresupuesto = null;			
 			if(!StringUtils.isBlank(idPresupuestoStr)) {
@@ -748,7 +759,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_MIS_PRESUPUESTOS;
-
+					forward = true;
+					
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -772,8 +784,8 @@ public class PrivadoPresupuestoServlet extends HttpServlet {
 
 
 		} else {
-			//SACAR UN ERROR?
-			targetView = ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 		}
 
 

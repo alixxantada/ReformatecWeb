@@ -15,7 +15,7 @@
 								<%@include file="/common/common-errors.jsp"%>
 								<div class="formregistro1">								
 									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SINGUP%>"/>
-									<input type="hidden" name="<%=ParameterNames.ID_TIPO_USUARIO%>" value="<%=1%>"/>
+									<input type="hidden" name="<%=ParameterNames.ID_TIPO_USUARIO%>" value="<%=TipoUsuario.USUARIO_CLIENTE%>"/>
 									<%
 			                  		parameterError = errors.getParameterError(ParameterNames.NOMBRE_PERFIL);
 			                  		if (parameterError!=null) {
@@ -66,7 +66,7 @@
 				                  	%>
 									<input type="password" name="<%=ParameterNames.PASSWORD_2%>" id="usuario-contraseña-2" size="20" class="contact2_form_subject input_field" 
 									placeholder="Repetir Contraseña*" required="required" data-error="Necesitamos confirmar tu contraseña...">
-									<button type="submit" id="paso1" class="form_submit_button button trans_200">Continuar</button>
+									<button type="button" id="paso1" class="form_submit_button button trans_200">Continuar</button>
 								</div>
 								<div class="formregistro2">
 									<%
@@ -129,7 +129,7 @@
 				                  	%>
 									<input type="text" name="<%=ParameterNames.TELEFONO_2%>" size="40" id="usuario-telefono2" class="contact2_form_email input_field" 
 									placeholder="Teléfono 2" data-error="Necesitamos tu teléfono 2..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_2))%>">
-									<%
+				                   <%
 			                  		parameterError = errors.getParameterError(ParameterNames.DIRECCION);
 			                  		if (parameterError!=null) {
 				                  	%>
@@ -146,8 +146,7 @@
 				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
 				                  	<%
 				                  		}
-				                  	%>
-				                  	
+				                  	%>				                  	
 									<input type="text" name="<%=ParameterNames.COD_POSTAL%>" size="10" id="usuario-codigo-postal" class="contact2_form_name2 input_field"  
 									placeholder="Código Postal*" data-error="Necesitamos tu Código Postal.. " required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.COD_POSTAL))%>">
 									<%
@@ -174,7 +173,7 @@
 									required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.ID_POBLACION))%>">
 										<option disabled selected>Selecciona una población</option>
 									</select>
-									<button type="submit" id="volverpaso1" class="form_submit_button button trans_200">Volver</button>									
+									<button type="button" id="volverpaso1" class="form_submit_button button trans_200">Volver</button>									
 									<button type="submit" id="crear-usuario" class="form_submit_button button trans_200">Registrarse</button>
 								</div>
 								</form>								

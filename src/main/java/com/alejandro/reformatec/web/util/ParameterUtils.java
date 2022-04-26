@@ -38,5 +38,23 @@ public class ParameterUtils {
 			return parameterValue.trim();
 		}
 	}
+	
 
+	public static final String print(Long parameterValue) {
+		if (parameterValue ==null) {
+			return Strings.EMPTY;
+		} else {
+			return Long.toString(parameterValue);
+		}
+	}
+	
+	public static final String print(Double parameterValue) {
+		if (parameterValue ==null) {
+			return Strings.EMPTY;
+		} else {
+			return Double.toString(parameterValue);
+		}
+	}
+	
+	
 }

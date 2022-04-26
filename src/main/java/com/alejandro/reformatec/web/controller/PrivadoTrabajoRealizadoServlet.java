@@ -20,6 +20,7 @@ import com.alejandro.reformatec.service.TrabajoRealizadoService;
 import com.alejandro.reformatec.service.impl.TrabajoRealizadoServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
 import com.alejandro.reformatec.web.util.AttributeNames;
+import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
 import com.alejandro.reformatec.web.util.Validator;
@@ -223,7 +224,7 @@ public class PrivadoTrabajoRealizadoServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_MIS_TRABAJOS;
-
+					forward = true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -409,7 +410,7 @@ public class PrivadoTrabajoRealizadoServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_MIS_TRABAJOS;
-
+					forward = true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -435,7 +436,8 @@ public class PrivadoTrabajoRealizadoServlet extends HttpServlet {
 		} else if (ActionNames.UPDATE_STATUS_TRABAJO.equalsIgnoreCase(action)) {
 			
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 
 			// Recoger los datos que enviamos desde la jsp
@@ -484,7 +486,7 @@ public class PrivadoTrabajoRealizadoServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_MIS_TRABAJOS;
-					
+					forward=true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -508,8 +510,8 @@ public class PrivadoTrabajoRealizadoServlet extends HttpServlet {
 			
 			
 		} else {
-			//SACAR UN ERROR?
-			targetView = ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 		}
 
 

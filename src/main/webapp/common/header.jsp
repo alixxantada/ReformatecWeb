@@ -1,44 +1,7 @@
-<%@ page import="com.alejandro.reformatec.web.util.*,com.alejandro.reformatec.web.controller.*,java.util.*,java.text.*,com.alejandro.reformatec.model.*" %>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-
+<%@include file="/common/styles.jsp"%>
 <%
 		String context = request.getContextPath();
 %>
-<!DOCTYPE html> 
-<html lang="en">
-<head>
-<title>Reformatec</title>
-<meta charset="ISO-8859-1">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="description" content="Header">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="keywords" content="Reformatec">
-<meta name="author" content="Alejandro Calvo">
-<meta name="copyrigth" content="Propietario del copyright">
-
-<link rel="stylesheet" type="text/css" href="<%=context%>/styles/bootstrap4/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/plugins/colorbox/colorbox.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/plugins/OwlCarousel2-2.2.1/animate.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/styles/common_styles.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/styles/reformatec_styles.css">
-<link rel="stylesheet" type="text/css" href="<%=context%>/styles/reformatec_responsive.css">
-
-<script src="<%=context%>/js/jquery-3.2.1.min.js"></script>
-<script src="<%=context%>/styles/bootstrap4/popper.js"></script>
-<script src="<%=context%>/styles/bootstrap4/bootstrap.min.js"></script>
-<script src="<%=context%>/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="<%=context%>/plugins/colorbox/jquery.colorbox-min.js"></script>
-<script src="<%=context%>/plugins/Isotope/isotope.pkgd.min.js"></script>
-<script src="<%=context%>/js/reformatec_customized.js"></script> 
-<script src="<%=context%>/js/reformatec_ajax.js"></script>
-
-
-<link rel="shortcut icon" type="image/x-icon" href="<%=context%>/images/iconito.png">
-<link rel="icon" type="image/x-icon" href="<%=context%>/images/iconito.png">
-</head>
 <body>
 	<div class="super_container">
 		<!-- Header Start-->
@@ -94,12 +57,12 @@
 							class="col main_nav_col d-flex flex-row align-items-center justify-content-start">
 							<div class="logo_container">
 								<div class="logo">
-									<a href="<%=context+ViewNames.HOME%>"><img src="<%=context%>/images/iconito.png" alt="Logo Reformatec">Reformatec</a>
+									<a href="<%=context+ControllerNames.USUARIO%>"><img src="<%=context%>/images/iconito.png" alt="Logo Reformatec">Reformatec</a>
 								</div>
 							</div>
 							<div class="main_nav_container ml-auto">
 								<ul class="main_nav_list">
-									<li class="main_nav_item"><a href="<%=context+ViewNames.HOME%>">Inicio</a></li>
+									<li class="main_nav_item"><a href="<%=context+ControllerNames.USUARIO%>">Inicio</a></li>
 									<li class="main_nav_item"><a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.SEARCH_USUARIO%>">Proveedores</a></li>
 									<li class="main_nav_item"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.SEARCH_TRABAJO%>">Trabajos</a></li>
 									<li class="main_nav_item"><a href="<%=context+ViewNames.ABOUT%>">Sobre Nosotros</a></li>
@@ -120,7 +83,7 @@
 					<div class="menu_close"></div>
 				</div>
 				<div class="logo_movil_sesion">
-					<a href="<%=context+ViewNames.HOME%>"><img src="<%=context%>/images/logo/logoreformatecrecort.png" alt="Logo Reformatec"></a>
+					<a href="<%=context+ControllerNames.USUARIO%>"><img src="<%=context%>/images/logo/logoreformatecrecort.png" alt="Logo Reformatec"></a>
 				</div>
 				<ul>
 					<li class="main_nav_item2"><a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.SEARCH_USUARIO%>">Proveedores</a></li>

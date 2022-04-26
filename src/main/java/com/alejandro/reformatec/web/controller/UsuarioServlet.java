@@ -14,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alejandro.reformatec.dao.util.ConfigurationManager;
+import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
 import com.alejandro.reformatec.exception.CodeInvalidException;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.EmailPendienteValidacionException;
@@ -29,12 +31,15 @@ import com.alejandro.reformatec.model.UsuarioCriteria;
 import com.alejandro.reformatec.model.UsuarioDTO;
 import com.alejandro.reformatec.model.ValoracionCriteria;
 import com.alejandro.reformatec.model.ValoracionDTO;
+import com.alejandro.reformatec.service.MailService;
 import com.alejandro.reformatec.service.UsuarioService;
 import com.alejandro.reformatec.service.ValoracionService;
+import com.alejandro.reformatec.service.impl.MailServiceImpl;
 import com.alejandro.reformatec.service.impl.UsuarioServiceImpl;
 import com.alejandro.reformatec.service.impl.ValoracionServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
 import com.alejandro.reformatec.web.util.AttributeNames;
+import com.alejandro.reformatec.web.util.ConfigNames;
 import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.CookieManager;
 import com.alejandro.reformatec.web.util.ErroresNames;
@@ -51,19 +56,26 @@ public class UsuarioServlet extends HttpServlet {
 
 	private static Logger logger = LogManager.getLogger(UsuarioServlet.class);
 
-	// TODO sacar de configuracion
-	private static int PAGE_SIZE = 3; 
-	private static int PAGE_COUNT = 5;
 
+	private static final String CFGM_PFX = ConfigNames.PFX;
+	private static final String PAGE_SIZE_DETAIL = CFGM_PFX + ConfigNames.PAGE_SIZE_DETAIL;
+	private static final String PAGE_SIZE_SEARCH = CFGM_PFX +  ConfigNames.PAGE_SIZE_SEARCH;
+	private static final String PAGE_SIZE_PROVEEDORES_TOP = CFGM_PFX +  ConfigNames.PAGE_SIZE_PROVEEDORES_TOP;
+	private static final String PAGE_COUNT = CFGM_PFX + ConfigNames.PAGE_COUNT;
+	private static final String START_INDEX = CFGM_PFX + ConfigNames.START_INDEX;
+	private static final String MAIL = CFGM_PFX + ConfigNames.MAIL;
+	private ConfigurationManager cfgM = ConfigurationManager.getInstance();	
 
 	private UsuarioService usuarioService = null;
 	private ValoracionService valoracionService = null;
+	private MailService mailService = null;
 
 
 	public UsuarioServlet() {
 		super();
 		usuarioService = new UsuarioServiceImpl();
 		valoracionService = new ValoracionServiceImpl();
+		mailService = new MailServiceImpl();
 	}
 
 	@Override
@@ -80,6 +92,8 @@ public class UsuarioServlet extends HttpServlet {
 		//inicio forward a false(si sale a false, se encontraron errores...)
 		boolean forward = true;
 
+
+
 		// Recogemos primero la accion
 		String action = request.getParameter(ParameterNames.ACTION);
 
@@ -87,7 +101,8 @@ public class UsuarioServlet extends HttpServlet {
 		if (ActionNames.SEARCH_USUARIO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView=ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String buscarStr = request.getParameter(ParameterNames.BUSCAR_DESCRIPCION);
@@ -96,7 +111,6 @@ public class UsuarioServlet extends HttpServlet {
 			String servicio24Str = request.getParameter(ParameterNames.SERVICIO_24);
 			String proveedorVerificadoStr = request.getParameter(ParameterNames.PROVEEDOR_VERIFICADO);
 			String orderByStr = request.getParameter(ParameterNames.ORDER_BY);
-
 
 
 			UsuarioCriteria uc = new UsuarioCriteria();
@@ -150,21 +164,22 @@ public class UsuarioServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-					Results<UsuarioDTO> results = usuarioService.findByCriteria(uc, (currentPage-1)*PAGE_SIZE +1, PAGE_SIZE);
+					Results<UsuarioDTO> results = usuarioService.findByCriteria(uc, (currentPage-1)*Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)) +1, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 
 					request.setAttribute(AttributeNames.USUARIO, results);
 
 
 					// Atributos para paginacion
-					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), PAGE_SIZE);
+					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 					request.setAttribute(AttributeNames.TOTAL_PAGES, totalPages);
-					request.setAttribute(AttributeNames.CURRENT_PAGE, currentPage);					
-					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, PAGE_COUNT, totalPages));
-					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, PAGE_COUNT, totalPages));
+					request.setAttribute(AttributeNames.CURRENT_PAGE, currentPage);
+					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
 
 
 					// Dirigir a...
 					targetView =ViewNames.USUARIO_RESULTS;
+					forward = true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -192,7 +207,8 @@ public class UsuarioServlet extends HttpServlet {
 		} else if (ActionNames.DETAIL_USUARIO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			// Recoger los datos que enviamos desde la jsp
 			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
@@ -234,22 +250,22 @@ public class UsuarioServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 
-					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, 1, 1);
+
+					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 					request.setAttribute(AttributeNames.USUARIO, usuario);
 
 
 					usuarioService.visualizaUsuario(idUsuario);
 
-
-					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-
-					Results<ValoracionDTO> valoraciones = valoracionService.findByCriteria(vc, (currentPage-1)*PAGE_SIZE +1, PAGE_SIZE);
+					// Por no poner 1,1 en la paginacion sale rentable?
+					Results<ValoracionDTO> valoraciones = valoracionService.findByCriteria(vc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 
 					request.setAttribute(AttributeNames.VALORACION, valoraciones);
 
 
 					// Dirigir a...
 					targetView =ViewNames.USUARIO_DETAIL;
+					forward = true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -277,7 +293,7 @@ public class UsuarioServlet extends HttpServlet {
 
 			//Dirección de la vista predefinida(en caso de error)
 			targetView = ViewNames.USUARIO_LOGIN;
-			//targetView = ViewNames.USUARIO_LOGIN;
+			forward = true;
 
 			// Recoger los datos que enviamos desde la jsp
 			String emailStr = request.getParameter(ParameterNames.EMAIL);
@@ -358,8 +374,10 @@ public class UsuarioServlet extends HttpServlet {
 				}
 
 				// Dirigir a...
-				targetView = ViewNames.HOME;
-
+				targetView = ControllerNames.USUARIO;
+				forward = false;
+				
+				
 			}catch (EmailPendienteValidacionException epve) {
 				if (logger.isErrorEnabled()) {
 					logger.error("EmailPendienteValidacionException: "+epve.getMessage(), epve);
@@ -426,6 +444,8 @@ public class UsuarioServlet extends HttpServlet {
 			String direccionWebStr = request.getParameter(ParameterNames.DIRECCION_WEB);
 			String servicio24Str = request.getParameter(ParameterNames.SERVICIO_24);			
 			String [] idsEspecializacionesStr = request.getParameterValues(ParameterNames.ID_ESPECIALIZACION);
+			String descripcionStr = request.getParameter(ParameterNames.DESCRIPCION_USUARIO);
+			
 			//TODO Falta la descripcion del usuario
 
 			UsuarioDTO usuario = new UsuarioDTO();
@@ -433,7 +453,7 @@ public class UsuarioServlet extends HttpServlet {
 			List<Integer> idsEspecializaciones = new ArrayList<Integer>();
 
 
-			// Validar y Convertir Datos
+			// Validar y Convertir Datos			
 			Integer idTipoUsuario = null;
 			if (!StringUtils.isBlank(idTipoUsuarioStr)) {				
 				idTipoUsuario = Validator.validaIdTipoUsuario(idTipoUsuarioStr);
@@ -457,17 +477,19 @@ public class UsuarioServlet extends HttpServlet {
 
 			// Dirigimos la vista en caso de error en función del tipo de dato (idTipoUsuario)
 			if (errors.hasErrors()) {
-				targetView = ViewNames.HOME;
+				targetView = ControllerNames.USUARIO;
 				forward = false;
 			} else {
 
 				if (idTipoUsuario==TipoUsuario.USUARIO_PROVEEDOR) {
-					targetView = ViewNames.USUARIO_REGISTRO_PROVEEDOR;					
+					targetView = ViewNames.USUARIO_REGISTRO_PROVEEDOR;
+					forward =true;
 				} else if (idTipoUsuario==TipoUsuario.USUARIO_CLIENTE){
-					targetView = ViewNames.USUARIO_REGISTRO_CLIENTE;					
+					targetView = ViewNames.USUARIO_REGISTRO_CLIENTE;
+					forward =true;
 				} else {
-					targetView = ViewNames.HOME;
-					//Si forward es false hace redirect
+					// Dirigir a...
+					targetView = ControllerNames.USUARIO;
 					forward = false;
 				}
 
@@ -721,7 +743,7 @@ public class UsuarioServlet extends HttpServlet {
 
 
 
-				//TODO realmente como valido callejero/portal piso? :S un REGEX PATTERN? Sin tener los parametros separados...
+				
 				if (!StringUtils.isBlank(direccionStr)) {
 					direccionStr=direccionStr.trim();
 					usuario.setNombreCalle(direccionStr);
@@ -780,12 +802,14 @@ public class UsuarioServlet extends HttpServlet {
 							}
 							errors.addParameterError(ParameterNames.CIF, ErroresNames.ERROR_CIF_FORMATO_INCORRECTO);
 						}
+					} else {
+						usuario.setCif(dniStr);
 					}
 
 
 					if (!StringUtils.isBlank(direccionWebStr)) {
 						direccionWebStr = direccionWebStr.trim();
-						if (Validator.validaDireccionWeb(direccionWebStr)) { 
+						if (Validator.validaDireccionWeb(direccionWebStr)) {
 							usuario.setDireccionWeb(direccionWebStr);
 						} else {					
 							if (logger.isDebugEnabled()) {
@@ -796,11 +820,16 @@ public class UsuarioServlet extends HttpServlet {
 					}
 
 
-					Boolean servicio24 = null;
+					if (!StringUtils.isBlank(descripcionStr)) {
+						direccionStr=direccionStr.trim();
+						usuario.setDescripcion(descripcionStr);
+					} 
+
+					
+					Boolean servicio24 = false;
 					if (!StringUtils.isBlank(servicio24Str)) {
 						if (Validator.validaBoolean(servicio24Str)) {
-							servicio24 = Validator.validaBoolean(servicio24Str);
-							usuario.setServicio24(servicio24);
+							servicio24 = Validator.validaBoolean(servicio24Str);							
 						} else {
 							if (logger.isDebugEnabled()) {
 								logger.debug("Dato incorrecto servicio24"+servicio24Str);
@@ -808,9 +837,10 @@ public class UsuarioServlet extends HttpServlet {
 							errors.addParameterError(ParameterNames.SERVICIO_24, ErroresNames.ERROR_SERVICIO_24_FORMATO_INCORRECTO);
 						}
 					}
+					usuario.setServicio24(servicio24);
 
 
-					if (idsEspecializacionesStr.length>0 ) {
+					if (idsEspecializacionesStr!=null ) {
 
 						for (int i=0;i<idsEspecializacionesStr.length;i++) {
 							if (!StringUtils.isBlank(idsEspecializacionesStr[i])) {
@@ -846,28 +876,19 @@ public class UsuarioServlet extends HttpServlet {
 				+"&"+ParameterNames.EMAIL+"="+usuario.getEmail()
 				+"&"+ParameterNames.COD_REGISTRO+"="+usuario.getCodigoRegistro();
 
-				if (logger.isTraceEnabled()) {
-					logger.trace("url: "+url);
-					logger.trace("Usuario: "+usuario);
-					logger.trace("Especializaciones: "+idsEspecializaciones);
-				}
+
 
 				//Acceder a la capa de negocio(si no hay errores)
 				if(!errors.hasErrors()) {
 					try {
 
 						usuarioService.signUp(usuario, idsEspecializaciones, url);
-						if (logger.isInfoEnabled()) {
-							logger.info("Usuario Creado: "+usuario);
-						}
 
-						request.setAttribute("", usuario);
+						request.setAttribute(AttributeNames.USUARIO, usuario);
 
 						// Dirigir a..
 						targetView =ViewNames.USUARIO_LOGIN;
-						forward = false;
-
-
+						forward = true;
 
 					}catch (UserAlreadyExistsException uaee) {
 						if (logger.isErrorEnabled()) {
@@ -905,7 +926,7 @@ public class UsuarioServlet extends HttpServlet {
 		}else if (ActionNames.VALIDAR_EMAIL.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView=ViewNames.HOME;
+			targetView=ViewNames.USUARIO_LOGIN;
 
 			// Recoger los datos que enviamos desde la jsp
 			String codRegistroStr = request.getParameter(ParameterNames.COD_REGISTRO);
@@ -967,9 +988,10 @@ public class UsuarioServlet extends HttpServlet {
 					SessionManager.set(request, AttributeNames.USUARIO, u);
 
 					// Dirigir a...
-					targetView = ViewNames.HOME;
+					targetView = ControllerNames.USUARIO;
+					forward = false;
 
-					
+
 				}catch (UserLowInTheSystemException ulise) {
 					if (logger.isErrorEnabled()) {
 						logger.error("UserLowInTheSystemException: "+ulise.getMessage(), ulise);
@@ -1008,10 +1030,439 @@ public class UsuarioServlet extends HttpServlet {
 				}
 			}
 
+		} else if (ActionNames.REACTIVAR_CUENTA.equalsIgnoreCase(action)) {
+
+			// Vista en caso de error
+			targetView = ControllerNames.USUARIO;
+			forward = false;
+
+
+			// Recoger los datos que enviamos desde la jsp
+			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
+			String idEstadoStr = request.getParameter(ParameterNames.ID_STATUS_CUENTA);
+
+
+			// Validar y convertir los datos
+			Long idUsuario = null;			
+			if(!StringUtils.isBlank(idUsuarioStr)) {
+				idUsuario = Validator.validaLong(idUsuarioStr);
+			} 
+
+
+			Integer idEstado = null;
+			if(!StringUtils.isBlank(idEstadoStr)) {
+				idEstado = Validator.validaStatusCuenta(idEstadoStr);
+			}
+
+
+			if (idUsuario==null || idEstado==null) {
+				if (logger.isDebugEnabled()) {
+					if (idUsuario==null) {
+						logger.debug("Datos incorrecto idUsuario: "+idUsuarioStr);
+					} else {
+						logger.debug("Datos incorrecto idEstado: "+idEstadoStr);
+					}
+				}
+				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_UPDATE_STATUS_CUENTA_INVALIDO);
+			}
+
+
+			if (logger.isTraceEnabled()) {
+				logger.trace("idUsuario: "+idUsuario+", idEstado: "+idEstado);
+			}
+
+
+
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+					String url=null;
+
+					usuarioService.updateStatus(idUsuario, idEstado, url);
+
+					UsuarioCriteria uc = new UsuarioCriteria();
+					uc.setIdUsuario(idUsuario);
+					//Meter a config
+					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, 1, 1);
+
+					for (UsuarioDTO u : usuario.getData()) {
+						SessionManager.set(request, AttributeNames.USUARIO, u);
+					}
+
+					if (logger.isInfoEnabled()) {
+						logger.info("Usuario actualizado: "+idUsuario);
+					}
+
+					// Dirigir a..
+					targetView =ControllerNames.USUARIO;
+					forward = false;
+
+
+				}catch (DataException de) {
+					if (logger.isErrorEnabled()) {
+						logger.error(de.getMessage(), de);
+					}
+					errors.addCommonError(ErroresNames.ERROR_DATA);
+
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error(se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+
+		} else if (ActionNames.FORGOT.equalsIgnoreCase(action)) {
+
+			// Vista en caso de error
+			targetView = ViewNames.USUARIO_FORGOT_PASSWORD;
+			forward = true;
+			
+			String emailStr = request.getParameter(ParameterNames.EMAIL);
+
+
+			//Validar Datos
+			if (StringUtils.isBlank(emailStr)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco email: "+emailStr);
+				}
+				errors.addParameterError(ParameterNames.EMAIL, ErroresNames.ERROR_EMAIL_OBLIGATORIO);
+			} else {
+				emailStr=emailStr.trim();
+
+				if (!Validator.VALIDA_EMAIL.isValid(emailStr)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto email: "+emailStr);
+					}
+					errors.addParameterError(ParameterNames.EMAIL, ErroresNames.ERROR_EMAIL_FORMATO_INCORRECTO);
+				}
+			}
+
+
+			if (logger.isTraceEnabled()) {
+				logger.trace("email: "+emailStr);
+			}
+
+
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+					UsuarioCriteria uc = new UsuarioCriteria();
+					uc.setEmailExistente(emailStr);
+
+					UsuarioDTO user = usuarioService.findByEmail(uc);
+					String code = (RandomStringUtils.randomAlphabetic(10).toUpperCase());
+
+					usuarioService.updateCode(user.getIdUsuario(), code);
+
+					String url= request.getScheme()+"://"+request.getServerName()+":"+request.getLocalPort()
+					+request.getContextPath()+ControllerNames.USUARIO+"?"
+					+ParameterNames.ACTION+"="+ActionNames.RESTAURAR_PASS
+					+"&"+ParameterNames.ID_USUARIO+"="+user.getIdUsuario()
+					+"&"+ParameterNames.COD_REGISTRO+"="+code;
+
+
+					StringBuilder msgSb = new StringBuilder("<html><body> <h1> Recuperar Cuenta Reformatec!!</h1>")
+							.append("<p>Recupera tu contraseña en el siguiente enlace: <a href='"+url+"'>Recuperar Contraseña</a></p></body></html>");
+
+					String msg = msgSb.toString();
+
+					mailService.sendHTML(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, MAIL), "Recupera tu contraseña", msg, emailStr);
+
+
+					if (logger.isInfoEnabled()) {
+						logger.info("Correo Enviado a: "+emailStr);
+					}
+
+					//No es un error realmente, solo notifico que revise el correo
+					errors.addCommonError(ErroresNames.NOTIFICA_CORREO);
+					// Dirigir a..
+					targetView =ViewNames.USUARIO_LOGIN;
+					forward = true;
+
+					
+				}catch (UserNotFoundException unfe) {
+					if (logger.isErrorEnabled()) {
+						logger.error(unfe.getMessage(), unfe);
+					}
+					errors.addCommonError(ErroresNames.ERROR_USER_NOT_FOUND);
+
+					
+				}catch (MailException de) {
+					if (logger.isErrorEnabled()) {
+						logger.error(de.getMessage(), de);
+					}
+					errors.addCommonError(ErroresNames.ERROR_EMAIL);
+
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error(se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+
+
+
+		} else if(ActionNames.UPDATE_PASSWORD.equalsIgnoreCase(action)) {
+			
+			
+			// Dirigir a...
+			targetView = ControllerNames.USUARIO;
+			forward = false;
+			
+			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
+			String passwordStr = request.getParameter(ParameterNames.PASSWORD);
+			String password2Str = request.getParameter(ParameterNames.PASSWORD_2);
+			
+			
+			//Validar y convertir datos
+			Long idUsuario = null;
+			if(!StringUtils.isBlank(idUsuarioStr)) {
+				idUsuario = Validator.validaLong(idUsuarioStr);
+
+				if(idUsuario==null) {
+				
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto idUsuario: "+idUsuarioStr);
+					}
+					errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_FORMATO_INCORRECTO);
+				}
+				
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco idUsuario: "+idUsuarioStr);
+				}
+				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
+			}
+
+
+			if (StringUtils.isBlank(passwordStr)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco password:");
+				}
+				errors.addParameterError(ParameterNames.PASSWORD, ErroresNames.ERROR_PASSWORD_OBLIGATORIA);
+			} else {
+				passwordStr=passwordStr.trim();
+				if (!Validator.validaPassword(passwordStr)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto password:");
+					}
+					errors.addParameterError(ParameterNames.PASSWORD, ErroresNames.ERROR_PASSWORD_FORMATO_INCORRECTO);
+				}			
+			}
+
+
+
+			if (StringUtils.isBlank(password2Str)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco password2");
+				}
+				errors.addParameterError(ParameterNames.PASSWORD_2, ErroresNames.ERROR_PASSWORD_OBLIGATORIA);
+			} else {
+				password2Str=password2Str.trim();
+
+				if (!Validator.validaPassword(password2Str)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto password2");
+					}
+					errors.addParameterError(ParameterNames.PASSWORD_2, ErroresNames.ERROR_PASSWORD_FORMATO_INCORRECTO);
+				}			
+			}
+
+			if (logger.isTraceEnabled()) {
+				logger.trace("Validando Password iguales...");
+			}
+
+			if (passwordStr.equals(password2Str)) {
+				passwordStr=passwordStr.trim();
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Las passwords no son iguales");
+				}
+				errors.addParameterError(ParameterNames.PASSWORD, ErroresNames.ERROR_PASSWORDS_DIFERENTES);
+			}
+
+			
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+
+					usuarioService.updatePassword(idUsuario, passwordStr);
+
+					// Por no tener un buen findby id...
+					UsuarioCriteria uc = new UsuarioCriteria();
+					uc.setIdUsuario(idUsuario);
+					Results<UsuarioDTO> usuario = new Results<UsuarioDTO>();
+					
+					usuario = usuarioService.findByCriteria(uc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
+					String code = (RandomStringUtils.randomAlphabetic(10).toUpperCase());
+
+					// Si ya cambio la password, vuelvo a cambiar el codigo.
+					for (UsuarioDTO u : usuario.getData()) {
+						usuarioService.updateCode(u.getIdUsuario(), code);
+					}
+					
+
+					usuario = usuarioService.findByCriteria(uc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
+					
+					for (UsuarioDTO u : usuario.getData()) {
+						SessionManager.set(request, AttributeNames.USUARIO, u);
+					}
+
+					if (logger.isInfoEnabled()) {
+						logger.info("Usuario actualizado: "+idUsuario);
+					}
+
+					// Dirigir a...
+					targetView = ControllerNames.USUARIO;
+					forward = false;
+
+
+				}catch (DataException de) {
+					if (logger.isErrorEnabled()) {
+						logger.error(de.getMessage(), de);
+					}
+					errors.addCommonError(ErroresNames.ERROR_DATA);
+
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error(se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+				
+			
+		} else if (ActionNames.RESTAURAR_PASS.equalsIgnoreCase(action)) {
+
+			
+			// Dirigir a...
+			targetView = ControllerNames.USUARIO;
+			forward = false;
+			
+			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
+			String codeStr = request.getParameter(ParameterNames.COD_REGISTRO);
+
+			//Validar y convertir datos
+			Long idUsuario = null;			
+			if(!StringUtils.isBlank(idUsuarioStr)) {
+				idUsuario = Validator.validaLong(idUsuarioStr);
+			} 
+
+
+			if (!StringUtils.isBlank(codeStr)) {
+				Validator.validaString(codeStr);
+			} 
+
+
+			if (idUsuario==null || codeStr==null) {
+				if (logger.isDebugEnabled()) {
+					if (idUsuario==null) {
+						logger.debug("Datos incorrecto idUsuario: "+idUsuarioStr);
+					} else {
+						logger.debug("Datos incorrecto codigo: "+codeStr);
+					}
+				}
+				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_RESTAURAR_PASS_INVALID);
+			}
+
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+		
+					UsuarioCriteria uc = new UsuarioCriteria();
+					uc.setIdUsuario(idUsuario);
+					
+					Results<UsuarioDTO> usuarios = usuarioService.findByCriteria(uc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
+					
+					boolean codeOk = false;
+					for (UsuarioDTO u : usuarios.getData()) {
+						
+						if (u.getCodigoRegistro().equalsIgnoreCase(codeStr)) {
+							codeOk = true;							
+						}
+					}
+					
+					if (codeOk==true) {						
+						// Dirigir a..
+						targetView =ViewNames.RECUPERAR_PASSWORD;
+						forward=true;
+						
+						request.setAttribute(AttributeNames.USUARIO, usuarios);
+					} 
+	
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error(se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+
 
 		}else{
-			//SACAR UN ERROR?
-			targetView = ViewNames.HOME;
+
+			UsuarioCriteria criteria = new UsuarioCriteria();
+
+			//TODO sacar a config/clase?
+			criteria.setOrderBy("VAL");
+
+			if (logger.isTraceEnabled()) {
+				logger.trace("Busqueda usuarios con buena valoracion: "+criteria);
+			}
+
+			try {
+
+				Results<UsuarioDTO> results= usuarioService.findByCriteria(criteria, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_PROVEEDORES_TOP)));				
+
+
+				request.setAttribute(AttributeNames.USUARIO, results);
+				
+				//Dirigir a..
+				targetView= ViewNames.HOME;
+				forward=true;
+
+			} catch (DataException de) {
+				if (logger.isErrorEnabled()) {
+					logger.error(de);
+				}
+				errors.addCommonError(ErroresNames.ERROR_DATA);
+
+			} catch (ServiceException se) {
+				if (logger.isErrorEnabled()) {
+					logger.error(se);
+				}
+				errors.addCommonError(ErroresNames.ERROR_SERVICE);
+			}
 		}
 		// TODO Por qué nunca pone el valor de targetview en este logger?
 		if (logger.isInfoEnabled()) {

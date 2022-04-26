@@ -27,8 +27,13 @@ public class ViewNames {
 	public static final String PROYECTO_DETAIL = "/proyecto/proyecto-detail.jsp";
 	public static final String PROYECTO_RESULTS = "/proyecto/proyecto-results.jsp";
 	
+	public static final String PROVEEDORES_TOP = "/proveedores-top.jsp";
+	
 	public static final String PRESUPUESTO_DETAIL = "";
 	public static final String PRESUPUESTO_RESULTS = "";
+	
+	public static final String RECUPERAR_PASSWORD = "/usuario/recuperar-password.jsp";
+	
 	
 	public static final String ABOUT = "/common/about.jsp";
 	public static final String CONTACT = "/common/contact.jsp";

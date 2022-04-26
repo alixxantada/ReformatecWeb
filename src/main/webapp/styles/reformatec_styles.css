@@ -1225,6 +1225,7 @@ registro proveedor chebox
 	margin-bottom: 0px;
 	cursor: pointer;
 	color: #FFFFFF;
+	margin-bottom:10px;
 }
 /*********************************
 8.2 search3 More Options iniciar sesion
@@ -3410,6 +3411,10 @@ margin-bottom:10px;
 	
 	display:none;
 }
+.formregistro4{
+	
+	display:none;
+}
 .errores_formulario {
 	box-sizing: border-box;
     font-size: 12px;
@@ -3549,39 +3554,6 @@ margin-top: 20px;
     color: #28395a;
 }
 
-#direccionEditarPerfil{
-	display:none;
-}
-#direccionEditarPerfil p{
-	font-size: 12px;
-    font-weight: 600;
-    color: #28395a;
-}
-#direccionEditarPerfil label{
-	padding:5px;
-	color: #28395a;
-	font-size: 16px;
-	border:1px solid ;
-	border-radius: .25rem;
-	border-color: #28395a ;
-}
-#codPostalEditarPerfil{
-	display:none;
-}
-#codPostalEditarPerfil p{
-	font-size: 12px;
-    font-weight: 600;
-    color: #28395a;
-}
-#codPostalEditarPerfil label{
-	padding:5px;
-	color: #28395a;
-	font-size: 16px;
-	border:1px solid ;
-	border-radius: .25rem;
-	border-color: #28395a ;
-}
-
 .perfil-caja-izq{
 	width: 250px;
 	position:relative;
@@ -3691,12 +3663,6 @@ margin-top: 20px;
     font-weight: 600; 
     border-radius: 10px;
 }
-#nuevaDireccion{
-	display:none;
-}
-#nuevoCodPostal{
-	display:none
-}
 .paginacion li a{
 	color: #28395a;
 	font-size: 16px;
@@ -3725,4 +3691,163 @@ margin-top: 20px;
 }
 .custom-file-input{
 	display: none;
+}
+.select-registro-especializacion{
+	position:relative;
+	float:left;
+	width: 200px; 
+	height: 200px;
+	background-color: rgba(40, 57, 90, 0.1);
+}
+.select-registro-especializacion option{
+	font-size:12px;
+	font-weight: 650;
+	color:#28395a ;
+	padding:3px;
+	background-color: rgba(150, 106, 8, 0.1);
+}
+.select-registro-especializacion option:selected{ 
+	color: #966A08  ;
+	background-color: #28395a;
+}
+.select-registro-especializacion-seleccionadas{
+	position:relative;
+	float:left;
+	margin-left:10px;
+	width: 200px; 
+	height: 200px;
+	background-color: rgba(40, 57, 90, 0.1);
+}
+.select-registro-especializacion-seleccionadas option{ 
+	font-size:12px;
+	font-weight: 650;
+	color: #28395a ;
+	padding:3px;
+	background-color: rgba(150, 106, 8, 0.1);
+}
+.select-registro-especializacion-seleccionadas option::selection{ 
+	color: #966A08  ;
+	background-color: #28395a;
+}
+.select-registro-especializacion-seleccionadas option:target{ 
+	color: #966A08  ;
+	background-color: #28395a;
+}
+
+.descripcion-registro-proveedor{
+	width:100%;
+	margin-top:20px;
+	height:300px;
+	resize:none;
+	z-index:auto;
+}
+.form-control-descripcion{
+	width:100%;
+	height:300px;
+}
+.caja-eliminar-usuario{
+	margin-top: 30px;	
+	text-align:center;
+}
+
+.eliminar-usuario-definitivo{
+	display:none;
+	height: 100px;
+	text-align:center;
+	width: 100%;
+}
+.eliminar-usuario-definitivo p{
+	color:red;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+
+#direccionEditarPerfil{
+	display:none;
+}
+#direccionEditarPerfilLabel{
+	display:none;
+}
+#direccionEditarPerfil label{
+	padding:5px;
+	color: #28395a;
+	font-size: 16px;
+	border:1px solid ;
+	border-radius: .25rem;
+	border-color: #28395a ;
+}
+#codPostalEditarPerfil{	
+	display:none;
+}
+#codPostalEditarPerfilLabel{
+	display:none;
+}
+#codPostalEditarPerfil label{
+	padding:5px;
+	color: #28395a;
+	font-size: 16px;
+	border:1px solid ;
+	border-radius: .25rem;
+	border-color: #28395a ;
+}
+
+#poblacion-select{
+	display:none;
+	margin-top:5px;
+}
+#cancelar-edit{
+	margin-left:5px;
+}
+#nuevaDireccion{
+	display:none;
+}
+#nuevoCodPostal{
+	display:none
+}
+#direccionEditarPerfil{
+	display:none;
+}
+#direccionEditarPerfil p{
+	font-size: 12px;
+    font-weight: 600;
+    color: #28395a;
+}
+
+#codPostalEditarPerfil{
+	display:none;
+}
+#codPostalEditarPerfil p{
+	font-size: 12px;
+    font-weight: 600;
+    color: #28395a;
+}
+
+#provincia-select-perfil{
+	display:none;
+	width:200px;
+}
+#poblacion-select-perfil{
+	display:none;
+	width:200px;
+}
+
+#caja-pass{
+	display:none;
+}
+#cambioDePass{
+	margin-bottom:10px;
+}
+#servicio24Perfil{
+margin-left: 10px;
+font-size: 16px;
+font-weight: 600;
+color: #28395a;
+}
+#checkServicioPerfil{
+	scale: 1.5;
+}
+#cajaCheckPerfil{
+	  margin-top: 30px;
+  margin-bottom: 10px;
 }

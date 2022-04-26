@@ -1,4 +1,5 @@
 <%@include file="/common/header.jsp"%>
+
 <!-- Registro Proveedor Start -->
 			<div class="contact2_form_section">
 				<div class="container">
@@ -11,58 +12,266 @@
 									<span class="text-claro">¿Ya tienes cuenta? </span>
 									<a href="<%=context%>/usuario/usuario-login.jsp" class="offers-link">Iniciar Sesión</a>
 								</div>	
-								<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off" method="post" id="contact2_form" class="contact2_form text-center">
-								<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SINGUP%>"/>
-								<input type="hidden" name="<%=ParameterNames.ID_TIPO_USUARIO%>" value="<%=2%>"/>
-									<input type="text" name="<%=ParameterNames.NOMBRE_PERFIL%>" id="usuario-nombreperfil" class="contact2_form_subject input_field" placeholder="Nombre de Perfil*" required="required" data-error="Necesitamos tu nombre de perfil..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.NOMBRE_PERFIL))%>">
-									<input type="email" name="<%=ParameterNames.EMAIL%>" id="usuario-email" class="contact2_form_subject input_field" placeholder="E-mail*" required="required" data-error="Necesitamos tu E-mail... " value="<%=ParameterUtils.print(request.getParameter(ParameterNames.EMAIL))%>">
-									<input type="email" name="<%=ParameterNames.EMAIL%>" id="usuario-email2" class="contact2_form_subject input_field" placeholder="Confirma tu E-mail*" required="required" data-error="Necesitamos confirmar tu E-mail... " value="<%=ParameterUtils.print(request.getParameter(ParameterNames.EMAIL_2))%>">
-									<input type="password" name="<%=ParameterNames.PASSWORD%>" id="usuario-contraseña" class="contact2_form_subject input_field" placeholder="Contraseña*" required="required" data-error="Necesitamos tu contraseña...">
-									<input type="password" name="<%=ParameterNames.PASSWORD%>" id="usuario-contraseña2" class="contact2_form_subject input_field" placeholder="Repetir Contraseña*" required="required" data-error="Necesitamos confirmar tu contraseña...">
-									<input type="text" name="<%=ParameterNames.DNI%>" id="usuario-cif" class="contact2_form_name2 input_field" placeholder="D.N.I*" required="required" data-error="Necesitamos tu DNI..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.DNI))%>">
-									<input type="text" name="<%=ParameterNames.NOMBRE%>" id="usuario-nombre" class="contact2_form_name2 input_field" placeholder="Nombre*" required="required" data-error="Necesitamos tu Nombre..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.NOMBRE))%>">
-									<input type="text" name="<%=ParameterNames.APELLIDO_1%>" id="usuario-apellido1" class="contact2_form_name input_field" placeholder="Primer Apellido*" required="required" data-error="Necesitamos tu primer apellido..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_1))%>">
-									<input type="text" name="<%=ParameterNames.APELLIDO_2%>" id="usuario-apellido2" class="contact2_form_email input_field" placeholder="Segundo Apellido*" required="required" data-error="Necesitamos tu segundo apellido..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_2))%>">
-									<input type="text" name="<%=ParameterNames.TELEFONO_1%>" id="usuario-telefono1" class="contact2_form_name input_field" placeholder="Teléfono 1*" required="required" data-error="Necesitamos tu teléfono 1..."  value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_1))%>">
-									<input type="text" name="<%=ParameterNames.TELEFONO_2%>" id="usuario-telefono2" class="contact2_form_email input_field" placeholder="Teléfono 2" data-error="Necesitamos tu teléfono 2..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_2))%>">
-									<input type="text" name="<%=ParameterNames.DIRECCION%>" id="usuario-direccion" class="contact2_form_subject input_field" placeholder="Dirección*" required="required" data-error="Necesitamos tu Dirección.. " value="<%=ParameterUtils.print(request.getParameter(ParameterNames.DIRECCION))%>">
-									<input type="text" name="<%=ParameterNames.COD_POSTAL%>" id="usuario-codigo-postal" class="contact2_form_name2 input_field"  required="required" placeholder="Código Postal*" data-error="Necesitamos tu Código Postal.. " value="<%=ParameterUtils.print(request.getParameter(ParameterNames.COD_POSTAL))%>">
-									<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-usuario" class="dropdown2_item_select search2_input" required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.ID_PROVINCIA))%>">
-										<option disabled selected>Selecciona una provincia</option>
-										<option value="1">A Coruña</option>
-										<option value="2">Lugo</option>
-										<option value="3">Ourense</option>
-										<option value="4">Pontevedra</option>
+								<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off" method="post" id="registro-proveedor" class="contact2_form text-center">
+								<%@include file="/common/common-errors.jsp"%>
+								<div class="formregistro1">
+									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SINGUP%>"/>
+									<input type="hidden" name="<%=ParameterNames.ID_TIPO_USUARIO%>" value="<%=TipoUsuario.USUARIO_PROVEEDOR%>"/>
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.NOMBRE_PERFIL);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.NOMBRE_PERFIL%>" size="80" id="usuario-nombreperfil" class="contact2_form_subject input_field" 
+									placeholder="Nombre de Perfil*" data-error="Necesitamos tu nombre de perfil..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.NOMBRE_PERFIL))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.EMAIL);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="email" name="<%=ParameterNames.EMAIL%>" id="usuario-email" autocomplete="off" size="256" class="contact2_form_subject input_field" 
+									placeholder="E-mail*" data-error="Necesitamos tu E-mail... " required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.EMAIL))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.EMAIL_2);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="email" name="<%=ParameterNames.EMAIL_2%>" id="usuario-email-2" size="256"  class="contact2_form_subject input_field" 
+									placeholder="Confirma tu E-mail*" data-error="Necesitamos confirmar tu E-mail... " required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.EMAIL_2))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="password" name="<%=ParameterNames.PASSWORD%>" id="usuario-contraseña" size="20" class="contact2_form_subject input_field" 
+									placeholder="Contraseña*" required="required" data-error="Necesitamos tu contraseña...">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD_2);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="password" name="<%=ParameterNames.PASSWORD_2%>" id="usuario-contraseña-2" size="20" class="contact2_form_subject input_field" 
+									placeholder="Repetir Contraseña*" required="required" data-error="Necesitamos confirmar tu contraseña...">
+									
+									<button type="button" id="paso1" class="form_submit_button button trans_200">Continuar</button>
+								</div>
+								<div class="formregistro2">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.DNI);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.DNI%>" maxlength="10" size="10" id="usuario-cif" class="contact2_form_name2 input_field" 
+									placeholder="D.N.I*" data-error="Necesitamos tu DNI..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.DNI))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.NOMBRE);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.NOMBRE%>" size="80" id="usuario-nombre" class="contact2_form_name2 input_field" 
+									placeholder="Nombre*" data-error="Necesitamos tu Nombre..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.NOMBRE))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.APELLIDO_1);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.APELLIDO_1%>" size="80" id="usuario-apellido1" class="contact2_form_name input_field" 
+									placeholder="Primer Apellido*" data-error="Necesitamos tu primer apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_1))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.APELLIDO_2);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.APELLIDO_2%>" size="80" id="usuario-apellido2" class="contact2_form_email input_field" 
+									placeholder="Segundo Apellido*" data-error="Necesitamos tu segundo apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_2))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.TELEFONO_1);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.TELEFONO_1%>" size="40"id="usuario-telefono1" class="contact2_form_name input_field" 
+									placeholder="Teléfono 1*" data-error="Necesitamos tu teléfono 1..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_1))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.TELEFONO_2);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.TELEFONO_2%>" size="40" id="usuario-telefono2" class="contact2_form_email input_field" 
+									placeholder="Teléfono 2" data-error="Necesitamos tu teléfono 2..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_2))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.DIRECCION);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<input type="text" name="<%=ParameterNames.DIRECCION%>" size="80" id="usuario-direccion" class="contact2_form_subject input_field" 
+									placeholder="Dirección*" data-error="Necesitamos tu Dirección.. " required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.DIRECCION))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.COD_POSTAL);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>				                  	
+									<input type="text" name="<%=ParameterNames.COD_POSTAL%>" size="10" id="usuario-codigo-postal" class="contact2_form_name2 input_field"  
+									placeholder="Código Postal*" data-error="Necesitamos tu Código Postal.. " required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.COD_POSTAL))%>">
+									<%
+									parameterError = errors.getParameterError(ParameterNames.ID_PROVINCIA);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select" class="dropdown2_item_select search2_input"  
+									required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.ID_PROVINCIA))%>"
+									onchange="cargarPoblaciones()">									
 									</select>
-									<select name="<%=ParameterNames.ID_POBLACION%>" id="poblacion-usuario" class="dropdown2_item_select search2_input" required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.ID_POBLACION))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.ID_POBLACION);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+				                  	<select name="<%=ParameterNames.ID_POBLACION%>" id="poblacion-select" class="dropdown2_item_select search2_input" 
+									required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.ID_POBLACION))%>">
 										<option disabled selected>Selecciona una población</option>
-										<option value="1">Chantada</option>
-										<option value="2">Escairón</option>
-										<option value="3">Ribadavia</option>
-										<option value="4">Carballiño</option>
-										<option value="5">Nigrán</option>
-										<option value="5">Baiona</option>
-										<option value="5">Cedeira</option>
-										<option value="5">Ferrol</option>
 									</select>
+				                  	<button type="button" id="volverpaso1" class="form_submit_button button trans_200">Volver</button>
+				                  	<button type="button" id="paso2" class="form_submit_button button trans_200">Continuar</button>
+				       			</div>
+				       			<div class="formregistro3">
+				       				<%
+			                  		parameterError = errors.getParameterError(ParameterNames.CIF);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
 									<input type="text" name="<%=ParameterNames.CIF%>" id="usuario-cif" class="contact2_form_name2 input_field" placeholder="C.I.F." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.CIF))%>">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.DIRECCION_WEB);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
 									<input type="text" name="<%=ParameterNames.DIRECCION_WEB%>" id="usuario-direccion-web" class="contact2_form_subject input_field" placeholder="Dirección Web" value="<%=ParameterUtils.print(request.getParameter(ParameterNames.DIRECCION_WEB))%>">
 									<div class="extras">
 										<ul class="search4_extras clearfix">
 											<li class="search4_extras_item">
 												<div class="clearfix">
-													<input type="checkbox" name="<%=ParameterNames.SERVICIO_24%>" id="servicio24" class="search2_extras_cb" value="<%=ParameterUtils.print(request.getParameter(ParameterNames.SERVICIO_24))%>">
-													<label for="servicio24">Servicio24H</label>
+													<%
+							                  		parameterError = errors.getParameterError(ParameterNames.SERVICIO_24);
+							                  		if (parameterError!=null) {
+								                  	%>
+								                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+								                  	<%
+								                  		}
+								                  	%>
+													<input type="checkbox" name="<%=ParameterNames.SERVICIO_24%>" value="true" id="servicio24" class="search2_extras_cb">
+													<label for="servicio24">Servicio24H</label>									
 												</div>
 											</li>											
 										</ul>
 									</div>
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.ID_ESPECIALIZACION);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<div class="especializacion-proveedor" id="especializaciones-proveedor">
+									
+										<div>
+	                                        <select class="select-registro-especializacion" id="especializacion-select" multiple>
+												
+	                                        </select>
+	                                    </div>
+	                                    <div>
+	                                        <select class="select-registro-especializacion-seleccionadas" id="especializacionesSeleccionadas" name="<%=ParameterNames.ID_ESPECIALIZACION%>" multiple>
+	                                        </select>	
+	                                    </div> 
+									</div>									
+									<button type="button" id="volverpaso2" class="form_submit_button button trans_200">Volver</button>
+									<button type="button" id="paso3" class="form_submit_button button trans_200">Continuar&nbsp/&nbspOmitir</button>
+								</div>
+								<div class="formregistro4">
+									<%
+			                  		parameterError = errors.getParameterError(ParameterNames.DESCRIPCION_USUARIO);
+			                  		if (parameterError!=null) {
+				                  	%>
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	<%
+				                  		}
+				                  	%>
+									<textarea class="descripcion-registro-proveedor" name="<%=ParameterNames.DESCRIPCION_USUARIO%>" rows="10" cols="40" placeholder="Aquí puedes poner una descripción de tu empresa."></textarea>		
+									<button type="button" id="volverpaso3" class="form_submit_button button trans_200">Volver</button>
 									<button type="submit" id="crear-usuario" class="form_submit_button button trans_200">Registrarse</button>
+								</div>
 								</form>
 							</div>
 						</div>
 					</div>
 				</div>
+
 			</div>
+			<script>
+				window.addEventListener("load",comenzar,false);
+				$(document).ready(comenzar());
+				$(document).ready(pasar());
+				$(document).ready(regresar());
+				
+				$(document).ready(cargarProvincias());
+				$(document).ready(cargarEspecializacionesRegistro());
+				$(document).ready(initPaso1());
+				$(document).ready(initVolverPaso1());
+				$(document).ready(initPaso2());
+				$(document).ready(initVolverPaso2());
+				$(document).ready(initPaso3());
+				$(document).ready(initVolverPaso3());
+			</script>
 <!-- Registro Proveedor End -->
 <%@include file="/common/footer.jsp"%>

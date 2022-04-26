@@ -9,6 +9,7 @@ public class ErroresNames {
 	public static final String ERROR_PASSWORD_OBLIGATORIA = "Debes rellenar el campo de la contraseña";
 	public static final String ERROR_PASSWORD_FORMATO_INCORRECTO = "El formato de la constraseña es incorrecto";
 	public static final String ERROR_PASSWORDS_DIFERENTES = "Las contraseñas no son iguales";
+	public static final String ERROR_PASSWORD_ACTUAL_INCORRECTA = "La password introducida no es correcta";
 	
 	public static final String ERROR_NOMBRE_PERFIL_OBLIGATORIO= "Debes rellenar el campo del Nombre del perfil";
 	public static final String ERROR_NOMBRE_PERFIL_FORMATO_INCORRECTO= "El formato del Nombre de perfil es incorrecto";
@@ -42,6 +43,8 @@ public class ErroresNames {
 	
 	public static final String ERROR_CIF_INNECESARIO="No puede tener CIF";
 	public static final String ERROR_CIF_FORMATO_INCORRECTO = "El formato del cif es incorrecto";
+	
+	public static final String ERROR_PROVEEDOR_VERIFICADO_FORMATO_INCORRECTO ="El formato del proveedor verificado es invalido";
 	
 	public static final String ERROR_DIRECCION_WEB_INNECESARIA="No puede tener dirección Web";
 	public static final String ERROR_DIRECCION_WEB_FORMATO_INCORRECTO = "El formato de la dirección Web es incorrecto";
@@ -136,18 +139,23 @@ public class ErroresNames {
 	
 	public static final String ERROR_USUARIO_PASSWORD_INVALID="El usuario y/o la contraseña no son correctos...";
 	
-	public static final String ERROR_DATA="Ha un ocurrido un problema al consultar sus datos, inténtelo de nuevo más tarde.";
+	public static final String ERROR_DATA="Ha un ocurrido un problema al consultar sus datos, inténtelo de nuevo más tarde";
 	
-	public static final String ERROR_E="Se ha producido un error. Por favor inténtelo de nuevo más tarde.";
+	public static final String ERROR_E="Se ha producido un error. Por favor inténtelo de nuevo más tarde";
 	
-	public static final String ERROR_SERVICE="Se ha producido un error en el servicio. Por favor inténtelo de nuevo más tarde.";
+	public static final String ERROR_SERVICE="Se ha producido un error en el servicio. Por favor inténtelo de nuevo más tarde";
 	
 	public static final String ERROR_KEEP_AUTHENTICATED_FORMATO_INCORRECTO="El formato del keep authenticated es incorrecto";
 	
-	public static final String ERROR_EMAIL_SIN_VALIDAR ="Debe validar su email para poder usar su cuenta, revise sus correos recibidos.";
+	public static final String ERROR_EMAIL_SIN_VALIDAR ="Debe validar su email para poder usar su cuenta, revise sus correos recibidos";
 	
-	public static final String ERROR_USER_LOW_IN_SYSTEM ="El usuario se encuentra de baja.";
+	public static final String ERROR_USER_LOW_IN_SYSTEM ="Esta cuenta se encuentra en estado de baja actualmente";
 	
 	public static final String ERROR_COD_REGISTRO_OBLIGATORIO = "El cod registro es obligatorio";
 	public static final String ERROR_COD_REGISTRO_FORMATO_INCORRECTO = "El formato del cod registro es incorrecto";
+	
+	public static final String ERROR_RESTAURAR_PASS_INVALID = "Ha ocurrido un error a la hora de intentar recuperar la contraseña";
+	
+	public static final String NOTIFICA_CORREO = "Enviado al mail los pasos para reestablecer la contraseña";
+	
 }

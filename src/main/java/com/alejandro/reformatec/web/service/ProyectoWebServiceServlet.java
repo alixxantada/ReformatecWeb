@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alejandro.reformatec.dao.util.ConfigurationManager;
+import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
 import com.alejandro.reformatec.model.ProyectoCriteria;
@@ -21,6 +23,7 @@ import com.alejandro.reformatec.model.Results;
 import com.alejandro.reformatec.service.ProyectoService;
 import com.alejandro.reformatec.service.impl.ProyectoServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
+import com.alejandro.reformatec.web.util.ConfigNames;
 import com.alejandro.reformatec.web.util.MimeTypeNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
 import com.google.gson.Gson;
@@ -36,15 +39,16 @@ public class ProyectoWebServiceServlet extends HttpServlet {
 	private ProyectoService proyectoService = null;
 	private Gson gson = null;
 
+	private static final String CFGM_PFX = ConfigNames.PFX_WEB;
+	private static final String PAGE_SIZE_WEB = CFGM_PFX +  ConfigNames.PAGE_SIZE_WEB;
+	private static final String START_INDEX = CFGM_PFX + ConfigNames.START_INDEX_WEB;
+	private ConfigurationManager cfgM = ConfigurationManager.getInstance();
+	
 	public ProyectoWebServiceServlet() {
 		super();
 		proyectoService = new ProyectoServiceImpl();
 		gson = new Gson();
 	}
-
-	// TODO sacar de configuracion
-	private static int PAGE_SIZE = 8; 
-	private static int START_INDEX = 1;
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -76,7 +80,7 @@ public class ProyectoWebServiceServlet extends HttpServlet {
 			
 			try {
 
-				Results<ProyectoDTO> proyectos = proyectoService.findByCriteria(criteria, START_INDEX, PAGE_SIZE);
+				Results<ProyectoDTO> proyectos = proyectoService.findByCriteria(criteria, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_WEB)));
 				wsResponse.setData(proyectos);				
 
 			} catch (DataException de) {

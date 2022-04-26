@@ -18,6 +18,7 @@ import com.alejandro.reformatec.service.ValoracionService;
 import com.alejandro.reformatec.service.impl.ValoracionServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
 import com.alejandro.reformatec.web.util.AttributeNames;
+import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
 import com.alejandro.reformatec.web.util.Validator;
@@ -57,7 +58,8 @@ public class PrivadoValoracionServlet extends HttpServlet {
 		if (ActionNames.CREATE_VALORACION.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 
 			// Recoger los datos que enviamos desde la jsp
@@ -215,7 +217,7 @@ public class PrivadoValoracionServlet extends HttpServlet {
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_MIS_TRABAJOS;
-					forward = false;
+					forward = true;
 
 
 				}catch (DataException de) {
@@ -243,7 +245,8 @@ public class PrivadoValoracionServlet extends HttpServlet {
 		} else if (ActionNames.UPDATE_STATUS_VALORACION.equalsIgnoreCase(action)) {
 			
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 
 			// Recoger los datos que enviamos desde la jsp
@@ -293,7 +296,8 @@ public class PrivadoValoracionServlet extends HttpServlet {
 
 					// Dirigir a..
 					//TODO aqui en funcion de si borra una valoracion de un trabajo o de un proveedor...
-					targetView =ViewNames.HOME;
+					targetView = ControllerNames.USUARIO;
+					forward = false;
 					
 
 				}catch (DataException de) {
@@ -319,8 +323,9 @@ public class PrivadoValoracionServlet extends HttpServlet {
 			
 			
 		}else {
-			//SACAR UN ERROR?
-			targetView = ViewNames.HOME;
+			// Dirigir a...
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 		}
 		
 		

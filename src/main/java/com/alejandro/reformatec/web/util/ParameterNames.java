@@ -13,6 +13,7 @@ public class ParameterNames {
 	public static final String EMAIL = "email";
 	public static final String EMAIL_2 = "email-2";
 	public static final String PASSWORD = "password";
+	public static final String PASSWORD_ACTUAL = "password-actual";
 	public static final String PASSWORD_2 = "password-2";
 	public static final String DNI = "dni";
 	public static final String NOMBRE = "nombre";

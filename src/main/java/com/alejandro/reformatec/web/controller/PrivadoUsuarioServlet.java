@@ -14,14 +14,22 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 
+import com.alejandro.reformatec.dao.util.ConfigurationManager;
+import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
+import com.alejandro.reformatec.dao.util.PasswordEncryptionUtil;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
+import com.alejandro.reformatec.model.EstadoCuenta;
+import com.alejandro.reformatec.model.Results;
 import com.alejandro.reformatec.model.TipoUsuario;
+import com.alejandro.reformatec.model.UsuarioCriteria;
 import com.alejandro.reformatec.model.UsuarioDTO;
 import com.alejandro.reformatec.service.UsuarioService;
 import com.alejandro.reformatec.service.impl.UsuarioServiceImpl;
 import com.alejandro.reformatec.web.util.ActionNames;
 import com.alejandro.reformatec.web.util.AttributeNames;
+import com.alejandro.reformatec.web.util.ConfigNames;
+import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.CookieManager;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
@@ -39,8 +47,12 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 	private UsuarioService usuarioService = null;
 
+	private static final String CFGM_PFX = ConfigNames.PFX;
+	private static final String PAGE_SIZE_DETAIL = CFGM_PFX + ConfigNames.PAGE_SIZE_DETAIL;
+	private ConfigurationManager cfgM = ConfigurationManager.getInstance();	
+	
+	
 	public PrivadoUsuarioServlet() {
-		//TODO que significaba el super?
 		super();
 		usuarioService = new UsuarioServiceImpl();
 	}
@@ -51,7 +63,6 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 		//CommandManager.getInstance().doAction(request, response); **revisar commandManager**
 
-		// Errors aqui no es null, estaria por ahora vacio
 		Errors errors = new Errors();
 		request.setAttribute(AttributeNames.ERRORS , errors);
 
@@ -66,21 +77,21 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			logger.info("Processing action "+action);
 		}
 
+		
 		if (ActionNames.LOGOUT.equalsIgnoreCase(action)) {
 			CookieManager.setValue(response, AttributeNames.USUARIO, Strings.EMPTY, -1);
 			SessionManager.set(request, AttributeNames.USUARIO, null);
 
 			// Dirigir a...
-			targetView = ViewNames.HOME;
+			targetView = ControllerNames.USUARIO;
 			forward = false;
 
 		} else if (ActionNames.UPDATE_USUARIO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			//TODO Estoy casi seguro que tal como se valida el primer dato SOBRA este targetview?
 			targetView = ViewNames.USUARIO_REGISTRO;
 
-
+			String servicio24Str=null;
 			// Recoger los datos que enviamos desde la jsp
 			String idTipoUsuarioStr = request.getParameter(ParameterNames.ID_TIPO_USUARIO);
 			String userNameStr = request.getParameter(ParameterNames.NOMBRE_PERFIL);
@@ -90,15 +101,21 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			String codPostalStr = request.getParameter(ParameterNames.COD_POSTAL);
 			String idPoblacionStr = request.getParameter(ParameterNames.ID_POBLACION);
 			String direccionWebStr = request.getParameter(ParameterNames.DIRECCION_WEB);
-			String servicio24Str = request.getParameter(ParameterNames.SERVICIO_24);		
+			servicio24Str = request.getParameter(ParameterNames.SERVICIO_24);
+			String cifStr = request.getParameter(ParameterNames.CIF);
+			String dniStr = request.getParameter(ParameterNames.DNI);
 			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
+			String proveedorVerificadoStr = request.getParameter(ParameterNames.PROVEEDOR_VERIFICADO);
+			String passwordActualStr = request.getParameter(ParameterNames.PASSWORD_ACTUAL);
+			String passwordStr = request.getParameter(ParameterNames.PASSWORD);
+			String password2Str = request.getParameter(ParameterNames.PASSWORD_2);
 			String [] idsEspecializacionesStr = request.getParameterValues(ParameterNames.ID_ESPECIALIZACION);
-			
+
 			UsuarioDTO usuario = new UsuarioDTO();
 
 			List<Integer> idsEspecializaciones = new ArrayList<Integer>();
-			
-			
+
+
 			// Validar y Convertir Datos
 			Integer idTipoUsuario = null;
 			if (!StringUtils.isBlank(idTipoUsuarioStr)) {				
@@ -123,11 +140,11 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 			// Dirigimos la vista predefinida en caso de error en función del tipo de dato (idTipoUsuario)
 			if (errors.hasErrors()) {
-				targetView = ViewNames.HOME;
+				// Dirigir a...
+				targetView = ControllerNames.USUARIO;
 				forward = false;
 			} else {				
-				targetView = ViewNames.USUARIO_PERFIL;	
-				forward = false;
+				targetView = ViewNames.USUARIO_EDITAR_PERFIL;
 			}
 
 
@@ -149,6 +166,84 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				}
 				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
 			}
+
+
+
+			String passwordOk = null;
+			// Compruebo si me envia la password actual(Quiere cambiar la password)
+			if (!StringUtils.isBlank(passwordActualStr)) {
+				passwordActualStr=passwordActualStr.trim();
+
+				if (!Validator.validaPassword(passwordActualStr)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto passwordActual");
+					}
+					errors.addParameterError(ParameterNames.PASSWORD_ACTUAL, ErroresNames.ERROR_PASSWORD_FORMATO_INCORRECTO);
+				} else {
+
+
+					UsuarioDTO user = (UsuarioDTO) SessionManager.get(request, AttributeNames.USUARIO);
+					// Compruebo si la contraseña del usuario encriptada es la misma que tiene el usuario en bbdd encriptada.
+					if (PasswordEncryptionUtil.checkPassword(passwordActualStr, user.getEncryptedPassword())) {
+
+
+						if (StringUtils.isBlank(passwordStr)) {
+							if (logger.isDebugEnabled()) {
+								logger.debug("Dato null/blanco password:");
+							}
+							errors.addParameterError(ParameterNames.PASSWORD, ErroresNames.ERROR_PASSWORD_OBLIGATORIA);
+						} else {
+							passwordStr=passwordStr.trim();
+							if (!Validator.validaPassword(passwordStr)) {
+								if (logger.isDebugEnabled()) {
+									logger.debug("Dato incorrecto password:");
+								}
+								errors.addParameterError(ParameterNames.PASSWORD, ErroresNames.ERROR_PASSWORD_FORMATO_INCORRECTO);
+							}			
+						}
+
+
+
+						if (StringUtils.isBlank(password2Str)) {
+							if (logger.isDebugEnabled()) {
+								logger.debug("Dato null/blanco password2");
+							}
+							errors.addParameterError(ParameterNames.PASSWORD_2, ErroresNames.ERROR_PASSWORD_OBLIGATORIA);
+						} else {
+							password2Str=password2Str.trim();
+
+							if (!Validator.validaPassword(password2Str)) {
+								if (logger.isDebugEnabled()) {
+									logger.debug("Dato incorrecto password2");
+								}
+								errors.addParameterError(ParameterNames.PASSWORD_2, ErroresNames.ERROR_PASSWORD_FORMATO_INCORRECTO);
+							}			
+						}
+
+						if (logger.isTraceEnabled()) {
+							logger.trace("Validando Password iguales...");
+						}
+
+						if (passwordStr.equals(password2Str)) {
+							passwordOk=passwordStr.trim();									
+						} else {
+							if (logger.isDebugEnabled()) {
+								logger.debug("Las passwords no son iguales");
+							}
+							errors.addParameterError(ParameterNames.PASSWORD, ErroresNames.ERROR_PASSWORDS_DIFERENTES);
+						}					
+
+					} else {
+
+						if (logger.isDebugEnabled()) {
+							logger.debug("Dato incorrecto password:");
+						}
+						errors.addParameterError(ParameterNames.PASSWORD_ACTUAL, ErroresNames.ERROR_PASSWORD_ACTUAL_INCORRECTA);
+					}
+				}
+
+			}
+			usuario.setPassword(passwordOk);
 
 
 
@@ -211,8 +306,6 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			}
 
 
-
-			//TODO realmente como valido callejero/portal piso? :S un REGEX PATTERN? Sin tener los parametros separados...
 			if (!StringUtils.isBlank(direccionStr)) {
 				direccionStr=direccionStr.trim();
 				usuario.setNombreCalle(direccionStr);
@@ -236,12 +329,12 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				errors.addParameterError(ParameterNames.COD_POSTAL, ErroresNames.ERROR_COD_POSTAL_OBLIGATORIO);
 			}
 
-			
+
 
 			Integer idPoblacion = null;
 			if (!StringUtils.isBlank(idPoblacionStr)) {
 				idPoblacion = Validator.validaPoblacion(idPoblacionStr);
-				
+
 				if(idPoblacion!=null) {
 					usuario.setIdPoblacion(idPoblacion);				
 				} else {
@@ -250,7 +343,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					}
 					errors.addParameterError(ParameterNames.ID_POBLACION, ErroresNames.ERROR_ID_POBLACION_FORMATO_INCORRECTO);
 				}
-				
+
 			} else {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Dato null/blanco idpoblacion: "+idPoblacionStr);
@@ -259,10 +352,45 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			}
 
 
+			if (!StringUtils.isBlank(dniStr)) {
+				dniStr=dniStr.trim();
+
+				if (Validator.validaDni(dniStr)) {
+					usuario.setNif(dniStr);
+
+				} else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto dni: "+dniStr);
+					}
+					errors.addParameterError(ParameterNames.DNI, ErroresNames.ERROR_DNI_FORMATO_INCORRECTO);
+				}
+
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco dni: "+dniStr);
+				}
+				errors.addParameterError(ParameterNames.DNI, ErroresNames.ERROR_DNI_OBLIGATORIO);			
+			}
+			
 
 			if (idTipoUsuario==TipoUsuario.USUARIO_PROVEEDOR) {
 
-
+				if (!StringUtils.isBlank(cifStr)) {
+					cifStr = cifStr.trim();
+					if (Validator.validaDni(cifStr)) {
+						usuario.setCif(cifStr);	
+					} else {
+						if (logger.isDebugEnabled()) {
+							logger.debug("Dato incorrecto cif: "+cifStr);
+						}
+						errors.addParameterError(ParameterNames.CIF, ErroresNames.ERROR_CIF_FORMATO_INCORRECTO);
+					}
+				} else {
+					usuario.setCif(dniStr);
+				}
+				
+				
+				
 				if (!StringUtils.isBlank(direccionWebStr)) {
 					direccionWebStr = direccionWebStr.trim();
 					if (Validator.validaDireccionWeb(direccionWebStr)) { 
@@ -275,12 +403,12 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					}
 				}
 
+				
 
-				Boolean servicio24 = null;
+				Boolean servicio24 = false;
 				if (!StringUtils.isBlank(servicio24Str)) {
 					if (Validator.validaBoolean(servicio24Str)) {
-						servicio24 = Validator.validaBoolean(servicio24Str);
-						usuario.setServicio24(servicio24);
+						servicio24 = Validator.validaBoolean(servicio24Str);						
 					} else {
 						if (logger.isDebugEnabled()) {
 							logger.debug("Dato incorrecto servicio24"+servicio24Str);
@@ -288,55 +416,63 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 						errors.addParameterError(ParameterNames.SERVICIO_24, ErroresNames.ERROR_SERVICIO_24_FORMATO_INCORRECTO);
 					}
 				}
-			}	
-			
-			
-			
-			if (idsEspecializacionesStr.length>0 ) {
-				
-				for (int i=0;i<idsEspecializacionesStr.length;i++) {
-					if (!StringUtils.isBlank(idsEspecializacionesStr[i])) {
-						Integer idEspecializacion = Validator.validaEspecializacion(idsEspecializacionesStr[i]);
-						
-						if(idEspecializacion!=null) {
-							idsEspecializaciones.add(idEspecializacion);
-						} else {
-							if (logger.isDebugEnabled()) {
-								logger.debug("Formato invalido idEspecializacion: "+idsEspecializacionesStr[i]);
-							}
-							errors.addParameterError(ParameterNames.ID_ESPECIALIZACION, ErroresNames.ERROR_ID_ESPECIALIZACION_FORMATO_INCORRECTO);
-						}
-						
+				usuario.setServicio24(servicio24);
+
+
+				Boolean proveedorVerificado = false;
+				if (!StringUtils.isBlank(proveedorVerificadoStr)) {
+					if (Validator.validaBoolean(proveedorVerificadoStr)) {
+						proveedorVerificado = Validator.validaBoolean(proveedorVerificadoStr);						
 					} else {
 						if (logger.isDebugEnabled()) {
-							logger.debug("Dato obligatorio idEspecializacion: "+idsEspecializacionesStr[i]);
+							logger.debug("Dato incorrecto proveedorVerificado"+proveedorVerificadoStr);
 						}
-						errors.addParameterError(ParameterNames.ID_ESPECIALIZACION, ErroresNames.ERROR_ID_ESPECIALIZACION_OBLIGATORIO);
+						errors.addParameterError(ParameterNames.PROVEEDOR_VERIFICADO, ErroresNames.ERROR_PROVEEDOR_VERIFICADO_FORMATO_INCORRECTO);
 					}
 				}
-			}
+				usuario.setProveedorVerificado(proveedorVerificado);
+				
+				
+				if (idsEspecializacionesStr!=null) {
 
-			if (logger.isTraceEnabled()) {
-				logger.trace("Usuario: "+usuario);
-				logger.trace("Especializaciones: "+idsEspecializaciones);
-			}
-			
+					for (int i=0;i<idsEspecializacionesStr.length;i++) {
+						if (!StringUtils.isBlank(idsEspecializacionesStr[i])) {
+							Integer idEspecializacion = Validator.validaEspecializacion(idsEspecializacionesStr[i]);
+
+							if(idEspecializacion!=null) {
+								idsEspecializaciones.add(idEspecializacion);
+							} else {
+								if (logger.isDebugEnabled()) {
+									logger.debug("Formato invalido idEspecializacion: "+idsEspecializacionesStr[i]);
+								}
+								errors.addParameterError(ParameterNames.ID_ESPECIALIZACION, ErroresNames.ERROR_ID_ESPECIALIZACION_FORMATO_INCORRECTO);
+							}
+
+						} else {
+							if (logger.isDebugEnabled()) {
+								logger.debug("Dato obligatorio idEspecializacion: "+idsEspecializacionesStr[i]);
+							}
+							errors.addParameterError(ParameterNames.ID_ESPECIALIZACION, ErroresNames.ERROR_ID_ESPECIALIZACION_OBLIGATORIO);
+						}
+					}
+				}
+
+			}	
+
+
 			//Acceder a la capa de negocio(si no hay errores)
 			if(!errors.hasErrors()) {
 				try {
 
 					usuarioService.update(usuario, idsEspecializaciones);
 
-					if (logger.isInfoEnabled()) {
-						logger.info("Usuario actualizado: "+usuario);
-					}
-
-					request.setAttribute("", usuario);
-
+					request.setAttribute(AttributeNames.USUARIO, usuario);
+					
+					SessionManager.set(request, AttributeNames.USUARIO, usuario);
+					
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_PERFIL;
-					forward = false;
-
+					forward = true;
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
@@ -358,10 +494,12 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				}
 			}
 
+
 		} else if (ActionNames.UPDATE_STATUS_USUARIO.equalsIgnoreCase(action)) {
 
-			//Dirección de la vista predefinida(en caso de error)
-			targetView = ViewNames.HOME;
+			// Dirigir a...
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 
 			// Recoger los datos que enviamos desde la jsp
@@ -369,7 +507,6 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			String idEstadoStr = request.getParameter(ParameterNames.ID_STATUS_CUENTA);
 
 
-			// Validar y convertir los datos
 			// Validar y convertir los datos
 			Long idUsuario = null;			
 			if(!StringUtils.isBlank(idUsuarioStr)) {
@@ -399,18 +536,44 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				logger.trace("idUsuario: "+idUsuario+", idEstado: "+idEstado);
 			}
 
+
+
 			//Acceder a la capa de negocio(si no hay errores)
 			if(!errors.hasErrors()) {
 				try {
 
-					usuarioService.updateStatus(idUsuario, idEstado);
+					String url=null;
+					if(idEstado==EstadoCuenta.CUENTA_CANCELADA) {
+
+						UsuarioCriteria uc = new UsuarioCriteria();
+						uc.setIdUsuario(idUsuario);
+
+
+						//Meter a config
+						Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc,  Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
+
+
+						for(UsuarioDTO u : usuario.getData()) {
+							url = request.getScheme()+"://"+request.getServerName()+":"+request.getLocalPort()
+							+request.getContextPath()+ControllerNames.USUARIO+"?"
+							+ParameterNames.ACTION+"="+ActionNames.REACTIVAR_CUENTA
+							+"&"+ParameterNames.ID_USUARIO+"="+u.getIdUsuario()
+							+"&"+ParameterNames.ID_STATUS_CUENTA+"="+EstadoCuenta.CUENTA_VALIDADA;
+						}
+
+					}
+
+					usuarioService.updateStatus(idUsuario, idEstado, url);
+
+					CookieManager.setValue(response, AttributeNames.USUARIO, Strings.EMPTY, -1);
+					SessionManager.set(request, AttributeNames.USUARIO, null);
 
 					if (logger.isInfoEnabled()) {
 						logger.info("Usuario actualizado: "+idUsuario);
 					}
 
-					// Dirigir a..
-					targetView =ViewNames.HOME;
+					// Dirigir a...
+					targetView = ControllerNames.USUARIO;
 					forward = false;
 
 
@@ -434,10 +597,10 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				}
 			}
 
-
 		} else {
-			//SACAR UN ERROR?
-			targetView = ViewNames.HOME;
+			// Dirigir a...
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 		}
 
 		if (logger.isInfoEnabled()) {
