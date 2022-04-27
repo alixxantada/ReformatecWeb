@@ -22,7 +22,7 @@
 												<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_USUARIO%>"/>
 												<div class="search3_item">
 													<div>Descripción</div>
-													<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
+													<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" value="<%=ParameterUtils.print(request.getParameter(ParameterNames.BUSCAR_DESCRIPCION))%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
 													onkeyup="buscarProveedores()"/>
 												</div>
 												<div id="proveedores-results" class="cuadro-proveedores-results">
@@ -30,7 +30,7 @@
 												<div class="search3_item">
 													<div>Especializacion</div>
 													<select name="<%=ParameterNames.ID_ESPECIALIZACION%>" id="especializacion-select" class="dropdown_item_select search3_input">
-														-	<option disabled selected>Selecciona una especialización</option>
+														<option disabled selected>Selecciona una especialización</option>
 													</select>
 												</div>
 												<div class="search3_item">
@@ -43,14 +43,42 @@
 													<ul class="search3_extras clearfix">
 														<li class="search3_extras_item">
 															<div class="clearfix">
+															<%															
+															String checkServicio24 = request.getParameter(ParameterNames.SERVICIO_24);
+																if (checkServicio24==null) {
+																	
+															%>
 																<input type="checkbox" name="<%=ParameterNames.SERVICIO_24%>" value="true" id="servicio24" class="search3_extras_cb">
 																<label for="servicio24">Servicio24H</label>
+															<% } else if (checkServicio24.equals("true")){ %>
+																<input type="checkbox" name="<%=ParameterNames.SERVICIO_24%>" checked value="true" id="servicio24" class="search3_extras_cb">
+																<label for="servicio24">Servicio24H</label>
+															<%} else if (checkServicio24.equals("false")) { %>
+																<input type="checkbox" name="<%=ParameterNames.SERVICIO_24%>" value="true" id="servicio24" class="search3_extras_cb">
+																<label for="servicio24">Servicio24H</label>
+															<%} %>
+															
 															</div>
 														</li>
 														<li class="search3_extras_item2">
 															<div class="clearfix">
+															<%															
+															String checkProveedor = request.getParameter(ParameterNames.PROVEEDOR_VERIFICADO);
+																if (checkProveedor==null) {
+																	
+															%>
 																<input type="checkbox" name="<%=ParameterNames.PROVEEDOR_VERIFICADO%>" value="true" id="experto-negocio" class="search3_extras_cb">
 																<label for="experto-negocio">Proveedor Verificado</label>
+																<% } else if (checkProveedor.equals("true")){ %>
+																<input type="checkbox" name="<%=ParameterNames.PROVEEDOR_VERIFICADO%>" checked value="true" id="experto-negocio" class="search3_extras_cb">
+																<label for="experto-negocio">Proveedor Verificado</label>
+																
+																<%} else if (checkProveedor.equals("false")) { %>
+																
+																<input type="checkbox" name="<%=ParameterNames.PROVEEDOR_VERIFICADO%>" value="true" id="experto-negocio" class="search3_extras_cb">
+																<label for="experto-negocio">Proveedor Verificado</label>
+																<%} %>
+																
 															</div>
 														</li>
 													</ul>
@@ -71,31 +99,29 @@
 							<!-- offers2 Sorting -->
 						<div class="col-lg-11 ordenar_por">
 							<div class="offers2_sorting_container">
-								<ul class="offers2_sorting">
-									<li>
-										<span class="sorting_text">Ordenar Por</span>
+								<ul class="offers2_sorting" >
+									<select name="<%=ParameterNames.ORDER_BY%>" id="orderby-select" class="dropdown_item_select search3_input">
+										<option disabled selected>Ordenar Por</option>
+										<option value ="NV">Numero de visualizaciones</option>
+										<option value ="VAL">Valoracion Media</option>
 										<i class="fa fa-chevron-down"></i>
-										<ul name="<%=ParameterNames.ORDER_BY%>" >
-											<select name="<%=ParameterNames.ORDER_BY%>" id="orderby-select" class="dropdown_item_select search3_input">
-												<option value ="NV">Numero de visualizaciones</option>
-												<option value ="VAL">Valoracion Media</option>
-											</select>
-										</ul>
-									</li>
+									</select>
 								</ul>
+								
 							</div>
 						</div>
 						<%
 							}
 						%>
 						</form>
+						<%
+						// lio de usuarios usuarios es la lista de usuarios resultados
+						Results<UsuarioDTO> results = (Results<UsuarioDTO>) request.getAttribute(AttributeNames.USUARIO);
+						List<UsuarioDTO> usuarios = results.getData();
+						if (usuarios.size()>0) {
+						%>
 						<div class="col-lg-11 usuario_resultados">
-
 							<%
-							// lio de usuarios usuarios es la lista de usuarios resultados
-							Results<UsuarioDTO> results = (Results<UsuarioDTO>) request.getAttribute(AttributeNames.USUARIO);
-							List<UsuarioDTO> usuarios = results.getData();
-							
 							for (UsuarioDTO u : usuarios) {
 							%>
 								<!-- Proveedor Result -->
@@ -178,6 +204,22 @@
 							</div>
 							<div class="col-lg-12 nombre_perfil_resultados">
 								<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePerfil() %></a><span></span>
+							<%
+							//usuario en sesion
+							if (usuario!=null) {
+								Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
+								if(!idsFavoritos.contains(u.getIdUsuario())){
+						
+							%>
+							<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
+							<%
+								} else {
+							%>										
+							<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
+							<%
+								}
+							}			
+							%>
 							</div>
 							<div class="row">
 								<div class="resultado_foto">
@@ -220,7 +262,7 @@
 									parameters.remove(ParameterNames.PAGE); // para que no arrastre el valor anterior
 									
 									// Ya viene terminada en &
-									String baseURL = ParameterUtils.getURL(request.getContextPath()+ControllerNames.USUARIO, parameters);
+									String baseURL = ParameterUtils.getURLPaginacion(request.getContextPath()+ControllerNames.USUARIO, parameters);
 	
 									
 									// Primera
@@ -274,11 +316,20 @@
 							</ul>
 						</div>				
 					</div>
+					<%
+						} else {
+					%>
+					<div class="caja-sin-resultados">
+					<p class="sin-resultados">No se han encontrado resultados</p>
+					</div>
+					<%
+						}
+					%>
 				</div>
 			</div>
 			<script>
-				$(document).ready(cargarProvincias());
-				$(document).ready(cargarEspecializaciones());
+				$(document).ready(cargarProvincias(<%=request.getParameter(ParameterNames.ID_PROVINCIA)%>));
+				$(document).ready(cargarEspecializaciones(<%=request.getParameter(ParameterNames.ID_ESPECIALIZACION)%>));
 			</script>
 <!-- Sección Central End-->
 <%@include file="/common/footer.jsp"%>

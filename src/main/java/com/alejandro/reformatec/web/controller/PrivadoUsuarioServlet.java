@@ -2,7 +2,10 @@ package com.alejandro.reformatec.web.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,9 +36,11 @@ import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.CookieManager;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
+import com.alejandro.reformatec.web.util.ParameterUtils;
 import com.alejandro.reformatec.web.util.SessionManager;
 import com.alejandro.reformatec.web.util.Validator;
 import com.alejandro.reformatec.web.util.ViewNames;
+import com.alejandro.reformatec.web.util.WebPagingUtils;
 
 
 
@@ -49,9 +54,11 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 	private static final String CFGM_PFX = ConfigNames.PFX;
 	private static final String PAGE_SIZE_DETAIL = CFGM_PFX + ConfigNames.PAGE_SIZE_DETAIL;
+	private static final String PAGE_SIZE_SEARCH = CFGM_PFX +  ConfigNames.PAGE_SIZE_SEARCH;
+	private static final String PAGE_COUNT = CFGM_PFX + ConfigNames.PAGE_COUNT;
 	private ConfigurationManager cfgM = ConfigurationManager.getInstance();	
-	
-	
+
+
 	public PrivadoUsuarioServlet() {
 		super();
 		usuarioService = new UsuarioServiceImpl();
@@ -77,7 +84,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			logger.info("Processing action "+action);
 		}
 
-		
+
 		if (ActionNames.LOGOUT.equalsIgnoreCase(action)) {
 			CookieManager.setValue(response, AttributeNames.USUARIO, Strings.EMPTY, -1);
 			SessionManager.set(request, AttributeNames.USUARIO, null);
@@ -110,7 +117,8 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			String passwordStr = request.getParameter(ParameterNames.PASSWORD);
 			String password2Str = request.getParameter(ParameterNames.PASSWORD_2);
 			String [] idsEspecializacionesStr = request.getParameterValues(ParameterNames.ID_ESPECIALIZACION);
-
+			String descripcionStr = request.getParameter(ParameterNames.DESCRIPCION_USUARIO);
+			
 			UsuarioDTO usuario = new UsuarioDTO();
 
 			List<Integer> idsEspecializaciones = new ArrayList<Integer>();
@@ -371,7 +379,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				}
 				errors.addParameterError(ParameterNames.DNI, ErroresNames.ERROR_DNI_OBLIGATORIO);			
 			}
-			
+
 
 			if (idTipoUsuario==TipoUsuario.USUARIO_PROVEEDOR) {
 
@@ -388,9 +396,9 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				} else {
 					usuario.setCif(dniStr);
 				}
-				
-				
-				
+
+
+
 				if (!StringUtils.isBlank(direccionWebStr)) {
 					direccionWebStr = direccionWebStr.trim();
 					if (Validator.validaDireccionWeb(direccionWebStr)) { 
@@ -403,7 +411,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					}
 				}
 
-				
+
 
 				Boolean servicio24 = false;
 				if (!StringUtils.isBlank(servicio24Str)) {
@@ -431,8 +439,8 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					}
 				}
 				usuario.setProveedorVerificado(proveedorVerificado);
-				
-				
+
+
 				if (idsEspecializacionesStr!=null) {
 
 					for (int i=0;i<idsEspecializacionesStr.length;i++) {
@@ -456,6 +464,12 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 						}
 					}
 				}
+				
+				
+				
+				//TODO como seria recomendable validar esto?
+				usuario.setDescripcion(descripcionStr);
+				
 
 			}	
 
@@ -467,9 +481,9 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					usuarioService.update(usuario, idsEspecializaciones);
 
 					request.setAttribute(AttributeNames.USUARIO, usuario);
-					
+
 					SessionManager.set(request, AttributeNames.USUARIO, usuario);
-					
+
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_PERFIL;
 					forward = true;
@@ -596,6 +610,254 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					errors.addCommonError(ErroresNames.ERROR_E);
 				}
 			}
+
+		} else if (ActionNames.MIS_FAVORITOS.equalsIgnoreCase(action)) {
+
+			//Dirección de la vista predefinida(en caso de error)
+			targetView = ControllerNames.USUARIO;
+			forward = false;
+
+
+			// Recoger los datos que enviamos desde la jsp
+			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
+
+
+			//Validar y convertir datos
+			Long idUsuario = null;
+			if(!StringUtils.isBlank(idUsuarioStr)) {
+				idUsuario = Validator.validaLong(idUsuarioStr);
+
+				if(idUsuario==null) {					
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto idUsuario: "+idUsuarioStr);
+					}
+					errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_FORMATO_INCORRECTO);					
+				}
+
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco idUsuario: "+idUsuarioStr);
+				}
+				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
+			}
+
+
+
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+					Integer currentPage = WebPagingUtils.getCurrentPage(request);
+
+					UsuarioCriteria uc = new UsuarioCriteria();
+					uc.setIdUsuarioFavorito(idUsuario);
+
+					Results<UsuarioDTO> results = usuarioService.findByCriteria(uc, (currentPage-1)*Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)) +1, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
+
+					request.setAttribute(AttributeNames.USUARIO, results);
+
+					// Atributos para paginacion
+					Integer totalPages = WebPagingUtils.getTotalPages(results.getTotal(), Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
+					request.setAttribute(AttributeNames.TOTAL_PAGES, totalPages);
+					request.setAttribute(AttributeNames.CURRENT_PAGE, currentPage);
+					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+
+
+					// Dirigir a...
+					targetView = ViewNames.USUARIO_MIS_PROVEEDORES;
+					forward = true;
+
+
+				}catch (DataException de) {
+					if (logger.isErrorEnabled()) {
+						logger.error(de.getMessage(), de);
+					}
+					errors.addCommonError(ErroresNames.ERROR_DATA);
+
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error(se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+
+
+
+		} else if (ActionNames.ANHADIR_FAVORITO.equalsIgnoreCase(action)) {
+
+			// Vista en caso de error
+			targetView = ControllerNames.USUARIO;
+			forward = false;
+		
+			// Recoger los datos que enviamos desde la jsp
+			String idProveedorStr = request.getParameter(ParameterNames.ID_PROVEEDOR_FAVORITO);
+			UsuarioDTO user = (UsuarioDTO) SessionManager.get(request, AttributeNames.USUARIO);
+			Long idUsuario = user.getIdUsuario();
+			
+			Map<String, String> userDetailParams = new HashMap<String, String>();
+			userDetailParams.put(ParameterNames.ACTION, ActionNames.MIS_FAVORITOS);
+			userDetailParams.put(ParameterNames.ID_USUARIO, user.getIdUsuario().toString());
+			
+			
+			//Validar y convertir datos
+			Long idProveedor = null;
+			if(!StringUtils.isBlank(idProveedorStr)) {
+				idProveedor = Validator.validaLong(idProveedorStr);
+
+				if(idProveedor==null) {					
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto idProveedor: "+idProveedorStr);
+					}
+					errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_FORMATO_INCORRECTO);					
+				}
+
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco idUsuario: "+idProveedorStr);
+				}
+				errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
+			}
+
+
+
+			if(StringUtils.isBlank(idUsuario.toString())) {
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco idUsuario: "+idUsuario);
+				}
+				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
+			}
+
+
+
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+					usuarioService.anhadirFavorito(idUsuario, idProveedor);
+
+					Set<Long> usuariosIds = usuarioService.findFavorito(user.getIdUsuario());
+
+					SessionManager.set(request, AttributeNames.FAVORITOS, usuariosIds);
+					
+					//Dirigir a 
+					targetView = ParameterUtils.getURL(ControllerNames.PRIVADO_USUARIO, userDetailParams); 
+					forward = true;
+
+
+				}catch (DataException de) {
+					if (logger.isErrorEnabled()) {
+						logger.error(de.getMessage(), de);
+					}
+					errors.addCommonError(ErroresNames.ERROR_DATA);
+
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error(se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+
+
+
+		} else if (ActionNames.ELIMINAR_FAVORITO.equalsIgnoreCase(action)) {
+
+			// Vista en caso de error
+			targetView = ControllerNames.USUARIO;
+			forward = false;
+
+			// Recoger los datos que enviamos desde la jsp
+			String idProveedorStr = request.getParameter(ParameterNames.ID_PROVEEDOR_FAVORITO);
+			UsuarioDTO user = (UsuarioDTO) SessionManager.get(request, AttributeNames.USUARIO);
+			Long idUsuario = user.getIdUsuario();
+			
+
+			Map<String, String> userDetailParams = new HashMap<String, String>();
+			userDetailParams.put(ParameterNames.ACTION, ActionNames.MIS_FAVORITOS);
+			userDetailParams.put(ParameterNames.ID_USUARIO, user.getIdUsuario().toString());
+
+			 
+			//Validar y convertir datos
+			Long idProveedor = null;
+			if(!StringUtils.isBlank(idProveedorStr)) {
+				idProveedor = Validator.validaLong(idProveedorStr);
+
+				if(idProveedor==null) {					
+					if (logger.isDebugEnabled()) {
+						logger.debug("Dato incorrecto idProveedor: "+idProveedorStr);
+					}
+					errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_FORMATO_INCORRECTO);					
+				}
+
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco idUsuario: "+idProveedorStr);
+				}
+				errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
+			}
+
+
+
+			if(StringUtils.isBlank(idUsuario.toString())) {
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("Dato null/blanco idUsuario: "+idUsuario);
+				}
+				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
+			}
+
+
+
+			//Acceder a la capa de negocio(si no hay errores)
+			if(!errors.hasErrors()) {
+				try {
+
+					usuarioService.deleteFavorito(idUsuario, idProveedor);
+
+					Set<Long> usuariosIds = usuarioService.findFavorito(user.getIdUsuario());
+
+					SessionManager.set(request, AttributeNames.FAVORITOS, usuariosIds);
+					
+					//Dirigir a ...
+					targetView = ParameterUtils.getURL(ControllerNames.PRIVADO_USUARIO, userDetailParams); 
+					forward = true;
+
+
+				}catch (DataException de) {
+					if (logger.isErrorEnabled()) {
+						logger.error(de.getMessage(), de);
+					}
+					errors.addCommonError(ErroresNames.ERROR_DATA);
+
+				}catch (ServiceException se) {
+					if (logger.isErrorEnabled()) {
+						logger.error(se.getMessage(), se);
+					}
+					errors.addCommonError(ErroresNames.ERROR_SERVICE);
+
+				}catch (Exception e) {
+					if (logger.isErrorEnabled()) {
+						logger.error(e.getMessage(), e);
+					}
+					errors.addCommonError(ErroresNames.ERROR_E);
+				}
+			}
+
 
 		} else {
 			// Dirigir a...

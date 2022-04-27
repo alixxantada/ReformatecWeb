@@ -39,26 +39,35 @@
 							<div class="offers2_item rating_5">
 								<div class="offers_content">									
 									<%						
-										if (usuario!= null) {
-											if(u.getValoracionMedia()==null) {
-	
-											} else {
-						
-												int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());
-										
-											%>
-										<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
-											<i></i>
-											<i></i>
-											<i></i>
-											<i></i>
-											<i></i>
-										</div>
-										<%	
-										}
-									}
-									%>	
+										if(u.getValoracionMedia()==null) {
+
+										} else {
+					
+											int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());
 									
+										%>
+									<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
+										<i></i>
+										<i></i>
+										<i></i>
+										<i></i>
+										<i></i>
+									</div>
+									<%	
+									}
+
+									Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
+									if(!idsFavoritos.contains(u.getIdUsuario())){
+								
+									%>
+									<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
+									<%
+									} else {
+									%>										
+									<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
+									<%
+										}
+									%>
 									<p class="offers_text"><%=u.getDescripcion()%></p>
 									<div class="offers_icons">
 										<ul class="offers_icons_list">

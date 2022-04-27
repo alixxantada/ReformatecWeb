@@ -39,14 +39,8 @@
 									                  	<%
 									                  		}
 									                  	%>														
-														<input type="text" name="<%=ParameterNames.DESCRIPCION_USUARIO%>" class="form-control demo"  value="<%=ParameterUtils.print(usuario.getDescripcion())%>" autocomplete="off">
 														<textarea class="descripcion-registro-proveedor" name="<%=ParameterNames.DESCRIPCION_USUARIO%>"
-														 style="z-index: 9999999" rows="10" cols="40" <% if (usuario.getDescripcion()==null) { %>
-														 placeholder="¿Todavía no te has descrito? A nuestros usuarios les gustaria saber más sobre tu empresa!" 
-														 <% } else { %>
-														 value="<%=ParameterUtils.print(usuario.getDescripcion())%>"
-														 <% } %>>
-														 </textarea>		
+														 rows="10" cols="40"><%=ParameterUtils.print(usuario.getDescripcion())%></textarea>		
 													</div>
 												</div>
 												<%
@@ -177,6 +171,27 @@
 							                  	%>														
 												<input <% if (usuario.getServicio24()==true) { %> checked <% } %> type="checkbox" name="<%=ParameterNames.SERVICIO_24%>" value="true" id="checkServicioPerfil" class="search2_extras_cb">
 												<label id="servicio24Perfil" for="servicio24">Servicio24H</label>									
+											</div>
+											
+											<%
+					                  		parameterError = errors.getParameterError(ParameterNames.ID_ESPECIALIZACION);
+					                  		if (parameterError!=null) {
+						                  	%>
+						                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+						                  	<%
+						                  		}
+						                  	%>
+											<div class="especializacion-proveedor" id="especializaciones-proveedor">
+											
+												<div>
+			                                        <select class="select-registro-especializacion" id="especializacion-select" multiple>
+														
+			                                        </select>
+			                                    </div>
+			                                    <div>
+			                                        <select class="select-registro-especializacion-seleccionadas" id="especializacionesSeleccionadas" name="<%=ParameterNames.ID_ESPECIALIZACION%>" multiple>
+			                                        </select>	
+			                                    </div> 
 											</div>
 											<%
 											}

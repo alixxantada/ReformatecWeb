@@ -20,6 +20,9 @@ public class AttributeNames {
 	public static final String TRABAJO = "trabajo";
 	public static final String VALORACION = "valoracion";
 	public static final String PRESUPUESTO = "presupuesto";
+	public static final String CODE = "code";
+	
+	public static final String FAVORITOS = "favoritos";
 	
 	public static final String LOCALE = "locale";
 }

@@ -31,24 +31,35 @@ window.addEventListener('load', initVolverPaso1);
 1. Cargar Especializaciones
 
 */
-function cargarEspecializaciones() {
+function cargarEspecializaciones(idEspecializacionSelect) {
 	var url = "/ReformatecWeb/especializacion-service";
     $.ajax({                        
 	       type: "GET",                 
 	       url: url,                    
 	       data: "action=search-especializacion",
 	       success: function(response) {
+		    	  
 		    	  $('#especializacion-select').empty();
-		    	  $('#especializacion-select').append('<option disabled selected>Selecciona una especializacion</option>');
+		    	  $('#especializacion-select').append('<option value="null" selected>Selecciona una especializacion</option>');
 		    	  $('#especializacion2-select').empty();
-		    	  $('#especializacion2-select').append('<option disabled selected>Selecciona una especializacion</option>');
+		    	  $('#especializacion2-select').append('<option value="null" selected>Selecciona una especializacion</option>');
 		    	  var data = response.data;
 		    	  var data2 = response.data;
 		    	  for (var i=0; i<data.length;i++){
-		    		 $('#especializacion-select').append('<option value='+data[i].idEspecializacion+'>'+data[i].nombre+'</option>');
+		    		 
+		    		 if (data[i].idEspecializacion==idEspecializacionSelect) {
+						$('#especializacion-select').append('<option selected value='+data[i].idEspecializacion+'>'+data[i].nombre+'</option>');
+					} else {
+		    		 $('#especializacion-select').append('<option  value='+data[i].idEspecializacion+'>'+data[i].nombre+'</option>');
+		    	 	 }
 		    	  }
 		    	  for (var i=0; i<data2.length;i++){
+		    		 
+		    		 if (data[i]==idEspecializacionSelect) {
+						$('#especializacion2-select').append('<option selected value='+data[i].idEspecializacion+'>'+data[i].nombre+'</option>');
+					} else {
 		    		 $('#especializacion2-select').append('<option value='+data[i].idEspecializacion+'>'+data[i].nombre+'</option>');
+		    	  	}
 		    	  }
 	       }
 	     });
@@ -85,7 +96,7 @@ function cargarEspecializacionesRegistro() {
 2. Cargar Provincias
 
 */	
-function cargarProvincias() {
+function cargarProvincias(idProvinciaSelect) {
 	var url = "/ReformatecWeb/provincia-service";
 	$.ajax({                        
 	       type: "GET",                 
@@ -93,13 +104,26 @@ function cargarProvincias() {
 	       data: "action=search-provincia",
 	       success: function(response) {
 		    	  $('#provincia-select').empty();
-		    	  $('#provincia-select').append('<option disabled selected>Selecciona una provincia</option>');
+		    	  $('#provincia-select').append('<option value="null" selected>Selecciona una provincia</option>');
 		    	  $('#provincia2-select').empty();
-		    	  $('#provincia2-select').append('<option disabled selected>Selecciona una provincia</option>');
+		    	  $('#provincia2-select').append('<option value="null" selected>Selecciona una provincia</option>');
 		    	  var data = response.data;
-		    	  for (var i=0; i<data.length;i++){
-		    		 $('#provincia-select').append('<option value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
-		    		  $('#provincia2-select').append('<option value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
+		    	  var data2 = response.data;
+		    	   for (var i=0; i<data.length;i++){
+		    		 
+		    		 if (data[i].idProvincia==idProvinciaSelect) {
+						$('#provincia-select').append('<option selected value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
+					} else {
+		    		 $('#provincia-select').append('<option  value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
+		    	 	 }
+		    	  }
+		    	  for (var i=0; i<data2.length;i++){
+		    		 
+		    		 if (data[i].idProvincia==idProvinciaSelect) {
+						$('#provincia2-select').append('<option selected value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
+					} else {
+		    		 $('#provincia2-select').append('<option value='+data[i].idProvincia+'>'+data[i].nombre+'</option>');
+		    	  	}
 		    	  }
 	       }
 	 	});

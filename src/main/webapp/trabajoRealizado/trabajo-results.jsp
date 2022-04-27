@@ -166,7 +166,7 @@
 									parameters.remove(ParameterNames.PAGE); // para que no arrastre el valor anterior
 									
 									// Ya viene terminada en &
-									String baseURL = ParameterUtils.getURL(request.getContextPath()+ControllerNames.TRABAJO_REALIZADO, parameters);
+									String baseURL = ParameterUtils.getURLPaginacion(request.getContextPath()+ControllerNames.TRABAJO_REALIZADO, parameters);
 	
 									
 									// Primera

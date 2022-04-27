@@ -44,6 +44,8 @@ public class ActionNames {
 	public static final String LOGOUT = "logout";
 	public static final String LOGIN = "login";
 	
+	public static final String CONTACT = "contact";
+	
 	public static final String FORGOT = "forgot";
 	public static final String RESTAURAR_PASS = "restaurar-pass";
 	
@@ -52,5 +54,14 @@ public class ActionNames {
 	public static final String CONTADOR_PROVEEDOR = "contador-proveedor";
 	public static final String CONTADOR_PROYECTO_ACTIVO = "contador-proyecto-activo";
 	public static final String CONTADOR_PROYECTO_FINALIZADO = "contador-proyecto-finalizado";
+	
+	public static final String MIS_FAVORITOS = "mis-favoritos";
+	public static final String MIS_PROYECTOS = "mis-proyectos";
+	public static final String MIS_PRESUPUESTOS = "mis-presupuestos";
+	public static final String MIS_TRABAJOS = "mis-trabajos";
+	
+	public static final String ANHADIR_FAVORITO = "anhadir-favorito";
+	public static final String ELIMINAR_FAVORITO = "eliminar-favorito";
+	
 	
 }

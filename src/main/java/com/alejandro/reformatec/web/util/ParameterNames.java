@@ -81,4 +81,9 @@ public class ParameterNames {
 	public static final String CANTIDAD_LINEAS_PRESUPUESTO = "total-lineas";
 	public static final String IMPORTE_LINEA_PRESUPUESTO = "importe-linea-presupeusto";
 	public static final String DESCRIPCION_LINEA_PRESUPUESTO = "descripcion-linea-presupuesto";
+	
+	public static final String ID_PROVEEDOR_FAVORITO = "id-proveedor-favorito";
+	
+	public static final String ASUNTO = "asunto";
+	public static final String MENSAJE = "mensaje";
 }

@@ -16,7 +16,7 @@ public class ParameterUtils {
 	}
 
 
-	public static final String getURL(String uri, Map<String, String[]> parameters) {
+	public static final String getURLPaginacion(String uri, Map<String, String[]> parameters) {
 		StringBuilder sb = new StringBuilder(uri);
 		if (parameters.size()>0) {
 			sb.append("?");
@@ -31,6 +31,19 @@ public class ParameterUtils {
 		return sb.toString();
 	}
 
+	
+	public static final String getURL(String uri, Map<String, String> parameters) {
+		StringBuilder sb = new StringBuilder(uri);
+		if (parameters.size()>0) {
+			sb.append("?");
+		}
+		for (String pname: parameters.keySet()) {
+			sb.append(URLEncoder.encode(pname)).append("=")
+					.append(URLEncoder.encode(parameters.get(pname))).append("&");
+		}
+		return sb.toString();
+	}
+	
 	public static final String print(String parameterValue) {
 		if (StringUtils.isEmpty(parameterValue)) {
 			return Strings.EMPTY;

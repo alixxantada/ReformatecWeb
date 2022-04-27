@@ -10,7 +10,7 @@
 								<div class="contact_title text-center">Registro Proveedor</div>
 								<div class="todaviano">
 									<span class="text-claro">¿Ya tienes cuenta? </span>
-									<a href="<%=context%>/usuario/usuario-login.jsp" class="offers-link">Iniciar Sesión</a>
+									<a href="<%=context+ViewNames.USUARIO_LOGIN%>" class="offers-link">Iniciar Sesión</a>
 								</div>	
 								<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off" method="post" id="registro-proveedor" class="contact2_form text-center">
 								<%@include file="/common/common-errors.jsp"%>
@@ -79,7 +79,7 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.DNI%>" maxlength="10" size="10" id="usuario-cif" class="contact2_form_name2 input_field" 
+									<input type="text" name="<%=ParameterNames.DNI%>" maxlength="10" size="10" id="usuario-cif" class="contact2_form_subject input_field" 
 									placeholder="D.N.I*" data-error="Necesitamos tu DNI..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.DNI))%>">
 									<%
 			                  		parameterError = errors.getParameterError(ParameterNames.NOMBRE);
@@ -89,7 +89,7 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.NOMBRE%>" size="80" id="usuario-nombre" class="contact2_form_name2 input_field" 
+									<input type="text" name="<%=ParameterNames.NOMBRE%>" size="80" id="usuario-nombre" class="contact2_form_subject input_field" 
 									placeholder="Nombre*" data-error="Necesitamos tu Nombre..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.NOMBRE))%>">
 									<%
 			                  		parameterError = errors.getParameterError(ParameterNames.APELLIDO_1);
@@ -187,7 +187,7 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.CIF%>" id="usuario-cif" class="contact2_form_name2 input_field" placeholder="C.I.F." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.CIF))%>">
+									<input type="text" name="<%=ParameterNames.CIF%>" id="usuario-cif" class="contact2_form_subject input_field" placeholder="C.I.F." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.CIF))%>">
 									<%
 			                  		parameterError = errors.getParameterError(ParameterNames.DIRECCION_WEB);
 			                  		if (parameterError!=null) {

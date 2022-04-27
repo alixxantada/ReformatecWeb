@@ -33,6 +33,7 @@
 				                  	<%
 				                  		}
 				                  	%>
+				                  	<input type="hidden" name="<%=ParameterNames.COD_REGISTRO%>" value="<%=request.getAttribute(AttributeNames.CODE)%>">									
 									<input type="password" name="<%=ParameterNames.PASSWORD_2%>" class="contact3_form_subject input_field" required="required" placeholder="Repite la contraseña">	
 									<input type="hidden" name="<%=ParameterNames.ID_USUARIO%>" value="<%=u.getIdUsuario()%>">
 									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.UPDATE_PASSWORD%>">	

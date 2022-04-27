@@ -78,13 +78,26 @@
 								<div class="hotel_title_container d-flex flex-lg-row flex-column">
 									<div class="hotel_title_content">
 										<h1 class="hotel_title"><%=u.getNombrePerfil()%></h1>
-										<%						
-											if (usuario != null) {
-												if(u.getValoracionMedia()==null) {
-	
-												} else {
-											
-													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());											
+
+										<% 
+										if (usuario != null) {
+											Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
+											if(!idsFavoritos.contains(u.getIdUsuario())){
+			
+										%>
+										<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
+										<%
+											} else {
+										%>										
+										<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
+										<%
+										}
+			
+											if(u.getValoracionMedia()==null) {
+
+											} else {
+										
+												int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());											
 										%>
 										
 										<div class="offer3_reviews_rating text-center"><%=u.getValoracionMedia() %></div>
