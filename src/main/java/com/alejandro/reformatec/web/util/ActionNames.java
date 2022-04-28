@@ -63,5 +63,8 @@ public class ActionNames {
 	public static final String ANHADIR_FAVORITO = "anhadir-favorito";
 	public static final String ELIMINAR_FAVORITO = "eliminar-favorito";
 	
+	public static final String SEARCH_USUARIO_ESPECIALIZACION = "search-usuario-especializacion";
+	public static final String SEARCH_USUARIO_SIN_ESPECIALIZACION = "search-usuario-sin-especializacion";
+	
 	
 }

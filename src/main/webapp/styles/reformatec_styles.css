@@ -2347,7 +2347,12 @@ background: #966A08;
 	font-weight: 400;
 	color: #929191;
 }
-
+.offers_price a{
+	display: inline-block;
+	font-size: 18px;
+	color: #28395a;
+	line-height: 25px;
+}
 .offers_rating i::before
 {
 	font-size: 13px;
@@ -3428,11 +3433,20 @@ margin-bottom:10px;
 .cuadro-proveedores-results{
 	background-color: #FFF;
     max-height: 165px;
+    width: 250px;
     word-wrap: break-word;
     overflow-y: scroll;
-    width: 300px;
     margin-top: -34px;
 }
+.cuadro-proveedores-results-index{
+	background-color: #FFF;
+    max-height: 165px;
+    width: 244px;
+    word-wrap: break-word;
+    overflow-y: scroll;
+    margin-top: -34px;
+}
+
 .cuadro-proveedores-results p {
 	padding: 10px 10px 0px 10px;
 }
@@ -3739,6 +3753,7 @@ margin-top: 20px;
 	height:300px;
 	resize:none;
 	z-index:auto;
+	background-color: rgba(40, 57, 90, 0.02);
 }
 .form-control-descripcion{
 	width:100%;
@@ -3747,8 +3762,13 @@ margin-top: 20px;
 .caja-eliminar-usuario{
 	margin-top: 30px;	
 	text-align:center;
+	position: relative;;
+	float: left;
+	width: 100%;
 }
-
+.form-control{
+	background-color: rgba(40, 57, 90, 0.02);
+}
 .eliminar-usuario-definitivo{
 	display:none;
 	height: 100px;
@@ -3760,8 +3780,23 @@ margin-top: 20px;
 	font-size: 15px;
 	font-weight: 600;
 }
-
-
+.botones-editar{
+	position:relative;;
+	float:left;
+	width:100%;
+}
+.especializaciones-edit{
+	width:100%;
+	position: relative;;
+	float: left;;
+	text-align: center;
+}
+.cambi-pass{
+	position:relative;
+	width:100%;
+	float:left;
+	margin-top:10px;
+}
 #direccionEditarPerfil{
 	display:none;
 }
@@ -3866,4 +3901,40 @@ color: #28395a;
 	font-weight: 600;
 	margin-top: 100px;
 	margin-left: -400px;
+}
+.ordenar_por{
+	display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    width: 100%;
+}
+.caja-descripcion{
+	box-sizing: border-box;
+	width: 250px;
+	margin-bottom: 25px;
+}
+.enlaceBase {
+	color:#28395a;
+	text-decoration: none;
+}
+.listaBase{
+	padding:12px;
+	font-size:12px;
+	color:#28395a;
+}
+.listaBase b{
+	font-size:14px;
+}
+.listaBase:hover{
+	background: rgba(40, 57, 90, 0.1);
+}
+.enlaceBase:hover{
+	color:#966A08;	
+}
+#orderby-select{	
+	color:#28395a;
+	border: solid 1px #28395a;
+}
+#orderby-select option:hover{
+	color:#966A08;
 }

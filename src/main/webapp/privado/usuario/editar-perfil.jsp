@@ -181,22 +181,26 @@
 						                  	<%
 						                  		}
 						                  	%>
-											<div class="especializacion-proveedor" id="especializaciones-proveedor">
-											
-												<div>
-			                                        <select class="select-registro-especializacion" id="especializacion-select" multiple>
-														
-			                                        </select>
-			                                    </div>
-			                                    <div>
-			                                        <select class="select-registro-especializacion-seleccionadas" id="especializacionesSeleccionadas" name="<%=ParameterNames.ID_ESPECIALIZACION%>" multiple>
-			                                        </select>	
-			                                    </div> 
+						                  	<div class="especializaciones-edit">
+												<div class="especializacion-proveedor" id="especializaciones-proveedor">
+												
+													<div>
+				                                        <select class="select-registro-especializacion" id="especializacion-select" multiple>
+															
+				                                        </select>
+				                                    </div>
+				                                    <div>
+				                                        <select class="select-registro-especializacion-seleccionadas" id="especializacionesSeleccionadas" name="<%=ParameterNames.ID_ESPECIALIZACION%>" multiple>
+				                                        </select>	
+				                                    </div> 
+												</div>
 											</div>
 											<%
 											}
 											%>
-											<button type="button" class="btn btn-success" id="cambioDePass" onclick="cargarCambioPass()">Cambiar Contraseña</button>
+											<div class="cambi-pass">
+												<button type="button" class="btn btn-success" id="cambioDePass" onclick="cargarCambioPass()">Cambiar Contraseña</button>
+											</div>
 											<div id="caja-pass">
 												<div class="form-group">
 													<label for="position-top-right">Actual Contraseña</label>
@@ -241,7 +245,7 @@
 											<input type="hidden" name="<%=ParameterNames.ID_TIPO_USUARIO%>" value="<%=usuario.getIdTipoUsuario()%>"/>
 											<input type="hidden" name="<%=ParameterNames.NOMBRE_PERFIL%>" value="<%=usuario.getNombrePerfil()%>"/>
 											<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.UPDATE_USUARIO%>"/>
-											<div>
+											<div class="botones-editar">
 												<button type="submit" class="btn btn-success">Guardar</button>
 												<button type="button" class="btn btn-success" id="cancelar-edit" ><a href="<%=context+ViewNames.USUARIO_PERFIL%>">Cancelar</a></button>
 												<div class="caja-eliminar-usuario">
@@ -271,6 +275,8 @@
 				$(document).ready(pasar());
 				$(document).ready(regresar());
 				$(document).ready(eliminarCuenta());
+				$(document).ready(cargarEspecializacionesUpdateSi());
+				$(document).ready(cargarEspecializacionesUpdateNo());
 			</script>
 <!-- Editar Perfil End-->
 <%@include file="/common/footer.jsp"%>

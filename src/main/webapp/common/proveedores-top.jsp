@@ -28,13 +28,13 @@
 								<div class="offers_image_background"
 									style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)"></div>
 								<div class="offer_name">
-									<a href="<%=context+ViewNames.USUARIO_DETAIL%>"><%=u.getNombrePoblacion() %></a>
+									<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePoblacion() %></a>
 								</div>
 							</div>
 						</div>
 						<div class="col-lg-6">
 							<div class="offers_price">
-								<%=u.getNombrePerfil()%></br>
+								<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePerfil()%></a><span></span>
 							</div>
 							<div class="offers2_item rating_5">
 								<div class="offers_content">									
@@ -43,7 +43,7 @@
 
 										} else {
 					
-											int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());
+											int valoracionMediaEntera = (int) Math.ceil(u.getValoracionMedia());
 									
 										%>
 									<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
@@ -57,12 +57,12 @@
 									}
 
 									Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
-									if(!idsFavoritos.contains(u.getIdUsuario())){
+									if (!idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
 								
 									%>
 									<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
 									<%
-									} else {
+									} else if (idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
 									%>										
 									<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
 									<%
@@ -74,9 +74,6 @@
 											<%if (u.getServicio24()==true){ %><li class="offers2_icons_item"><img src="<%=context%>/images/24h.png" alt=""></li><% } %>
 											<%if (u.getProveedorVerificado()==true){ %><li class="offers2_icons_item"><img src="<%=context%>/images/ruler.png" alt=""></li><% } %>
 										</ul>
-									</div>
-									<div class="offers_link">
-										<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"">Ver Perfil</a>
 									</div>
 								</div>
 							</div>							

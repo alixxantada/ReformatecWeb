@@ -39,7 +39,7 @@
 									<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.LOGOUT%>">Cerrar Sesión</a>
 								</div>
 								<div class="user_box_register user_box_link">
-									<a href="<%=context+ViewNames.USUARIO_PERFIL%>">Mi Cuenta</a>
+									<a href="<%=context+ViewNames.USUARIO_PERFIL%>"><%=usuario.getNombrePerfil()%></a>
 								</div>
 							</div>
 							<%

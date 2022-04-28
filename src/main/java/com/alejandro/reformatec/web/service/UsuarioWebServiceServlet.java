@@ -1,6 +1,7 @@
 package com.alejandro.reformatec.web.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -17,6 +18,7 @@ import com.alejandro.reformatec.dao.util.ConfigurationManager;
 import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
 import com.alejandro.reformatec.exception.DataException;
 import com.alejandro.reformatec.exception.ServiceException;
+import com.alejandro.reformatec.model.Especializacion;
 import com.alejandro.reformatec.model.Results;
 import com.alejandro.reformatec.model.UsuarioCriteria;
 import com.alejandro.reformatec.model.UsuarioDTO;
@@ -109,7 +111,8 @@ public class UsuarioWebServiceServlet extends HttpServlet {
 			// se indica el final del json y que envie sus datos con flush
 			sos.flush();
 
-		}// + acciones a continuacion...
+		} 
+		// + acciones a continuacion...
 	}    
 
 

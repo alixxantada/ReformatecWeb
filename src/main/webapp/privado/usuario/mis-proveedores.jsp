@@ -1,14 +1,15 @@
 <%@include file="/common/header.jsp"%>
 <%@include file="/common/menu-usuario.jsp"%>
 <!--  Mis proveedores favoritos Start -->
-
+<h1 class="mis-favoritos"> Mis Favoritos </h1>
+<%
+	// lio de usuarios usuarios es la lista de usuarios resultados
+	Results<UsuarioDTO> results = (Results<UsuarioDTO>) request.getAttribute(AttributeNames.USUARIO);
+	List<UsuarioDTO> usuarios = results.getData();
+	if (usuarios.size()>0) {
+	%>
 	<div class="col-lg-11 usuario_resultados">
-	<h1 class="mis-favoritos"> Mis Favoritos </h1>
 		<%
-		// lio de usuarios usuarios es la lista de usuarios resultados
-		Results<UsuarioDTO> results = (Results<UsuarioDTO>) request.getAttribute(AttributeNames.USUARIO);
-		List<UsuarioDTO> usuarios = results.getData();
-		
 		for (UsuarioDTO u : usuarios) {
 		%>
 			<!-- Proveedor Result -->
@@ -199,6 +200,15 @@
 			</ul>
 		</div>
 	</div>
+	<%
+		} else {
+	%>
+	<div class="caja-sin-resultados">
+	<p class="sin-resultados">Todavía no tienes favoritos</p>
+	</div>
+	<%
+		}
+	%>
 </div>
 
 

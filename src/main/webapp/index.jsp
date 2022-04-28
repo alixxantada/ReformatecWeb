@@ -17,10 +17,10 @@
 							<div class="search_panel active">
 								<form action="<%=context+ControllerNames.USUARIO%>" id="proveedor" autocomplete="off" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_USUARIO%>"/>
-									<div class="search_item">
+									<div class="search_item" onmousedown="setFlag()" onmouseup="doProcessing()">
 										<div>Búsqueda</div>
 										<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-proveedor"class="destination search_input" placeholder="¿Qué necesitas?"
-											onkeyup="buscarProveedores()"/>
+											onkeyup="buscarProveedores()" onblur="ocultaDescripcion()"/>
 									</div>
 									<div class="search_item">
 										<div>Especializacion</div>
@@ -41,10 +41,10 @@
 							<div class="search_panel">
 								<form action="<%=context+ControllerNames.TRABAJO_REALIZADO%>" autocomplete="off"  id="trabajo" class="search_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 									<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_TRABAJO%>"/>
-									<div class="search_item">
+									<div class="search_item" onmousedown="setFlag()" onmouseup="doProcessing()">
 										<div>Descripción</div>
 										<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" class="destination search_input" placeholder="¿Qué quieres ver?"
-										onkeyup="buscarTrabajos()"/>
+										onkeyup="buscarTrabajos()" onblur="ocultaDescripcion()"/>
 									</div>
 									<div class="search_item">
 										<div>Especializacion</div>
@@ -61,7 +61,9 @@
 									<button class="button search_button">Buscar<span></span><span></span><span></span></button>
 								</form>
 							</div>
-							<div id="proveedores-results" class="cuadro-proveedores-results">
+							<div id="proveedores-results" class="cuadro-proveedores-results-index" onmousedown="setFlag()" onmouseup="doProcessing()" >
+								<ul id="lista-results">
+								</ul>
 							</div>
 						</div>
 					</div>

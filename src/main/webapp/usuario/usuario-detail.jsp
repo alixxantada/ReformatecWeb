@@ -16,14 +16,18 @@
 									</div>
 											<!-- search2 Panel -->
 									<div class="search3_panel active">
-										<form action="<%=(context+ControllerNames.USUARIO)%>" autocomplete="off" id="search-proveedor" class="search3_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
-										<input type="hidden" name="<%=(ParameterNames.ACTION)%>" value="<%=(ActionNames.SEARCH_USUARIO)%>"/>
-										<div class="search3_item">
-											<div>Descripción</div>
-											<input type="text" name="<%=(ParameterNames.BUSCAR_DESCRIPCION)%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
-											onkeyup="buscarProveedores()"/>
-										</div>
-										<div id="proveedores-results" class="cuadro-proveedores-results">
+										<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off" id="search-proveedor" class="search3_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
+										<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_USUARIO%>"/>
+										<div  class="caja-descripcion" id="caja-focus-descripcion" onmousedown="setFlag()" onmouseup="doProcessing()">
+											<div class="search3_item">
+												<div>Descripción</div>
+												<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
+												onkeyup="buscarProveedores()"  onclick="muestraDescripcion()" onblur="ocultaDescripcion()"/>
+											</div>													
+											<div id="proveedores-results" class="cuadro-proveedores-results" >
+												<ul id="lista-results">
+												</ul>
+											</div>
 										</div>
 										<div class="search3_item">
 											<div>Especializacion</div>
@@ -82,12 +86,12 @@
 										<% 
 										if (usuario != null) {
 											Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
-											if(!idsFavoritos.contains(u.getIdUsuario())){
+											if (!idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
 			
 										%>
 										<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
 										<%
-											} else {
+											} else if (idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
 										%>										
 										<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
 										<%
@@ -97,7 +101,7 @@
 
 											} else {
 										
-												int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());											
+												int valoracionMediaEntera = (int) Math.ceil(u.getValoracionMedia());											
 										%>
 										
 										<div class="offer3_reviews_rating text-center"><%=u.getValoracionMedia() %></div>
@@ -223,7 +227,7 @@
 													<div class="review_content">
 														<div class="review_title_container">
 															<div class="review_title"><%=v.getTitulo() %></div>
-															<div class="review_rating"><%=v.getNotaValoracion()*2 %></div>
+															<div class="review_rating"><%=v.getNotaValoracion() %></div>
 														</div>
 														<div class="review_text">
 															<p><%=v.getDescripcion()%></p>

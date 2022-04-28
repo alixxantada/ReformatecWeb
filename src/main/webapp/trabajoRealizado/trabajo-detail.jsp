@@ -19,12 +19,16 @@
 									<div class="search3_panel active">
 										<form action="<%=context+ControllerNames.TRABAJO_REALIZADO%>" autocomplete="off" id="search-trabajo" class="search3_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 										<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_TRABAJO%>"/>
-										<div class="search3_item">
-											<div>Descripción</div>
-											<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" placeholder="¿Qué estás buscando?" class="destination search3_input"
-											onkeyup="buscarTrabajos()"/>
-										</div>	
-										<div id="proveedores-results" class="cuadro-proveedores-results">
+										<div  class="caja-descripcion" id="caja-focus-descripcion" onmousedown="setFlag()" onmouseup="doProcessing()">
+											<div class="search3_item">
+												<div>Descripción</div>
+												<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" placeholder="¿Qué estás buscando?" class="destination search3_input"
+												onkeyup="buscarTrabajos()" onclick="muestraDescripcion()" onblur="ocultaDescripcion()"/>
+											</div>													
+											<div id="proveedores-results" class="cuadro-proveedores-results" >
+												<ul id="lista-results">
+												</ul>
+											</div>
 										</div>
 										<div class="search3_item">
 											<div>Especializacion</div>

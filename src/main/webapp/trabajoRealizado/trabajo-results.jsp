@@ -20,17 +20,19 @@
 											<div class="search3_panel active">
 												<form action="<%=context+ControllerNames.TRABAJO_REALIZADO%>" autocomplete="off" id="search-trabajo" class="search3_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 												<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_TRABAJO%>"/>
-												<div class="search3_item">
+												<div class="search3_item" onmousedown="setFlag()" onmouseup="doProcessing()">
 													<div>Descripción</div>
 													<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" placeholder="¿Qué estás buscando?" class="destination search3_input"
-													onkeyup="buscarTrabajos()"/>
-												</div>
-												<div id="proveedores-results" class="cuadro-proveedores-results">
+													onkeyup="buscarTrabajos()" onclick="muestraDescripcion()" onblur="ocultaDescripcion()"/>
+												</div>													
+												<div id="proveedores-results" class="cuadro-proveedores-results" onmousedown="setFlag()" onmouseup="doProcessing()">
+													<ul id="lista-results">
+													</ul>
 												</div>
 												<div class="search3_item">
 													<div>Especializacion</div>
 													<select name="<%=ParameterNames.ID_ESPECIALIZACION%>" id="especializacion-select" class="dropdown_item_select search3_input">
-														-	<option disabled selected>Selecciona una especialización</option>
+														<option disabled selected>Selecciona una especialización</option>
 													</select>
 												</div>
 												<div class="search3_item">
@@ -48,29 +50,30 @@
 						</div>
 					</div>
 					<div class="col-lg-8 caja_resultados_trabajos">					
-							<!-- Offers Sorting -->
-						<div class="col-lg-11 ordenar_por">
+							<!-- Offers Sorting -->						
+						<div class="ordenar_por">
 							<div class="offers2_sorting_container">
-								<ul class="offers2_sorting">
-									<li>
-										<span class="sorting_text">Ordenar Por</span>
+								<ul class="offers2_sorting" >
+									<select name="<%=ParameterNames.ORDER_BY%>" id="orderby-select" class="dropdown_item_select search3_input"
+									onchange="this.form.submit()">
+										<option disabled selected>Ordenar Por</option>
+										<option value ="NV">Numero de visualizaciones</option>
+										<option value ="FC">Fecha de Creacion</option>
+										<option value ="VAL">Valoracion Media</option>
 										<i class="fa fa-chevron-down"></i>
-										<ul>
-											<li class="sort_btn" data-isotope-option='{ "sortBy": "fecha-creacion" }'><span>Fecha Creación</span></li>
-											<li class="sort_btn" data-isotope-option='{ "sortBy": "valoracion" }'><span>Valoración</span></li>
-											<li class="sort_btn" data-isotope-option='{ "sortBy": "visualizaciones" }'><span>Visualizaciones</span></li>							
-										</ul>
-									</li>
+									</select>
 								</ul>
+								
 							</div>
 						</div>
 						</form>
-						<div class="col-lg-11 trabajo_resultados">
+						<%
+						Results<TrabajoRealizadoDTO> results = (Results<TrabajoRealizadoDTO>) request.getAttribute(AttributeNames.TRABAJO);
+						List<TrabajoRealizadoDTO> trabajos = results.getData();
+						if (trabajos.size()>0) {
+						%>
+						<div class="col-lg-11 trabajo_resultados">							
 							<%
-							// lio de usuarios usuarios es la lista de usuarios resultados
-							Results<TrabajoRealizadoDTO> results = (Results<TrabajoRealizadoDTO>) request.getAttribute(AttributeNames.TRABAJO);
-							List<TrabajoRealizadoDTO> trabajos = results.getData();
-							
 							for (TrabajoRealizadoDTO tr : trabajos) {
 							%>
 								<!-- Trabajo Result -->
@@ -80,9 +83,7 @@
 									<div class="offers2_content">
 										<%						
 											if (usuario != null) {
-												if(tr.getNotaValoracion()==null) {
-	
-												} else {
+												if(tr.getNotaValoracion()!=null) {
 																						
 												%>
 											<div class="rating_r rating_r_<%=tr.getNotaValoracion()%> offers2_rating" data-rating="<%=tr.getNotaValoracion()%>">
@@ -121,9 +122,19 @@
 												%>
 												<%						
 													if (usuario != null) {
+														if(tr.getNotaValoracion()!=null) {
 												%>
-													<div class="offer2_reviews_rating text-center"><%=tr.getNotaValoracion()%></div>
+												<div class="offer2_reviews_rating text-center"><%=tr.getNotaValoracion()%></div>
 												<%
+														} else {
+												%>
+												<div class="offer2_reviews_content">
+												<div class="offer2_reviews_subtitle"> Sin valoraciones</div>
+												</div>
+												<div class="offer2_reviews_rating text-center">-</div>
+												
+												<%
+														}
 													}
 												%>																								
 											</div>
@@ -220,12 +231,23 @@
 							</ul>
 						</div>
 					</div>
+					<% 
+					} else {					
+					%>
+					<div class="caja-sin-resultados">
+						<p class="sin-resultados">No se han encontrado resultados</p>
+					</div>
+					<%
+						}
+					%>
 				</div>		
 			</div>
 		</div>
 		<script>
-			$(document).ready(cargarProvincias());
-			$(document).ready(cargarEspecializaciones());
+		
+		
+			$(document).ready(cargarProvincias(<%=request.getParameter(ParameterNames.ID_PROVINCIA)%>));
+			$(document).ready(cargarEspecializaciones(<%=request.getParameter(ParameterNames.ID_ESPECIALIZACION)%>));
 		</script>
 <!-- Sección Central End-->
 <%@include file="/common/footer.jsp"%>

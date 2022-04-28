@@ -93,6 +93,8 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			targetView = ControllerNames.USUARIO;
 			forward = false;
 
+			
+			
 		} else if (ActionNames.UPDATE_USUARIO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)

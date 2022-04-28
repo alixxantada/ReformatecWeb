@@ -1,7 +1,7 @@
 <!-- Perfil Menu Start-->
 			<div class="container">
 				<div class="menuusuario">
-					<div><a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.MIS_FAVORITOS%>&<%=ParameterNames.ID_USUARIO%>=<%=usuario.getIdUsuario()%>">Mis Proveedores</a></div>
+					<div><a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.MIS_FAVORITOS%>&<%=ParameterNames.ID_USUARIO%>=<%=usuario.getIdUsuario()%>">Mis Favoritos</a></div>
 					<div><a href="<%=context+ControllerNames.PRIVADO_PROYECTO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.MIS_PROYECTOS%>&<%=ParameterNames.ID_USUARIO%>=<%=usuario.getIdUsuario()%>">Mis Proyectos</a></div>
 					<%
 					

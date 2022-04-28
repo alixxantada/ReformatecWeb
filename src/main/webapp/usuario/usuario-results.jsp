@@ -20,12 +20,16 @@
 											<div class="search3_panel active">
 												<form action="<%=context+ControllerNames.USUARIO%>" autocomplete="off" id="search-proveedor" class="search3_panel_content d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-lg-between justify-content-start">
 												<input type="hidden" name="<%=ParameterNames.ACTION%>" value="<%=ActionNames.SEARCH_USUARIO%>"/>
-												<div class="search3_item">
-													<div>Descripción</div>
-													<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" value="<%=ParameterUtils.print(request.getParameter(ParameterNames.BUSCAR_DESCRIPCION))%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
-													onkeyup="buscarProveedores()"/>
-												</div>
-												<div id="proveedores-results" class="cuadro-proveedores-results">
+												<div  class="caja-descripcion" id="caja-focus-descripcion" onmousedown="setFlag()" onmouseup="doProcessing()">
+													<div class="search3_item">
+														<div>Descripción</div>
+														<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-proveedor" placeholder="¿Qué estás buscando?" class="destination search3_input"
+														onkeyup="buscarProveedores()"  onclick="muestraDescripcion()" onblur="ocultaDescripcion()"/>
+													</div>													
+													<div id="proveedores-results" class="cuadro-proveedores-results" >
+														<ul id="lista-results">
+														</ul>
+													</div>
 												</div>
 												<div class="search3_item">
 													<div>Especializacion</div>
@@ -100,7 +104,8 @@
 						<div class="col-lg-11 ordenar_por">
 							<div class="offers2_sorting_container">
 								<ul class="offers2_sorting" >
-									<select name="<%=ParameterNames.ORDER_BY%>" id="orderby-select" class="dropdown_item_select search3_input">
+									<select name="<%=ParameterNames.ORDER_BY%>" id="orderby-select" class="dropdown_item_select search3_input"
+									onchange="this.form.submit()">
 										<option disabled selected>Ordenar Por</option>
 										<option value ="NV">Numero de visualizaciones</option>
 										<option value ="VAL">Valoracion Media</option>
@@ -134,7 +139,7 @@
 	
 												} else {
 							
-													int valoracionMediaEntera = (int) Math.round(u.getValoracionMedia());
+													int valoracionMediaEntera = (int) Math.ceil(u.getValoracionMedia());
 											
 												%>
 											<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
@@ -208,18 +213,18 @@
 							//usuario en sesion
 							if (usuario!=null) {
 								Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
-								if(!idsFavoritos.contains(u.getIdUsuario())){
+								if (!idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
 						
-							%>
-							<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
-							<%
-								} else {
-							%>										
-							<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
-							<%
-								}
-							}			
-							%>
+								%>
+								<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
+								<%
+									} else if (idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
+								%>										
+								<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
+								<%
+									}
+								}			
+								%>
 							</div>
 							<div class="row">
 								<div class="resultado_foto">
