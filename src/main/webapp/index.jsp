@@ -44,7 +44,7 @@
 									<div class="search_item" onmousedown="setFlag()" onmouseup="doProcessing()">
 										<div>Descripción</div>
 										<input type="text" name="<%=ParameterNames.BUSCAR_DESCRIPCION%>" id="descripcion-trabajo" class="destination search_input" placeholder="¿Qué quieres ver?"
-										onkeyup="buscarTrabajos()" onblur="ocultaDescripcion()"/>
+										onkeyup="buscarTrabajos()" onblur="ocultaDescripcion()" onclick="buscarTrabajos()"/>
 									</div>
 									<div class="search_item">
 										<div>Especializacion</div>
@@ -239,7 +239,6 @@
 <script>
 	$(document).ready(cargarProvincias());
 	$(document).ready(cargarEspecializaciones());
-	//$(document).ready(cargarUsuariosIndex());
 </script>
 				
 <%@include file="/common/footer.jsp"%>

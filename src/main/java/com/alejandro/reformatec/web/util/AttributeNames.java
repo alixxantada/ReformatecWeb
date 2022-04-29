@@ -24,5 +24,7 @@ public class AttributeNames {
 	
 	public static final String FAVORITOS = "favoritos";
 	
+	public static final String ESPECIALIZACIONES = "especializaciones";
+	
 	public static final String LOCALE = "locale";
 }

@@ -49,7 +49,7 @@ public class EspecializacionWebServiceServlet extends HttpServlet {
 
 		WebServiceResponse wsResponse = new WebServiceResponse();
 
-		// TODO rest style>
+		
 		if (ActionNames.SEARCH_ESPECIALIZACION.equals(methodStr)) {
 
 			try {

@@ -2,10 +2,7 @@ package com.alejandro.reformatec.web.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +33,6 @@ import com.alejandro.reformatec.web.util.ControllerNames;
 import com.alejandro.reformatec.web.util.CookieManager;
 import com.alejandro.reformatec.web.util.ErroresNames;
 import com.alejandro.reformatec.web.util.ParameterNames;
-import com.alejandro.reformatec.web.util.ParameterUtils;
 import com.alejandro.reformatec.web.util.SessionManager;
 import com.alejandro.reformatec.web.util.Validator;
 import com.alejandro.reformatec.web.util.ViewNames;
@@ -93,12 +89,13 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			targetView = ControllerNames.USUARIO;
 			forward = false;
 
-			
-			
+
+
 		} else if (ActionNames.UPDATE_USUARIO.equalsIgnoreCase(action)) {
 
 			//Dirección de la vista predefinida(en caso de error)
-			targetView = ViewNames.USUARIO_REGISTRO;
+			targetView = ControllerNames.USUARIO;
+			forward = false;
 
 			String servicio24Str=null;
 			// Recoger los datos que enviamos desde la jsp
@@ -112,7 +109,6 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			String direccionWebStr = request.getParameter(ParameterNames.DIRECCION_WEB);
 			servicio24Str = request.getParameter(ParameterNames.SERVICIO_24);
 			String cifStr = request.getParameter(ParameterNames.CIF);
-			String dniStr = request.getParameter(ParameterNames.DNI);
 			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
 			String proveedorVerificadoStr = request.getParameter(ParameterNames.PROVEEDOR_VERIFICADO);
 			String passwordActualStr = request.getParameter(ParameterNames.PASSWORD_ACTUAL);
@@ -120,7 +116,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			String password2Str = request.getParameter(ParameterNames.PASSWORD_2);
 			String [] idsEspecializacionesStr = request.getParameterValues(ParameterNames.ID_ESPECIALIZACION);
 			String descripcionStr = request.getParameter(ParameterNames.DESCRIPCION_USUARIO);
-			
+
 			UsuarioDTO usuario = new UsuarioDTO();
 
 			List<Integer> idsEspecializaciones = new ArrayList<Integer>();
@@ -155,6 +151,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 				forward = false;
 			} else {				
 				targetView = ViewNames.USUARIO_EDITAR_PERFIL;
+				forward = true;
 			}
 
 
@@ -362,25 +359,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 			}
 
 
-			if (!StringUtils.isBlank(dniStr)) {
-				dniStr=dniStr.trim();
 
-				if (Validator.validaDni(dniStr)) {
-					usuario.setNif(dniStr);
-
-				} else {
-					if (logger.isDebugEnabled()) {
-						logger.debug("Dato incorrecto dni: "+dniStr);
-					}
-					errors.addParameterError(ParameterNames.DNI, ErroresNames.ERROR_DNI_FORMATO_INCORRECTO);
-				}
-
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Dato null/blanco dni: "+dniStr);
-				}
-				errors.addParameterError(ParameterNames.DNI, ErroresNames.ERROR_DNI_OBLIGATORIO);			
-			}
 
 
 			if (idTipoUsuario==TipoUsuario.USUARIO_PROVEEDOR) {
@@ -396,7 +375,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 						errors.addParameterError(ParameterNames.CIF, ErroresNames.ERROR_CIF_FORMATO_INCORRECTO);
 					}
 				} else {
-					usuario.setCif(dniStr);
+					usuario.setCif(null);
 				}
 
 
@@ -466,12 +445,12 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 						}
 					}
 				}
-				
-				
-				
+
+
+
 				//TODO como seria recomendable validar esto?
 				usuario.setDescripcion(descripcionStr);
-				
+
 
 			}	
 
@@ -482,9 +461,15 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 					usuarioService.update(usuario, idsEspecializaciones);
 
-					request.setAttribute(AttributeNames.USUARIO, usuario);
+					// Busco al usuario actualizado para enviarlo actualizado
+					UsuarioCriteria uc = new UsuarioCriteria();
+					uc.setIdUsuario(usuario.getIdUsuario());					
+					Results<UsuarioDTO> user = usuarioService.findByCriteria(uc, 1, 1);					
+					for (UsuarioDTO u :user.getData()) {
 
-					SessionManager.set(request, AttributeNames.USUARIO, usuario);
+						request.setAttribute(AttributeNames.USUARIO, u);
+						SessionManager.set(request, AttributeNames.USUARIO, u);
+					}
 
 					// Dirigir a..
 					targetView =ViewNames.USUARIO_PERFIL;
@@ -693,175 +678,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 
 
-		} else if (ActionNames.ANHADIR_FAVORITO.equalsIgnoreCase(action)) {
-
-			// Vista en caso de error
-			targetView = ControllerNames.USUARIO;
-			forward = false;
-		
-			// Recoger los datos que enviamos desde la jsp
-			String idProveedorStr = request.getParameter(ParameterNames.ID_PROVEEDOR_FAVORITO);
-			UsuarioDTO user = (UsuarioDTO) SessionManager.get(request, AttributeNames.USUARIO);
-			Long idUsuario = user.getIdUsuario();
-			
-			Map<String, String> userDetailParams = new HashMap<String, String>();
-			userDetailParams.put(ParameterNames.ACTION, ActionNames.MIS_FAVORITOS);
-			userDetailParams.put(ParameterNames.ID_USUARIO, user.getIdUsuario().toString());
-			
-			
-			//Validar y convertir datos
-			Long idProveedor = null;
-			if(!StringUtils.isBlank(idProveedorStr)) {
-				idProveedor = Validator.validaLong(idProveedorStr);
-
-				if(idProveedor==null) {					
-					if (logger.isDebugEnabled()) {
-						logger.debug("Dato incorrecto idProveedor: "+idProveedorStr);
-					}
-					errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_FORMATO_INCORRECTO);					
-				}
-
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Dato null/blanco idUsuario: "+idProveedorStr);
-				}
-				errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
-			}
-
-
-
-			if(StringUtils.isBlank(idUsuario.toString())) {
-
-				if (logger.isDebugEnabled()) {
-					logger.debug("Dato null/blanco idUsuario: "+idUsuario);
-				}
-				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
-			}
-
-
-
-			//Acceder a la capa de negocio(si no hay errores)
-			if(!errors.hasErrors()) {
-				try {
-
-					usuarioService.anhadirFavorito(idUsuario, idProveedor);
-
-					Set<Long> usuariosIds = usuarioService.findFavorito(user.getIdUsuario());
-
-					SessionManager.set(request, AttributeNames.FAVORITOS, usuariosIds);
-					
-					//Dirigir a 
-					targetView = ParameterUtils.getURL(ControllerNames.PRIVADO_USUARIO, userDetailParams); 
-					forward = true;
-
-
-				}catch (DataException de) {
-					if (logger.isErrorEnabled()) {
-						logger.error(de.getMessage(), de);
-					}
-					errors.addCommonError(ErroresNames.ERROR_DATA);
-
-				}catch (ServiceException se) {
-					if (logger.isErrorEnabled()) {
-						logger.error(se.getMessage(), se);
-					}
-					errors.addCommonError(ErroresNames.ERROR_SERVICE);
-
-				}catch (Exception e) {
-					if (logger.isErrorEnabled()) {
-						logger.error(e.getMessage(), e);
-					}
-					errors.addCommonError(ErroresNames.ERROR_E);
-				}
-			}
-
-
-
-		} else if (ActionNames.ELIMINAR_FAVORITO.equalsIgnoreCase(action)) {
-
-			// Vista en caso de error
-			targetView = ControllerNames.USUARIO;
-			forward = false;
-
-			// Recoger los datos que enviamos desde la jsp
-			String idProveedorStr = request.getParameter(ParameterNames.ID_PROVEEDOR_FAVORITO);
-			UsuarioDTO user = (UsuarioDTO) SessionManager.get(request, AttributeNames.USUARIO);
-			Long idUsuario = user.getIdUsuario();
-			
-
-			Map<String, String> userDetailParams = new HashMap<String, String>();
-			userDetailParams.put(ParameterNames.ACTION, ActionNames.MIS_FAVORITOS);
-			userDetailParams.put(ParameterNames.ID_USUARIO, user.getIdUsuario().toString());
-
-			 
-			//Validar y convertir datos
-			Long idProveedor = null;
-			if(!StringUtils.isBlank(idProveedorStr)) {
-				idProveedor = Validator.validaLong(idProveedorStr);
-
-				if(idProveedor==null) {					
-					if (logger.isDebugEnabled()) {
-						logger.debug("Dato incorrecto idProveedor: "+idProveedorStr);
-					}
-					errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_FORMATO_INCORRECTO);					
-				}
-
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Dato null/blanco idUsuario: "+idProveedorStr);
-				}
-				errors.addParameterError(ParameterNames.ID_PROVEEDOR_FAVORITO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
-			}
-
-
-
-			if(StringUtils.isBlank(idUsuario.toString())) {
-
-				if (logger.isDebugEnabled()) {
-					logger.debug("Dato null/blanco idUsuario: "+idUsuario);
-				}
-				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_ID_USUARIO_OBLIGATORIO);
-			}
-
-
-
-			//Acceder a la capa de negocio(si no hay errores)
-			if(!errors.hasErrors()) {
-				try {
-
-					usuarioService.deleteFavorito(idUsuario, idProveedor);
-
-					Set<Long> usuariosIds = usuarioService.findFavorito(user.getIdUsuario());
-
-					SessionManager.set(request, AttributeNames.FAVORITOS, usuariosIds);
-					
-					//Dirigir a ...
-					targetView = ParameterUtils.getURL(ControllerNames.PRIVADO_USUARIO, userDetailParams); 
-					forward = true;
-
-
-				}catch (DataException de) {
-					if (logger.isErrorEnabled()) {
-						logger.error(de.getMessage(), de);
-					}
-					errors.addCommonError(ErroresNames.ERROR_DATA);
-
-				}catch (ServiceException se) {
-					if (logger.isErrorEnabled()) {
-						logger.error(se.getMessage(), se);
-					}
-					errors.addCommonError(ErroresNames.ERROR_SERVICE);
-
-				}catch (Exception e) {
-					if (logger.isErrorEnabled()) {
-						logger.error(e.getMessage(), e);
-					}
-					errors.addCommonError(ErroresNames.ERROR_E);
-				}
-			}
-
-
-		} else {
+		}  else {
 			// Dirigir a...
 			targetView = ControllerNames.USUARIO;
 			forward = false;

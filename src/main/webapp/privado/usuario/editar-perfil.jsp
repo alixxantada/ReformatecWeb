@@ -48,15 +48,14 @@
 												%>
 											</div>
 										</div>										
-										<div class="col-sm-12">																												
-											<div class="form-group">
+										<div class="col-sm-12">																																	
+											<div class="form-group">													
 												<label for="hue-demo">Dirección actual: </label>										
 												<div id="poblacionActual">												
 													<label for="position-top-right"> <%=ParameterUtils.print(usuario.getNombreCalle())%>, <%=ParameterUtils.print(usuario.getNombrePoblacion())%> <%=ParameterUtils.print(usuario.getCodigoPostal())%> ( <%=ParameterUtils.print(usuario.getNombreProvincia())%> )</label>
 												<button type="button" class="btn btn-success" onclick="cargarProvinciasPerfil()">Cambiar Direccion</button>
 												</div>
 											</div>
-											<div class="form-group">													
 												<%
 						                  		parameterError = errors.getParameterError(ParameterNames.ID_PROVINCIA);
 						                  		if (parameterError!=null) {
@@ -64,47 +63,52 @@
 							                  		<p class="error_parametro"><i><%=parameterError%></i></p>
 							                  	<%
 							                  		}
-							                  	%>	
-												<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select-perfil" class="dropdown2_item_select search2_input"  
-												required onchange="cargarPoblacionesPerfil()">
-												<option value="<%=usuario.getIdProvincia()%>" selected><%=usuario.getNombreProvincia()%></option>								
-												</select>
-											</div>
-											<div class="form-group">
-												<%
+							                  	%>
+							                  	<%
 						                  		parameterError = errors.getParameterError(ParameterNames.ID_POBLACION);
 						                  		if (parameterError!=null) {
 							                  	%>
 							                  		<p class="error_parametro"><i><%=parameterError%></i></p>
 							                  	<%
 							                  		}
-							                  	%>														
-												<select name="<%=ParameterNames.ID_POBLACION%>" id="poblacion-select-perfil" class="dropdown2_item_select search2_input" required>
-												<option value="<%=usuario.getIdPoblacion()%>" selected><%=usuario.getNombrePoblacion()%></option>									
-												</select>
-											</div>	
-											<div class="form-group">
-												<label for="position-top-right" id="direccionEditarPerfilLabel">Direccion: </label>
-												<%
+							                  	%>
+							                  	<%
 						                  		parameterError = errors.getParameterError(ParameterNames.DIRECCION);
 						                  		if (parameterError!=null) {
 							                  	%>
 							                  		<p class="error_parametro"><i><%=parameterError%></i></p>
 							                  	<%
 							                  		}
-							                  	%>		
-												<input type="text" name="<%=ParameterNames.DIRECCION%>" id="direccionEditarPerfil" class="form-control demo" data-position="bottom left" placeholder="Introduce Calle, Numero, Piso" value="<%=ParameterUtils.print(usuario.getNombreCalle())%>" autocomplete="off">
-											</div>
-											<div class="form-group" >
-												<label for="position-top-right" id="codPostalEditarPerfilLabel">Codigo Postal: </label>
-												<%
+							                  	%>
+							                  	<%
 						                  		parameterError = errors.getParameterError(ParameterNames.COD_POSTAL);
 						                  		if (parameterError!=null) {
 							                  	%>
 							                  		<p class="error_parametro"><i><%=parameterError%></i></p>
 							                  	<%
 							                  		}
-							                  	%>	
+							                  	%>
+											<div class="form-group">													
+												
+												<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select-perfil" class="dropdown2_item_select search2_input"  
+												required onchange="cargarPoblacionesPerfil()">
+												<option value="<%=usuario.getIdProvincia()%>" selected><%=usuario.getNombreProvincia()%></option>								
+												</select>
+											</div>
+											<div class="form-group">
+																									
+												<select name="<%=ParameterNames.ID_POBLACION%>" id="poblacion-select-perfil" class="dropdown2_item_select search2_input" required>
+												<option value="<%=usuario.getIdPoblacion()%>" selected><%=usuario.getNombrePoblacion()%></option>									
+												</select>
+											</div>	
+											<div class="form-group">
+												<label for="position-top-right" id="direccionEditarPerfilLabel">Direccion: </label>
+														
+												<input type="text" name="<%=ParameterNames.DIRECCION%>" id="direccionEditarPerfil" class="form-control demo" data-position="bottom left" placeholder="Introduce Calle, Numero, Piso" value="<%=ParameterUtils.print(usuario.getNombreCalle())%>" autocomplete="off">
+											</div>
+											<div class="form-group" >
+												<label for="position-top-right" id="codPostalEditarPerfilLabel">Codigo Postal: </label>
+												
 												<input type="text" name="<%=ParameterNames.COD_POSTAL%>" id="codPostalEditarPerfil" class="form-control demo" data-position="top right" placeholder="Introduce Cod Postal" value="<%=ParameterUtils.print(usuario.getCodigoPostal())%>" autocomplete="off">
 											</div>
 											<div class="form-group">
@@ -146,7 +150,7 @@
 							                  	<%
 							                  		}
 							                  	%>	
-												<input type="text" name="<%=ParameterNames.CIF%>" class="form-control demo" data-position="top right" placeholder="Introduce Cod Postal" value="<%=ParameterUtils.print(usuario.getCif())%>" autocomplete="off">
+												<input type="text" name="<%=ParameterNames.CIF%>" class="form-control demo" data-position="top right" placeholder="Puedes indicar el CIF de tu empresa" value="<%=ParameterUtils.print(usuario.getCif())%>" autocomplete="off">
 											</div>
 											<div class="form-group">
 												<label for="position-top-right" >Dirección Web </label>
@@ -158,7 +162,7 @@
 							                  	<%
 							                  		}
 							                  	%>
-												<input type="text" name="<%=ParameterNames.DIRECCION_WEB%>" class="form-control demo" data-position="top right" placeholder="Introduce Cod Postal" value="<%=ParameterUtils.print(usuario.getDireccionWeb())%>" autocomplete="off">
+												<input type="text" name="<%=ParameterNames.DIRECCION_WEB%>" class="form-control demo" data-position="top right" placeholder="Puedes indicar la direccion WEB de tu empresa" value="<%=ParameterUtils.print(usuario.getDireccionWeb())%>" autocomplete="off">
 											</div>
 											<div class="clearfix" id="cajaCheckPerfil">
 												<%
@@ -173,69 +177,66 @@
 												<label id="servicio24Perfil" for="servicio24">Servicio24H</label>									
 											</div>
 											
+												<%												
+						                  		parameterError = errors.getParameterError(ParameterNames.ID_ESPECIALIZACION);
+						                  		if (parameterError!=null) {
+							                  	%>
+							                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+							                  	<%
+							                  		}
+							                  	%>
+							                  	<div class="especializaciones-edit">
+													<div class="especializacion-proveedor" id="especializaciones-proveedor">
+													
+														<div>
+					                                        <select class="select-registro-especializacion" id="especializacion-select" multiple>
+																
+					                                        </select>
+					                                    </div>
+					                                    <div>
+					                                        <select class="select-registro-especializacion-seleccionadas" id="especializacionesSeleccionadas" name="<%=ParameterNames.ID_ESPECIALIZACION%>" multiple>
+					                                        </select>	
+					                                    </div> 
+													</div>
+												</div>
 											<%
-					                  		parameterError = errors.getParameterError(ParameterNames.ID_ESPECIALIZACION);
+											}
+											
+					                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD_ACTUAL);
+					                  		if (parameterError!=null) {
+						                  	%>
+						                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+						                  	<%
+						                  		}
+						                  
+					                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD);
+					                  		if (parameterError!=null) {
+						                  	%>
+						                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+						                  	<%
+						                  		}
+						                  
+					                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD_2);
 					                  		if (parameterError!=null) {
 						                  	%>
 						                  		<p class="error_parametro"><i><%=parameterError%></i></p>
 						                  	<%
 						                  		}
 						                  	%>
-						                  	<div class="especializaciones-edit">
-												<div class="especializacion-proveedor" id="especializaciones-proveedor">
-												
-													<div>
-				                                        <select class="select-registro-especializacion" id="especializacion-select" multiple>
-															
-				                                        </select>
-				                                    </div>
-				                                    <div>
-				                                        <select class="select-registro-especializacion-seleccionadas" id="especializacionesSeleccionadas" name="<%=ParameterNames.ID_ESPECIALIZACION%>" multiple>
-				                                        </select>	
-				                                    </div> 
-												</div>
-											</div>
-											<%
-											}
-											%>
 											<div class="cambi-pass">
 												<button type="button" class="btn btn-success" id="cambioDePass" onclick="cargarCambioPass()">Cambiar Contraseña</button>
 											</div>
 											<div id="caja-pass">
 												<div class="form-group">
-													<label for="position-top-right">Actual Contraseña</label>
-													<%
-							                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD_ACTUAL);
-							                  		if (parameterError!=null) {
-								                  	%>
-								                  		<p class="error_parametro"><i><%=parameterError%></i></p>
-								                  	<%
-								                  		}
-								                  	%>
+													<label for="position-top-right">Actual Contraseña</label>													
 													<input type="password" name="<%=ParameterNames.PASSWORD_ACTUAL%>" id="passoriginal" class="form-control demo" data-position="top right" autocomplete="off">
 												</div>											
 												<div class="form-group">
-													<label for="position-top-right">Nueva Contraseña</label>
-													<%
-							                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD);
-							                  		if (parameterError!=null) {
-								                  	%>
-								                  		<p class="error_parametro"><i><%=parameterError%></i></p>
-								                  	<%
-								                  		}
-								                  	%>
+													<label for="position-top-right">Nueva Contraseña</label>													
 													<input type="password" name="<%=ParameterNames.PASSWORD%>" id="pass" class="form-control demo" data-position="top right" autocomplete="off">
 												</div>
 												<div class="form-group">
-													<label for="position-top-right">Repetir Nueva Contraseña</label>
-													<%
-							                  		parameterError = errors.getParameterError(ParameterNames.PASSWORD_2);
-							                  		if (parameterError!=null) {
-								                  	%>
-								                  		<p class="error_parametro"><i><%=parameterError%></i></p>
-								                  	<%
-								                  		}
-								                  	%>
+													<label for="position-top-right">Repetir Nueva Contraseña</label>													
 													<input type="password" name="<%=ParameterNames.PASSWORD_2%>" id="pass2" class="form-control demo" data-position="top right" autocomplete="off">
 												</div>
 											</div>
@@ -251,7 +252,7 @@
 												<div class="caja-eliminar-usuario">
 													<button type="button" id="eliminar-usuario" class="btn btn-danger">Eliminar Cuenta</a></button>
 												</div>
-												<div class="eliminar-usuario-definitivo" >
+												<div class="eliminar-usuario-definitivo" id="eliminar-usuario-def">
 													<p>Esta seguro de que desea eliminar la cuenta?</p>
 													<button type="button" class="btn btn-danger"><a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=
 													<%=ActionNames.UPDATE_STATUS_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=usuario.getIdUsuario()%>&<%=ParameterNames.ID_STATUS_CUENTA%>=3"> Eliminar Cuenta</a></button>
@@ -269,14 +270,20 @@
 					</div>      
 				</div>
 			</div>
+			<% if (usuario.getIdTipoUsuario()==TipoUsuario.USUARIO_PROVEEDOR) { %>
 			<script>
-				window.addEventListener("load",comenzar,false);
+				window.addEventListener("load",comenzar,false);	
+				$(document).ready(cargarEspecializacionesUpdateSi());
+				$(document).ready(cargarEspecializacionesUpdateNo());
 				$(document).ready(comenzar());
 				$(document).ready(pasar());
 				$(document).ready(regresar());
-				$(document).ready(eliminarCuenta());
-				$(document).ready(cargarEspecializacionesUpdateSi());
-				$(document).ready(cargarEspecializacionesUpdateNo());
+			</script>
+			<%
+			}
+			%>
+			<script>				
+				$(document).ready(eliminarCuenta());			
 			</script>
 <!-- Editar Perfil End-->
 <%@include file="/common/footer.jsp"%>

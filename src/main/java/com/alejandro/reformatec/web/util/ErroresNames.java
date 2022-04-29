@@ -9,7 +9,7 @@ public class ErroresNames {
 	public static final String ERROR_PASSWORD_OBLIGATORIA = "Debes rellenar el campo de la contraseña";
 	public static final String ERROR_PASSWORD_FORMATO_INCORRECTO = "El formato de la constraseña es incorrecto";
 	public static final String ERROR_PASSWORDS_DIFERENTES = "Las contraseñas no son iguales";
-	public static final String ERROR_PASSWORD_ACTUAL_INCORRECTA = "La password introducida no es correcta";
+	public static final String ERROR_PASSWORD_ACTUAL_INCORRECTA = "Tu password actual introducida no es correcta";
 	
 	public static final String ERROR_NOMBRE_PERFIL_OBLIGATORIO= "Debes rellenar el campo del Nombre del perfil";
 	public static final String ERROR_NOMBRE_PERFIL_FORMATO_INCORRECTO= "El formato del Nombre de perfil es incorrecto";

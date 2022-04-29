@@ -1,4 +1,3 @@
-
 /*
 1.- CARGAR ESPECIALIZACIONES BUSCADOR
 2.- CARGAR PROVINCIAS BUSCADOR
@@ -11,20 +10,8 @@
 9.- REGISTRO CLIENTE/PROVEEDOR
 10.- EDITAR PERFIL CLIENTE/PROVEEDOR
 11.- AÑADIR ESPECIALIZACIONES PROVEEDOR REGISTRO/UPDATE
+12.- Accion de anhadir y quitar favorito actualizando el icono del corazon
 */
-
-
-/*
-window.addEventListener('load', cargarEspecializaciones);
-window.addEventListener('load', cargarProvincias);
-window.addEventListener('load', cargarPoblaciones);
-window.addEventListener('load', buscarProveedores);
-window.addEventListener('load', buscarTrabajos);
-window.addEventListener('load', initPaso1);
-window.addEventListener('load', initVolverPaso1);
-*/
-
-
 /*************************************************************************************************************
 
 									1.- CARGAR ESPECIALIZACIONES BUSCADOR
@@ -63,10 +50,6 @@ function cargarEspecializaciones(idEspecializacionSelect) {
 	       }
 	     });
 }
-
-
-
-
 
 
 
@@ -110,10 +93,6 @@ function cargarProvincias(idProvinciaSelect) {
 	
 
 
-
-
-
-
 /*************************************************************************************************************
 
 								3.-	CARGAR POBLACIONES BUSCADOR 
@@ -141,11 +120,6 @@ function cargarPoblaciones() {
 
 
 
-
-
-
-
-
 /*************************************************************************************************************
 
 									4.- CARGAR ORDERBY BUSCADOR
@@ -158,10 +132,6 @@ function cargarOrderBy() {
 
 
 
-
-
-
-
 /*************************************************************************************************************
 
 									5.- BUSCADOR DESCRIPCION PROVEEDORES
@@ -169,16 +139,19 @@ function cargarOrderBy() {
 *************************************************************************************************************/
 function buscarProveedores() {
 	var descripcion = $('#descripcion-proveedor').val();	
-	if (descripcion.length>0) {
+	if (descripcion.length>1) {
 		var url = "/ReformatecWeb/usuario-service";
 		$.ajax({
 		    	type: "GET", 
 		    	url: url,                    
 		    	data: "action=search-usuario&buscar-descripcion="+descripcion,
 		       	success: function(response) {
+
 			    	   if (response.errorCode != null && response.errorCode!= '') {
+					alert("aqui");
 			    		   $('#lista-results').append('<p><b>'+response.errorCode+"</b><p>");
 			    	   } else {
+						   $('#proveedores-results').show();
 		 	    	 	   $('#lista-results').empty();
 		 	    	 	   var data = response.data;
 			         	   for (i = 0; i<data.length; i++) {
@@ -188,12 +161,10 @@ function buscarProveedores() {
 		       }
 		     });
 	} else {
-    	$('#proveedores-results').empty();
+    	$('#proveedores-results').hide();
+    	$('#lista-results').empty();
 	}
 }
-
-
-
 
 
 
@@ -204,7 +175,7 @@ function buscarProveedores() {
 *************************************************************************************************************/
 function buscarTrabajos() {
 	var descripcion = $('#descripcion-trabajo').val();	
-	if (descripcion.length>0) {
+	if (descripcion.length>1) {
 		var url = "/ReformatecWeb/trabajo-service";
 		$.ajax({
 		    	type: "GET", 
@@ -214,6 +185,7 @@ function buscarTrabajos() {
 			    	   if (response.errorCode != null && response.errorCode!= '') {
 			    		   $('#lista-results').append('<p><b>'+response.errorCode+"</b><p>");
 			    	   } else {
+		 	    	 	   $('#proveedores-results').show();
 		 	    	 	   $('#lista-results').empty();
 		 	    	 	   var data = response.data;
 			         	   for (i = 0; i<data.length; i++) {
@@ -223,11 +195,10 @@ function buscarTrabajos() {
 		       }
 		     });
 	} else {
-    	$('#proveedores-results').empty();
+    	$('#proveedores-results').hide();
+    	$('#lista-results').empty();
 	}
 }
-
-
 
 
 
@@ -239,7 +210,7 @@ function buscarTrabajos() {
 *************************************************************************************************************/
 function buscarProyectos() {
 	var descripcion = $('#descripcion-proyecto').val();	
-	if (descripcion.length>0) {
+	if (descripcion.length>1) {
 		var url = "/ReformatecWeb/proyecto-service";
 		$.ajax({
 		    	type: "GET", 
@@ -249,6 +220,7 @@ function buscarProyectos() {
 			    	   if (response.errorCode != null && response.errorCode!= '') {
 			    		   $('#lista-results').append('<p><b>'+response.errorCode+"</b><p>");
 			    	   } else {
+		 	    	 	   $('#proveedores-results').show();
 		 	    	 	   $('#lista-results').empty();
 		 	    	 	   var data = response.data;
 			         	   for (i = 0; i<data.length; i++) {
@@ -258,10 +230,10 @@ function buscarProyectos() {
 		       }
 		     });
 	} else {
-    	$('#proveedores-results').empty();
+    	$('#proveedores-results').hide();
+    	$('#lista-results').empty();
 	}
 }
-
 
 
 
@@ -294,10 +266,6 @@ function doProcessing(id, name) {
 function muestraDescripcion() {
 	$('#proveedores-results').show();
 }
-
-
-
-
 
 
 
@@ -426,8 +394,6 @@ function cargarEspecializacionesRegistro() {
 
 
 
-
-
  
 /*************************************************************************************************************
 
@@ -455,7 +421,7 @@ Editar Perfil cliente/proveedor - Mostar confirmacion eliminar cuenta
 function eliminarCuenta(){
 	$("#eliminar-usuario").click(function(){
 		$("#eliminar-usuario").hide();
-		$(".eliminar-usuario-definitivo").show();
+		$("#eliminar-usuario-def").show();
 	});
 }
 
@@ -566,7 +532,6 @@ function cargarEspecializacionesUpdateNo() {
 
 
 
-
 /*************************************************************************************************************
 
 								11.- AÑADIR ESPECIALIZACIONES PROVEEDOR REGISTRO/UPDATE
@@ -605,4 +570,47 @@ function regresar(){
             destino.add(seleccionadas[0]);
         }
     }
+}
+
+
+/**********************************************************************************************************
+
+			12.- Accion de anhadir y quitar favorito actualizando el icono del corazon
+
+************************************************************************************************************/
+
+function anhadirFavorito(idUsuario){
+	var url = "/ReformatecWeb/usuario-service";
+		 $.ajax({                        
+	       type: "GET",                 
+	       url: url,                    
+	       data: "action=anhadir-favorito&id-proveedor-favorito="+idUsuario,
+	       success: function(data) {
+		    	  if (data=="OK") {
+						$("#anhadir-favorito-"+idUsuario).remove();
+						$("#caja-corazon-"+idUsuario).append('<img onclick="deleteFavorito('+idUsuario+')" src="/ReformatecWeb/images/heart2.png" alt="Icono Corazon Lleno" id="delete-favorito-'+idUsuario+'">');
+						
+					}
+	       }
+	     });
+}
+
+
+
+
+
+function deleteFavorito(idUsuario){
+	var url = "/ReformatecWeb/usuario-service";
+		 $.ajax({                        
+	       type: "GET",                 
+	       url: url,                    
+	       data: "action=eliminar-favorito&id-proveedor-favorito="+idUsuario,
+	       success: function(data) {
+		    	  if (data=="OK") {
+						$("#delete-favorito-"+idUsuario).remove();
+						$("#caja-corazon-"+idUsuario).append('<img onclick="anhadirFavorito('+idUsuario+')" src="/ReformatecWeb/images/heart.png" alt="Icono Corazon Vacio" id="anhadir-favorito-'+idUsuario+'">');
+						
+					}
+	       }
+	     });
 }

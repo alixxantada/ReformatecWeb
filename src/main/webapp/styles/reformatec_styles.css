@@ -3503,6 +3503,12 @@ margin-bottom:10px;
 	position:relative;
 	float:left;
 }
+.proveedor_perfil_especializaciones{
+	position:relative;
+	float:left;
+	border: 1px solid #28395a;
+	padding: 10px;
+}
 .hotel_title_content{
 	margin-bottom:20px;
 }
@@ -3788,6 +3794,7 @@ margin-top: 20px;
 .especializaciones-edit{
 	width:100%;
 	position: relative;;
+	margin-bottom: 20px;
 	float: left;;
 	text-align: center;
 }
@@ -3937,4 +3944,8 @@ color: #28395a;
 }
 #orderby-select option:hover{
 	color:#966A08;
+}
+#caja-corazon{
+	float: left;
+    position: relative;
 }

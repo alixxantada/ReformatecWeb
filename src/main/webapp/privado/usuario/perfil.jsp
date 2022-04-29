@@ -9,7 +9,7 @@
 									<div class="card-body">
 										<%
 											if (usuario!=null){				
-											
+												
 										%>										
 										<div>                                    											
 											<button type="submit" class="btn btn-info"><a href="<%=context+ViewNames.USUARIO_EDITAR_PERFIL%>">Editar Perfil</a></button>	 												
@@ -75,7 +75,20 @@
 											</div>
 											<div class="form-group">
 												<label for="position-top-right">Direccion Web: </label>
+												<%
+														if (usuario.getDireccionWeb()!=null){
+													
+												%>
+												
 												<p><%=ParameterUtils.print(usuario.getDireccionWeb())%></p>
+												<%
+														} else {														
+													
+												%>
+												<p>Sin definir</p>
+												<%
+														}
+												%>
 											</div>
 					
 											<div class="form-group">
@@ -90,14 +103,30 @@
 														} else if (usuario.getServicio24()==false) {														
 													
 													%>
-														<p>No disponible</p>
-											</div>
+														<p>No dispone</p>
+											</div>											
 											<%
 														}
+											%>
+											<div class="proveedor_perfil_especializaciones">
+											<%									
+												if (usuario.getEspecializaciones()!=null){
+													%><p>Especializaciones</p><%
+													for(Especializacion e : usuario.getEspecializaciones()){
+														%><p class="nombre-especializacion"><%=e.getNombre()%></p><%
+													}											
+												} else {									
+											%>
+											<p>Todavia no has asignado ninguna especializacion</p>
+											<%
+												}
+											%>
+											</div>
+											<%
 												}	
 											}
 											%>
-										</div>
+										</div>										
 										<div class="border-top">											
 										</div>
 										</div>

@@ -209,22 +209,24 @@
 							</div>
 							<div class="col-lg-12 nombre_perfil_resultados">
 								<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePerfil() %></a><span></span>
-							<%
-							//usuario en sesion
-							if (usuario!=null) {
-								Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
-								if (!idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
-						
-								%>
-								<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ANHADIR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio"></a>
-								<%
-									} else if (idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
-								%>										
-								<a href="<%=context+ControllerNames.PRIVADO_USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.ELIMINAR_FAVORITO%>&<%=ParameterNames.ID_PROVEEDOR_FAVORITO%>=<%=u.getIdUsuario()%>"><img src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno"></a>									
-								<%
-									}
-								}			
-								%>
+								<div id="caja-corazon-<%=u.getIdUsuario()%>">
+									<%
+									//usuario en sesion
+									if (usuario!=null) {
+										Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
+										if (!idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
+								
+										%>										
+										<img onclick="anhadirFavorito(<%=u.getIdUsuario()%>)" src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio" id="anhadir-favorito-<%=u.getIdUsuario()%>">
+										<%
+											} else if (idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
+										%>										
+										<img onclick="deleteFavorito(<%=u.getIdUsuario()%>)" src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno" id="delete-favorito-<%=u.getIdUsuario()%>">								
+										<%
+											}
+										}			
+										%>
+								</div>
 							</div>
 							<div class="row">
 								<div class="resultado_foto">
