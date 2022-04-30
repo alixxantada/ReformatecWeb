@@ -35,7 +35,7 @@ public class ErroresNames {
 	
 	public static final String ERROR_COD_POSTAL_OBLIGATORIO = "Debes rellenar el campo del código postal";
 	
-	public static final String ERROR_ID_POBLACION_OBLIGATORIO = "Debes rellenar el campo deL id de la población";
+	public static final String ERROR_ID_POBLACION_OBLIGATORIO = "Debes rellenar el campo deL id de la población y/o provincia";
 	public static final String ERROR_ID_POBLACION_FORMATO_INCORRECTO = "El formato del id de la poblacion es incorrecto";
 	
 	public static final String ERROR_ID_PROVINCIA_OBLIGATORIO = "Debes rellenar el campo del id de la provincia";

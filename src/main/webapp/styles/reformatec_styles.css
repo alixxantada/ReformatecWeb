@@ -2718,6 +2718,8 @@ background: #966A08;
 	font-size: 12px;
 	font-weight: 400;
 	border: none;
+	position:relative;
+	float:revert;
 	outline: none;
 	background: transparent;
 	color: #FFFFFF;
@@ -2727,7 +2729,6 @@ background: #966A08;
 {
 	width: calc((100% - -5px) / 2);
 	margin-right: 5px;
-	margin-top: 11px;
 }
 .contact2_form_name2
 {

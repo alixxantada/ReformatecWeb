@@ -92,14 +92,12 @@
 									<%
 			                  		parameterError = errors.getParameterError(ParameterNames.APELLIDO_1);
 			                  		if (parameterError!=null) {
-				                  	%>
-				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
+				                  	%>				                  	
+				                  		<p class="error_parametro"><i><%=parameterError%></i></p>				                  		
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.APELLIDO_1%>" size="80" id="usuario-apellido1" class="contact2_form_name input_field" 
-									placeholder="Primer Apellido*" data-error="Necesitamos tu primer apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_1))%>">
-									<%
+				                  	<%
 			                  		parameterError = errors.getParameterError(ParameterNames.APELLIDO_2);
 			                  		if (parameterError!=null) {
 				                  	%>
@@ -107,6 +105,9 @@
 				                  	<%
 				                  		}
 				                  	%>
+									<input type="text" name="<%=ParameterNames.APELLIDO_1%>" size="80" id="usuario-apellido1" class="contact2_form_name input_field" 
+									placeholder="Primer Apellido*" data-error="Necesitamos tu primer apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_1))%>">
+									
 									<input type="text" name="<%=ParameterNames.APELLIDO_2%>" size="80" id="usuario-apellido2" class="contact2_form_email input_field" 
 									placeholder="Segundo Apellido*" data-error="Necesitamos tu segundo apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_2))%>">
 									<%
@@ -117,9 +118,7 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.TELEFONO_1%>" size="40"id="usuario-telefono1" class="contact2_form_name input_field" 
-									placeholder="Teléfono 1*" data-error="Necesitamos tu teléfono 1..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_1))%>">
-									<%
+				                  	<%
 			                  		parameterError = errors.getParameterError(ParameterNames.TELEFONO_2);
 			                  		if (parameterError!=null) {
 				                  	%>
@@ -127,6 +126,8 @@
 				                  	<%
 				                  		}
 				                  	%>
+									<input type="text" name="<%=ParameterNames.TELEFONO_1%>" size="40"id="usuario-telefono1" class="contact2_form_name input_field" 
+									placeholder="Teléfono 1*" data-error="Necesitamos tu teléfono 1..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_1))%>">
 									<input type="text" name="<%=ParameterNames.TELEFONO_2%>" size="40" id="usuario-telefono2" class="contact2_form_email input_field" 
 									placeholder="Teléfono 2" data-error="Necesitamos tu teléfono 2..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_2))%>">
 				                   <%
@@ -150,7 +151,7 @@
 									<input type="text" name="<%=ParameterNames.COD_POSTAL%>" size="10" id="usuario-codigo-postal" class="contact2_form_name2 input_field"  
 									placeholder="Código Postal*" data-error="Necesitamos tu Código Postal.. " required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.COD_POSTAL))%>">
 									<%
-			                  		parameterError = errors.getParameterError(ParameterNames.ID_PROVINCIA);
+			                  		parameterError = errors.getParameterError(ParameterNames.ID_POBLACION);
 			                  		if (parameterError!=null) {
 				                  	%>
 				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
@@ -160,21 +161,13 @@
 									<select name="<%=ParameterNames.ID_PROVINCIA%>" id="provincia-select" class="dropdown2_item_select search2_input"  
 									required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.ID_PROVINCIA))%>"
 									onchange="cargarPoblaciones()">									
-									</select>
-									<%
-			                  		parameterError = errors.getParameterError(ParameterNames.ID_POBLACION);
-			                  		if (parameterError!=null) {
-				                  	%>
-				                  		<p class="error_parametro"><i><%=parameterError%></i></p>
-				                  	<%
-				                  		}
-				                  	%>
+									</select>									
 									<select name="<%=ParameterNames.ID_POBLACION%>" id="poblacion-select" class="dropdown2_item_select search2_input" 
 									required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.ID_POBLACION))%>">
 										<option disabled selected>Selecciona una población</option>
 									</select>
 									<button type="button" id="volverpaso1" class="form_submit_button button trans_200">Volver</button>									
-									<button type="submit" id="crear-usuario" class="form_submit_button button trans_200">Registrarse</button>
+									<button type="submit" id="crear-usuario" class="form_submit_button button trans_200">Registrarse</button>									
 								</div>
 								</form>								
 							</div>

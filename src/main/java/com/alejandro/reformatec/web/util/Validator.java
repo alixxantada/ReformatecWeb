@@ -15,24 +15,18 @@ public class Validator {
 	public static final EmailValidator VALIDA_EMAIL = EmailValidator.getInstance();
 
 	private static final String PASSWORD_REGEX = "[[a-z]+[A-Z]+[0-9]]{6,20}";
-
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);	
 
-	private static final String NOMBRE_APELLIDO_REGEX = "^[a-z ,.'-]+$";
+	private static final String NOMBRE_APELLIDO_REGEX = "^[a-zA-Z ,.'-]+$";
 	private static final Pattern NOMBRE_APELLIDO_PATTERN = Pattern.compile(NOMBRE_APELLIDO_REGEX);
 	
 	private static final String DNI_REGEX = "^(X(-|\\.)?0?\\d{7}(-|\\.)?[A-Z]|[A-Z](-|\\.)?\\d{7}(-|\\.)?[0-9A-Z]|\\d{8}(-|\\.)?[A-Z])$";
-
 	private static final Pattern DNI_PATTERN = Pattern.compile(DNI_REGEX);
 
-
 	private static final String DIRECCION_WEB_REGEX = "^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$";
-
 	private static final Pattern DIRECCION_WEB_PATTERN = Pattern.compile(DIRECCION_WEB_REGEX);
 
-
 	private static final String PHONE_REGEX = "^(0034|\\+34)?(\\d\\d\\d)-? ?(\\d\\d)-? ?(\\d)-? ?(\\d)-? ?(\\d\\d)$";
-
 	private static final Pattern PHONE_PATTERN = Pattern.compile(PHONE_REGEX);
 
 
@@ -193,7 +187,7 @@ public class Validator {
 		
 		if (!StringUtils.isBlank(nombrePerfil)) {
 			nombrePerfil = nombrePerfil.trim();
-			// El nombre/nombrePerfil/apellido1/apellido2 son de max 80
+			// El nombrePerfil son de max 80
 			if (nombrePerfil.length()<=0 || nombrePerfil.length()>80) {
 				s=null;
 			}else {

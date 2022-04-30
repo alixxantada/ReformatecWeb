@@ -99,9 +99,7 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.APELLIDO_1%>" size="80" id="usuario-apellido1" class="contact2_form_name input_field" 
-									placeholder="Primer Apellido*" data-error="Necesitamos tu primer apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_1))%>">
-									<%
+				                  	<%
 			                  		parameterError = errors.getParameterError(ParameterNames.APELLIDO_2);
 			                  		if (parameterError!=null) {
 				                  	%>
@@ -109,6 +107,8 @@
 				                  	<%
 				                  		}
 				                  	%>
+									<input type="text" name="<%=ParameterNames.APELLIDO_1%>" size="80" id="usuario-apellido1" class="contact2_form_name input_field" 
+									placeholder="Primer Apellido*" data-error="Necesitamos tu primer apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_1))%>">
 									<input type="text" name="<%=ParameterNames.APELLIDO_2%>" size="80" id="usuario-apellido2" class="contact2_form_email input_field" 
 									placeholder="Segundo Apellido*" data-error="Necesitamos tu segundo apellido..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.APELLIDO_2))%>">
 									<%
@@ -119,9 +119,7 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.TELEFONO_1%>" size="40"id="usuario-telefono1" class="contact2_form_name input_field" 
-									placeholder="Teléfono 1*" data-error="Necesitamos tu teléfono 1..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_1))%>">
-									<%
+				                  	<%
 			                  		parameterError = errors.getParameterError(ParameterNames.TELEFONO_2);
 			                  		if (parameterError!=null) {
 				                  	%>
@@ -129,6 +127,8 @@
 				                  	<%
 				                  		}
 				                  	%>
+									<input type="text" name="<%=ParameterNames.TELEFONO_1%>" size="40"id="usuario-telefono1" class="contact2_form_name input_field" 
+									placeholder="Teléfono 1*" data-error="Necesitamos tu teléfono 1..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_1))%>">
 									<input type="text" name="<%=ParameterNames.TELEFONO_2%>" size="40" id="usuario-telefono2" class="contact2_form_email input_field" 
 									placeholder="Teléfono 2" data-error="Necesitamos tu teléfono 2..." value="<%=ParameterUtils.print(request.getParameter(ParameterNames.TELEFONO_2))%>">
 									<%
