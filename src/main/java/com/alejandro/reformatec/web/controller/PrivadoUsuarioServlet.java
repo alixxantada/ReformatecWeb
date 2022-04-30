@@ -18,8 +18,11 @@ import org.apache.logging.log4j.util.Strings;
 import com.alejandro.reformatec.dao.util.ConfigurationManager;
 import com.alejandro.reformatec.dao.util.ConstantConfigUtil;
 import com.alejandro.reformatec.dao.util.PasswordEncryptionUtil;
+import com.alejandro.reformatec.exception.CodeInvalidException;
 import com.alejandro.reformatec.exception.DataException;
+import com.alejandro.reformatec.exception.MailException;
 import com.alejandro.reformatec.exception.ServiceException;
+import com.alejandro.reformatec.exception.UserNotFoundException;
 import com.alejandro.reformatec.model.EstadoCuenta;
 import com.alejandro.reformatec.model.Results;
 import com.alejandro.reformatec.model.TipoUsuario;
@@ -476,6 +479,12 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					targetView =ViewNames.USUARIO_PERFIL;
 					forward = true;
 
+				}catch (UserNotFoundException unfe) {
+					if (logger.isErrorEnabled()) {
+						logger.error(unfe.getMessage(), unfe);
+					}
+					errors.addCommonError(ErroresNames.ERROR_USER_NOT_FOUND);
+
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {
 						logger.error(de.getMessage(), de);
@@ -581,6 +590,23 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 					targetView = ControllerNames.USUARIO;
 					forward = false;
 
+				}catch (UserNotFoundException unfe) {
+					if (logger.isErrorEnabled()) {
+						logger.error(unfe.getMessage(), unfe);
+					}
+					errors.addCommonError(ErroresNames.ERROR_USER_NOT_FOUND);
+
+				}catch (CodeInvalidException cie) {
+					if (logger.isErrorEnabled()) {
+						logger.error(cie.getMessage(), cie);
+					}
+					errors.addCommonError(ErroresNames.ERROR_CODE_SINGUP_INVALID);
+
+				}catch (MailException me) {
+					if (logger.isErrorEnabled()) {
+						logger.error(me.getMessage(), me);
+					}
+					errors.addCommonError(ErroresNames.ERROR_EMAIL);
 
 				}catch (DataException de) {
 					if (logger.isErrorEnabled()) {

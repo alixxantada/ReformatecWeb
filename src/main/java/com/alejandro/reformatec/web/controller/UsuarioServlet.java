@@ -910,6 +910,19 @@ public class UsuarioServlet extends HttpServlet {
 						targetView =ViewNames.USUARIO_LOGIN;
 						forward = true;
 
+						
+					}catch (EmailPendienteValidacionException epve) {
+						if (logger.isErrorEnabled()) {
+							logger.error(epve.getMessage(), epve);
+						}
+						errors.addCommonError(ErroresNames.ERROR_EMAIL_SIN_VALIDAR);
+						
+					}catch (UserLowInTheSystemException ulise) {
+						if (logger.isErrorEnabled()) {
+							logger.error(ulise.getMessage(), ulise);
+						}
+						errors.addCommonError(ErroresNames.ERROR_USER_LOW_IN_SYSTEM);
+
 					}catch (UserAlreadyExistsException uaee) {
 						if (logger.isErrorEnabled()) {
 							logger.error(uaee.getMessage(), uaee);
