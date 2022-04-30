@@ -165,9 +165,9 @@ public class UsuarioServlet extends HttpServlet {
 			//Acceder a la capa de negocio(si no hay errores)
 			if(!errors.hasErrors()) {
 				try {
-					
+
 					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-					
+
 					Results<UsuarioDTO> results = usuarioService.findByCriteria(uc, (currentPage-1)*Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)) +1, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
 
 					request.setAttribute(AttributeNames.USUARIO, results);
@@ -254,19 +254,19 @@ public class UsuarioServlet extends HttpServlet {
 				try {
 
 					Integer currentPage = WebPagingUtils.getCurrentPage(request);
-					
+
 					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 					request.setAttribute(AttributeNames.USUARIO, usuario);
 
 
 					usuarioService.visualizaUsuario(idUsuario);
 
-					
+
 					Results<ValoracionDTO> valoraciones = valoracionService.findByCriteria(vc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_VALORACION)));
 
 					request.setAttribute(AttributeNames.VALORACION, valoraciones);
 
-					
+
 					// Atributos para paginacion
 					Integer totalPages = WebPagingUtils.getTotalPages(valoraciones.getTotal(), Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_VALORACION)));
 					request.setAttribute(AttributeNames.TOTAL_PAGES, totalPages);
@@ -275,7 +275,7 @@ public class UsuarioServlet extends HttpServlet {
 					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
 
 
-					
+
 
 					// Dirigir a...
 					targetView =ViewNames.USUARIO_DETAIL;
@@ -521,7 +521,7 @@ public class UsuarioServlet extends HttpServlet {
 
 
 				if (!StringUtils.isBlank(userNameStr)) {
-					userNameStr = Validator.validaNombreOApellido(userNameStr);
+					userNameStr = Validator.validaNombrePerfil(userNameStr);
 
 					if (userNameStr!=null) {
 						usuario.setNombrePerfil(userNameStr);
@@ -661,32 +661,30 @@ public class UsuarioServlet extends HttpServlet {
 
 
 
+			
 				if (!StringUtils.isBlank(nombreStr)) {
-					nombreStr = Validator.validaNombreOApellido(nombreStr);
 
-					if (nombreStr!=null) {
+					if (Validator.validaNombreOApellido(nombreStr)) {
 						usuario.setNombre(nombreStr);
 					} else {
 						if (logger.isDebugEnabled()) {
-							logger.debug("Dato incorrecto Nombre: "+nombreStr);
+							logger.debug("Dato incorrecto nombre: "+primerApellidoStr);
 						}
 						errors.addParameterError(ParameterNames.NOMBRE, ErroresNames.ERROR_NOMBRE_FORMATO_INCORRECTO);
 					}
 
 				} else {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Dato null/blanco nombre: "+nombreStr);
+						logger.debug("Dato null/blanco nombre: "+primerApellidoStr);
 					}
 					errors.addParameterError(ParameterNames.NOMBRE, ErroresNames.ERROR_NOMBRE_OBLIGATORIO);
-				}
-
-
-
+				}	
+				
+				
 
 				if (!StringUtils.isBlank(primerApellidoStr)) {
-					primerApellidoStr = Validator.validaNombreOApellido(primerApellidoStr);
 
-					if (primerApellidoStr!=null) {
+					if (Validator.validaNombreOApellido(primerApellidoStr)) {
 						usuario.setApellido1(primerApellidoStr);
 					} else {
 						if (logger.isDebugEnabled()) {
@@ -695,20 +693,19 @@ public class UsuarioServlet extends HttpServlet {
 						errors.addParameterError(ParameterNames.APELLIDO_1, ErroresNames.ERROR_APELLIDO_1_FORMATO_INCORRECTO);
 					}
 
-				} else {				
+				} else {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Dato obligatorio primerApellido: "+primerApellidoStr);
+						logger.debug("Dato null/blanco primerApellido: "+primerApellidoStr);
 					}
 					errors.addParameterError(ParameterNames.APELLIDO_1, ErroresNames.ERROR_APELLIDO_1_OBLIGATORIO);
-				}
+				}	
 
 
 
 
 				if (!StringUtils.isBlank(segundoApellidoStr)) {
-					segundoApellidoStr = Validator.validaNombreOApellido(segundoApellidoStr);
 
-					if (primerApellidoStr!=null) {
+					if (Validator.validaNombreOApellido(segundoApellidoStr)) {
 						usuario.setApellido2(segundoApellidoStr);
 					} else {
 						if (logger.isDebugEnabled()) {
@@ -848,7 +845,7 @@ public class UsuarioServlet extends HttpServlet {
 					//TODO como seria recomendable validar esto?
 					usuario.setDescripcion(descripcionStr);
 
-					
+
 					Boolean servicio24 = false;
 					if (!StringUtils.isBlank(servicio24Str)) {
 						if (Validator.validaBoolean(servicio24Str)) {
@@ -1104,36 +1101,36 @@ public class UsuarioServlet extends HttpServlet {
 
 					String url=null;
 
-					
+
 					usuarioService.updateStatus(idUsuario, idEstado, url);
 
 					UsuarioCriteria uc = new UsuarioCriteria();
 					uc.setIdUsuario(idUsuario);
-					//Meter a config
-					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, 1, 1);
-			
+
+					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
+
 					boolean codeOk = false;
 					for (UsuarioDTO u : usuario.getData()) {
-						
+
 						if (u.getCodigoRegistro().equalsIgnoreCase(codeStr)) {
 							codeOk = true;							
 						}
-						
+
 						if (codeOk==true) {	
 							SessionManager.set(request, AttributeNames.USUARIO, u);
-	
+
 							Set<Long> usuariosIds = usuarioService.findFavorito(u.getIdUsuario());
-	
+
 							SessionManager.set(request, AttributeNames.FAVORITOS, usuariosIds);
-							
+
 							// Dirigir a..
 							targetView =ControllerNames.USUARIO;
 							forward = false;
 						}
 					}
 
-					
-					
+
+
 					if (logger.isInfoEnabled()) {
 						logger.info("Usuario actualizado: "+idUsuario);
 					}
@@ -1503,11 +1500,11 @@ public class UsuarioServlet extends HttpServlet {
 				}
 			}
 
-			
-			
+
+
 		} else if (ActionNames.CONTACT.equalsIgnoreCase(action)) {
-		
-			
+
+
 			// Dirigir a...
 			targetView = ControllerNames.USUARIO;
 			forward = false;
@@ -1516,21 +1513,21 @@ public class UsuarioServlet extends HttpServlet {
 			String emailStr = request.getParameter(ParameterNames.EMAIL);
 			String mensajeStr = request.getParameter(ParameterNames.MENSAJE);
 			String asuntoStr = request.getParameter(ParameterNames.ASUNTO);
-			
+
 			//Validar y convertir
-			
-			
-			
+
+
+
 			//Acceder a la capa de negocio(si no hay errores)
 			if(!errors.hasErrors()) {
 				try {
-					
+
 					String to = cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, MAIL);
-					
+
 					String mensajeoKStr = "Hola buenas, el usuario con email: "+emailStr+", y con nombre: "+nombreStr+" , le ha enviado el siguiente mensaje: "+mensajeStr;
 					mailService.sendEmail(emailStr, asuntoStr, mensajeoKStr, to);
 					logger.error(to);
-					
+
 					// Dirigir a...
 					targetView = ControllerNames.USUARIO;
 					forward = false;
@@ -1562,9 +1559,9 @@ public class UsuarioServlet extends HttpServlet {
 					errors.addCommonError(ErroresNames.ERROR_E);
 				}
 			}
-			
-			
-			
+
+
+
 		}else{
 
 			UsuarioCriteria criteria = new UsuarioCriteria();

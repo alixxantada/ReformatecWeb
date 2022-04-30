@@ -18,7 +18,9 @@ public class Validator {
 
 	private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);	
 
-
+	private static final String NOMBRE_APELLIDO_REGEX = "^[a-z ,.'-]+$";
+	private static final Pattern NOMBRE_APELLIDO_PATTERN = Pattern.compile(NOMBRE_APELLIDO_REGEX);
+	
 	private static final String DNI_REGEX = "^(X(-|\\.)?0?\\d{7}(-|\\.)?[A-Z]|[A-Z](-|\\.)?\\d{7}(-|\\.)?[0-9A-Z]|\\d{8}(-|\\.)?[A-Z])$";
 
 	private static final Pattern DNI_PATTERN = Pattern.compile(DNI_REGEX);
@@ -63,6 +65,15 @@ public class Validator {
 
 
 
+	
+	public static final boolean validaNombreOApellido(String nombreOApellidoStr){
+		Matcher m = NOMBRE_APELLIDO_PATTERN.matcher(nombreOApellidoStr);
+		return m.matches();
+	}
+	
+	
+	
+	
 	/**
 	 * Convierte un string a un integer.
 	 * @param s
@@ -176,6 +187,23 @@ public class Validator {
 	
 	
 	
+	public static String validaNombrePerfil(String nombrePerfil) {
+		
+		String s = null;
+		
+		if (!StringUtils.isBlank(nombrePerfil)) {
+			nombrePerfil = nombrePerfil.trim();
+			// El nombre/nombrePerfil/apellido1/apellido2 son de max 80
+			if (nombrePerfil.length()<=0 || nombrePerfil.length()>80) {
+				s=null;
+			}else {
+				s = nombrePerfil;
+			}
+		}
+		return s;
+	}
+
+	
 	public static String validaDescripcion(String descripcionStr) {
 		
 		String s = null;
@@ -192,22 +220,6 @@ public class Validator {
 		return s;
 	}
 	
-	
-	public static String validaNombreOApellido(String nombreOApellidoStr) {
-			
-			String s = null;
-			
-			if (!StringUtils.isBlank(nombreOApellidoStr)) {
-				nombreOApellidoStr = nombreOApellidoStr.trim();
-				// El nombre/nombrePerfil/apellido1/apellido2 son de max 80
-				if (nombreOApellidoStr.length()<=0 || nombreOApellidoStr.length()>80) {
-					s=null;
-				}else {
-					s = nombreOApellidoStr;
-				}
-			}
-			return s;
-		}
 	
 	
 	/**

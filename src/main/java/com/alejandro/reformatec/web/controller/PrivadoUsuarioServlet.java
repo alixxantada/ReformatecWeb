@@ -256,7 +256,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 
 			if (!StringUtils.isBlank(userNameStr)) {
-				userNameStr = Validator.validaNombreOApellido(userNameStr);
+				userNameStr = Validator.validaNombrePerfil(userNameStr);
 
 				if (userNameStr!=null) {
 					usuario.setNombrePerfil(userNameStr);
@@ -549,9 +549,7 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 
 						UsuarioCriteria uc = new UsuarioCriteria();
 						uc.setIdUsuario(idUsuario);
-
 						
-						//Meter a config
 						Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc,  Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 
 
