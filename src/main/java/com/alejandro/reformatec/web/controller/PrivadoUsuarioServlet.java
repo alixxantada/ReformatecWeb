@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -549,17 +550,22 @@ public class PrivadoUsuarioServlet extends HttpServlet {
 						UsuarioCriteria uc = new UsuarioCriteria();
 						uc.setIdUsuario(idUsuario);
 
-
+						
 						//Meter a config
 						Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc,  Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 
 
 						for(UsuarioDTO u : usuario.getData()) {
+							// Cambio el codigo por seguridad, se lo envio para que pueda reactivar SU cuenta
+							String code = (RandomStringUtils.randomAlphabetic(10).toUpperCase());
+							usuarioService.updateCode(u.getIdUsuario(), code);
+							
 							url = request.getScheme()+"://"+request.getServerName()+":"+request.getLocalPort()
 							+request.getContextPath()+ControllerNames.USUARIO+"?"
 							+ParameterNames.ACTION+"="+ActionNames.REACTIVAR_CUENTA
 							+"&"+ParameterNames.ID_USUARIO+"="+u.getIdUsuario()
-							+"&"+ParameterNames.ID_STATUS_CUENTA+"="+EstadoCuenta.CUENTA_VALIDADA;
+							+"&"+ParameterNames.ID_STATUS_CUENTA+"="+EstadoCuenta.CUENTA_VALIDADA
+							+"&"+ParameterNames.COD_REGISTRO+"="+code;	
 						}
 
 					}

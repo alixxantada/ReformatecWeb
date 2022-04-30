@@ -63,9 +63,9 @@
 										<i class="fa fa-chevron-down"></i>
 									</select>
 								</ul>
-								
 							</div>
 						</div>
+						<input type="hidden" name="<%=ParameterNames.ID_USUARIO_CREADOR_TRABAJO%>" value="<%=request.getParameter(ParameterNames.ID_USUARIO_CREADOR_TRABAJO)%>"/>
 						</form>
 						<%
 						Results<TrabajoRealizadoDTO> results = (Results<TrabajoRealizadoDTO>) request.getAttribute(AttributeNames.TRABAJO);

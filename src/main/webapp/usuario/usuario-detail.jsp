@@ -1,5 +1,5 @@
 <%@include file="/common/header.jsp"%>
-<!-- Detalle Proveedor Start -->
+<!-- Buscador Proveedor Start -->
 			<div class="listing">
 					<!-- Search -->
 				<div class="search2">
@@ -66,158 +66,148 @@
 					</div>	
 				</div>
 				<%
-				//Lios de usuarios: u = proveedor
 					Results<UsuarioDTO> results = (Results<UsuarioDTO>) request.getAttribute(AttributeNames.USUARIO);
 					List<UsuarioDTO> usuarios = results.getData();
-	
-					for (UsuarioDTO u : usuarios) {
-					
+					//Aclaracion usuarios: u = proveedor
+					for (UsuarioDTO u : usuarios) {					
 				%>
 					<!-- Detalle Proveedor Start -->
 				<div class="container">
+				<%
+					int valoracionMediaEntera = (int) Math.ceil(u.getValoracionMedia());
+				 %>
 					<div class="row">
 						<div class="col-lg-12">
-							<div class="single_listing">
-										<!-- Title -->
-								<div class="hotel_title_container d-flex flex-lg-row flex-column">
-									<div class="hotel_title_content">
-										<h1 class="hotel_title"><%=u.getNombrePerfil()%></h1>
-										<div id="caja-corazon-<%=u.getIdUsuario()%>">
-											<% 
-											if (usuario != null) {
-												Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
-												if (!idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
-				
-											%>
-											<img onclick="anhadirFavorito(<%=u.getIdUsuario()%>)" src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio" id="anhadir-favorito-<%=u.getIdUsuario()%>">
-											<%
-												} else if (idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
-											%>										
-											<img onclick="deleteFavorito(<%=u.getIdUsuario()%>)" src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno" id="delete-favorito-<%=u.getIdUsuario()%>">									
-											<%
+							<div class="caja-resultado-detail">
+								<div class="caja-pre-detail-proveedor">									
+									<div id="caja-corazon-<%=u.getIdUsuario()%>" class="caja-corazon">
+									<% 
+									if (usuario != null) {
+										Set<Long> idsFavoritos = (Set<Long>) SessionManager.get(request, AttributeNames.FAVORITOS);
+										if (!idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
+									%>
+										<img onclick="anhadirFavorito(<%=u.getIdUsuario()%>)" src="<%=context%>/images/heart.png" alt="Icono Corazon Vacio" id="anhadir-favorito-<%=u.getIdUsuario()%>">
+									<%
+										} else if (idsFavoritos.contains(u.getIdUsuario()) && u.getIdUsuario()!=usuario.getIdUsuario()) {
+									%>										
+										<img onclick="deleteFavorito(<%=u.getIdUsuario()%>)" src="<%=context%>/images/heart2.png" alt="Icono Corazon Lleno" id="delete-favorito-<%=u.getIdUsuario()%>">									
+									<%
+										}
+									}
+									%>
+									</div>
+									<div class="nombre-perfil-detail">
+										<h1><%=u.getNombrePerfil()%></h1>
+									</div>
+									<div class="reformatec-detail-button"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.SEARCH_TRABAJO%>&<%=ParameterNames.ID_USUARIO_CREADOR_TRABAJO%>=<%=u.getIdUsuario()%>">Ver Trabajos<span></span><span></span><span></span></a></div>
+									<div class="valoraciones-detail-usuario">
+										<div class="proveedor_detail_visu">
+										<%
+											if (u.getNumeroVisualizaciones()==0){
+										%>												
+											Sin visualizaciones											
+										<%
+											}else if (u.getNumeroVisualizaciones()==1){
+										%>												
+											<%=u.getNumeroVisualizaciones()%> visualización											
+										<%
+											}else if (u.getNumeroVisualizaciones()>=2){
+										%>												
+											<%=u.getNumeroVisualizaciones() %> visualizaciones												
+										<%
 											}
-											%>
+										%>
 										</div>
 										<%
-											if(u.getValoracionMedia()==null) {
-
-											} else {
-										
-												int valoracionMediaEntera = (int) Math.ceil(u.getValoracionMedia());											
-										%>
-										
-										<div class="offer3_reviews_rating text-center"><%=u.getValoracionMedia() %></div>
-										<div class="proveedor_detail_estrellas">
-											<div class="rating_r rating_r_<%=valoracionMediaEntera%> offers2_rating" data-rating="<%=valoracionMediaEntera%>">
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-												<i></i>
-											</div>
-										</div>						
+										if (usuario != null) {
+											if(u.getValoracionMedia()!=null) {
+										%>											
+											<div class="media-detail-proveedor"><%=u.getValoracionMedia() %></div>					
 										<%	
 											}
 										}
-										%>
-										<div class="proveedor_detail_visu">
-											<%
-												if (u.getNumeroVisualizaciones()==0){
-											%>
-											<div class="offer2_reviews_content">
-												<div class="offer2_reviews_subtitle">Sin visualizaciones</div>
-											</div>
-											<%
-												}else if (u.getNumeroVisualizaciones()==1){
-											%>
-											<div class="offer2_reviews_content">
-												<div class="offer2_reviews_subtitle"><%=u.getNumeroVisualizaciones() %> visualización</div>
-											</div>
-											<%
-												}else if (u.getNumeroVisualizaciones()>=2){
-											%>
-											<div class="offer2_reviews_content">
-												<div class="offer2_reviews_subtitle"><%=u.getNumeroVisualizaciones() %> visualizaciones</div>
-											</div>
-											<%
-												}
-											%>
-										</div>
+										%>											
 									</div>
-									<div class="hotel_title_button ml-lg-auto text-lg-right">
-										<div class="button book_button trans_200"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.SEARCH_TRABAJO%>&<%=ParameterNames.ID_USUARIO_CREADOR_TRABAJO%>=<%=u.getIdUsuario()%>">Ver Trabajos<span></span><span></span><span></span></a></div>
-									</div>									
 								</div>
-										<!-- Listing Image -->
+								<%
+								if (usuario != null) {
+								%>
+								<div class="proveedor_detail_estrellas">
+									<div class="rating_r rating_r_<%=valoracionMediaEntera%>" data-rating="<%=valoracionMediaEntera%>">
+										<i></i>
+										<i></i>
+										<i></i>
+										<i></i>
+										<i></i>
+									</div>
+								</div>
+								<%	
+									}
+								%>	
 								<div class="row">
+									<!-- Foto Perfil -->
 									<div class="resultado_foto_detail">
-									<div class="offers2_image_container">
 										<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)" alt="Foto portada proveedor"></div>
 									</div>
-								</div>
+									<!-- Datos proveedor -->
 									<div class="proveedor_caja_detail">
-									<div class="col-lg-7 proveedor_detail_datos">
-									<div class="proveedor_detail_provi"><p><%=u.getNombrePoblacion()%>,(<%=u.getNombreProvincia()%>)</p></div>
-									<div class="proveedor_detail_calle"><p><%=u.getNombreCalle()%>, CP: (<%=u.getCodigoPostal()%>)</p></div>
-									<div class="proveedor_detail_tel"><p><a href="tel:<%=u.getTelefono1()%>"><%=u.getTelefono1()%></a>
-									<% 
-									
-									if (u.getTelefono2()!=null) {
-									
-									%>
-										<a href="tel:<%=u.getTelefono2()%>"><%=u.getTelefono2()%></a></p></div>
-									<%
-									
-									} else {
-									%>
-										</p></div>
-									<%
-									}
-									
-									if (u.getDireccionWeb()!=null) {										
-										
-									%>									
-										<div class="proveedor_detail_web"><p><a href="https://<%=u.getDireccionWeb()%>"><%=u.getDireccionWeb()%></a></p></div>
-									<%
-									}
-									%>								
-									</div>
-									<div class="col-lg-5 proveedor_detail_especializaciones">
-									<%									
+										<div class="col-lg-7 proveedor_detail_datos">
+											<div class="proveedor_detail_provi"><p><%=u.getNombrePoblacion()%>, (<%=u.getNombreProvincia()%>)</p></div>
+											<div class="proveedor_detail_calle"><p><%=u.getNombreCalle()%>, CP: (<%=u.getCodigoPostal()%>)</p></div>
+											<div class="proveedor_detail_tel"><p><a href="tel:<%=u.getTelefono1()%>"><%=u.getTelefono1()%></a>
+											<% 
+											if (u.getTelefono2()!=null) {
+											%>
+												<a href="tel:<%=u.getTelefono2()%>"><%=u.getTelefono2()%></a>
+											<%
+											}
+											%>
+											</p></div>
+											<%
+											if (u.getDireccionWeb()!=null) {	
+											%>									
+											<div class="proveedor_detail_web"><p><a href="https://<%=u.getDireccionWeb()%>"><%=u.getDireccionWeb()%></a></p></div>
+											<%
+											}
+											%>								
+										</div>
+										<!--  Especializaciones Proveedor -->
+										<div class="col-lg-5 proveedor_detail_especializaciones">
+										<%									
 										if (u.getEspecializaciones()!=null){
-											%><p>Especializaciones</p><%
+											%><h2 class="titulo-especializaciones-detail">Especializaciones: </h2><%
 											for(Especializacion e : u.getEspecializaciones()){
 												%><p class="nombre-especializacion"><%=e.getNombre()%></p><%
 											}											
 										}									
-									%>
-									</div>                                    
-                                    <div class="col-lg-12 offers2_icons">
-										<ul class="offers2_icons_list">
-											<%if (u.getServicio24()==true){ %><li class="offers2_icons_item"><img src="<%=context%>/images/24h.png" alt=""></li><% } %>
-											<%if (u.getProveedorVerificado()==true){ %><li class="offers2_icons_item"><img src="<%=context%>/images/ruler.png" alt=""></li><% } %>
-										</ul>
+										%>
+										</div>                                    
+	                                    <div class="col-lg-12 offers2_icons">
+											<ul class="offers2_icons_list">
+												<%if (u.getServicio24()==true){ %><li class="offers2_icons_item"><img src="<%=context%>/images/24h.png" alt=""></li><% } %>
+												<%if (u.getProveedorVerificado()==true){ %><li class="offers2_icons_item"><img src="<%=context%>/images/ruler.png" alt=""></li><% } %>
+											</ul>
+										</div>
 									</div>
-									</div>
-										<!-- Hotel Info Text -->
-									<div class="hotel_info_text">
+										<!-- Descripcion Proveedor -->
+									<div class="descripcion-proveedor-detail">
 										<p><%=u.getDescripcion()%></p>
 									</div>
 								</div>
 								<%	
-								//Lios de usuarios: usuario = usuario en sesion(Logueado)
-									if (usuario != null) {
-								
-										Results<ValoracionDTO> resultsValoraciones = (Results<ValoracionDTO>) request.getAttribute(AttributeNames.VALORACION);
-										List<ValoracionDTO> valoraciones = resultsValoraciones.getData();
-										
-										for (ValoracionDTO v : valoraciones) {
+								//Aclaracion usuarios: usuario = usuario en sesion(Logueado)
+								if (usuario != null) {
+							
+									Results<ValoracionDTO> resultsValoraciones = (Results<ValoracionDTO>) request.getAttribute(AttributeNames.VALORACION);
+									List<ValoracionDTO> valoraciones = resultsValoraciones.getData();
+									
+									for (ValoracionDTO v : valoraciones) {
 								%>
-									<!-- Reviews -->
+									<!-- Valoraciones Del Proveedor -->
 								<div class="reviews">
 									<div class="reviews_title"></div>
 									<div class="reviews_container">
-											<!-- Review -->
+											<!-- Valoracion -->
 										<div class="review">
 											<div class="row">
 												<div class="col-lg-1">
@@ -244,9 +234,79 @@
 											</div>
 										</div>							
 									</div>
-								</div>
+								</div>									
 								<%
 										}
+								%>
+								<div class="caja_paginacion">
+									<ul class="paginacion">
+									<!--  Paginador -->
+									<%
+										Integer currentPage = (Integer) request.getAttribute(AttributeNames.CURRENT_PAGE);
+									
+										Integer pagingFrom = (Integer) request.getAttribute(AttributeNames.PAGING_FROM);
+										Integer pagingTo = (Integer) request.getAttribute(AttributeNames.PAGING_TO);
+										
+										Integer totalPages = (Integer) request.getAttribute(AttributeNames.TOTAL_PAGES);
+										
+										Map<String,String[]> parameters = new HashMap<String, String[]>(request.getParameterMap());								
+										parameters.remove(ParameterNames.PAGE); // para que no arrastre el valor anterior
+										
+										// Ya viene terminada en &
+										String baseURL = ParameterUtils.getURLPaginacion(request.getContextPath()+ControllerNames.USUARIO, parameters);
+		
+										
+										// Primera
+										if (currentPage>1) {
+											%> 
+											<li><a href="<%=baseURL%>">Primera</a></li>
+											<%
+										}
+		
+										
+										// Anterior
+										if (currentPage>1) {
+											%> 
+											<li><a href="<%=baseURL+ParameterNames.PAGE+"="+(currentPage-1)%>">Anterior</a></li>
+											<%
+										}
+										
+										// Paginas antes de la actual
+										for (int i = pagingFrom; i<currentPage; i++) {
+												%> 
+												<li>&nbsp;<a href="<%=baseURL+ParameterNames.PAGE+"="+i%>"><%=i%></a>&nbsp;</li>
+												<% 
+										}	
+										
+										// La actual
+										%>&nbsp;<span class="paginacion_activa"><%=currentPage%></span>&nbsp;<%
+										
+										// Despues de la actual
+										for (int i = currentPage+1; i<=pagingTo; i++) {
+												%> 
+												<li>&nbsp;<a href="<%=baseURL+ParameterNames.PAGE+"="+i%>"><%=i%></a>&nbsp;</li>
+												<% 
+										}
+										
+										// Siguiente
+										if (currentPage<totalPages) {
+											%>
+												<li><a href="<%=baseURL+ParameterNames.PAGE+"="+(currentPage+1)%>">Siguiente</a></li>
+											<%
+										}
+										
+										
+										// Última
+										if (currentPage<totalPages) {
+											%>
+												<li><a href="<%=baseURL+ParameterNames.PAGE+"="+(totalPages)%>">Última</a></li>
+											<%
+									}
+										
+										%>
+									</ul>
+								</div>
+								<%
 									}
 								%>	
 							</div>

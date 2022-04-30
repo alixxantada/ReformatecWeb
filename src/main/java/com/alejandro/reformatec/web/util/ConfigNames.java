@@ -13,6 +13,7 @@ public class ConfigNames {
 	public static final String PAGE_SIZE_WEB = "pageSizeSearchWeb";
 	public static final String START_INDEX_WEB = "startIndexWeb";
 	public static final String PAGE_SIZE_PROVEEDORES_TOP = "pageSizeProveedoresTop";
+	public static final String PAGE_SIZE_VALORACION = "pageSizeValoracion";
 	
 	
 	

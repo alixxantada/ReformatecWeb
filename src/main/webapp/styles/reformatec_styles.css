@@ -900,7 +900,6 @@ Search Buscador usuarios/trabajos solo 1 tab
 	display: flex;
     justify-content: end;
     flex-direction: row;
-    margin-bottom: 70px;
 }
 .offers2_sorting > li
 {
@@ -1595,6 +1594,7 @@ background: #966A08;
 	display: inline-block;
 	vertical-align: middle;
 	margin-right: 7px;
+	padding: 10px;
 }
 .offer2_reviews_title
 {
@@ -1609,6 +1609,7 @@ background: #966A08;
 	font-weight: 600;
 	color: #929191;
 	margin-top: 1px;
+	padding: 10px;
 }
 .offer2_reviews_rating
 {
@@ -1631,23 +1632,14 @@ background: #966A08;
 .offer3_reviews_rating
 {
 	display: inline-block;
-	width: 62px;
-	height: 57px;
-	font-size: 28px;
+	width: 44px;
+	height: 44px;
+	font-size: 20px;
 	font-weight: 700;
 	color: #FFFFFF;
-	line-height: 57px;
+	line-height: 45px;
 	background: #966A08;
-	vertical-align: middle;
 	border-radius: 45%;
-	-webkit-transform: translateY(-4px);
-	-moz-transform: translateY(-4px);
-	-ms-transform: translateY(-4px);
-	-o-transform: translateY(-4px);
-	transform: translateY(-4px);
-	position: relative;
-    float: left;
-    margin-right: 5px;
 }
 /*********************************
 6. Section Title
@@ -2080,7 +2072,7 @@ background: #966A08;
 
 .reviews
 {
-	margin-top: 98px;
+
 }
 .reviews_title
 {
@@ -3482,15 +3474,16 @@ margin-bottom:10px;
 }
 .resultado_foto_detail{
 	position: relative;
-    float: left;
-    width: 300px;
-    height: 265px;
+	float: left;
+	width: 300px;
+	height: 265px;
+	margin-left: 15px;
 }
 .proveedor_caja_detail{
 	position:relative;
 	float:left;
-	width: calc(100% - 310px);
-	margin-left:10px;	
+	width: calc(100% - 340px);
+	margin-left:15px;	
 	height: 265px;
 }
 .proveedor_detail_datos{
@@ -3499,10 +3492,15 @@ margin-bottom:10px;
 	float:left;
 	height: 215px;
 }
+.proveedor_detail_datos p{
+	margin-bottom: 5px; 
+ 
+ }
 .proveedor_detail_especializaciones{
 	position:relative;
 	float:left;
 }
+
 .proveedor_perfil_especializaciones{
 	position:relative;
 	float:left;
@@ -3510,7 +3508,7 @@ margin-bottom:10px;
 	padding: 10px;
 }
 .hotel_title_content{
-	margin-bottom:20px;
+	width: 100%;
 }
 .proveedor_detail_provi p{
 	font-size: 15px;
@@ -3541,15 +3539,19 @@ margin-bottom:10px;
 	background: #966A08;
 }
 .proveedor_detail_estrellas{
-	
-	position:relative;
-	float:left;
+	margin-top: -20px;
+	padding: 10px;
 }
 .proveedor_detail_visu{
-	margin-left: 10px;
-	position:relative;
-	float:left;
-	padding:5px;
+	position: relative;
+	margin-right: 7px;
+	float: left;
+	height: 100%;
+	font-size: 13px;
+	font-weight: 600;
+	color: #966A08;
+	display: flex;
+	align-items: center;
 }
 .nombre-especializacion{
 	margin-bottom: 0px;
@@ -3945,7 +3947,102 @@ color: #28395a;
 #orderby-select option:hover{
 	color:#966A08;
 }
-#caja-corazon{
+.caja-corazon{
+    float: left;
+	position: relative;
+	width: 44px;
+}
+.caja-corazon img{
+	padding: 10px;
+}
+.nombre-perfil-detail{
+	position: relative;
 	float: left;
-    position: relative;
+	width: 1500px;
+}
+.nombre-perfil-detail h1{
+	font-size: 30px;
+	font-weight: 600;
+	color: #28395a;
+}
+.valoraciones-detail-usuario{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	width: 100%;
+}
+.caja-pre-detail-proveedor{
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+}
+.caja-resultado-detail {
+	padding-top: 100px;
+	padding-bottom: 107px;
+	padding-left: 98px;
+}
+.descripcion-proveedor-detail{
+	margin-top: 30px;
+	margin-left: 15px;
+	width: 100%;
+	max-height: 300px;
+	min-height: 100px;
+	margin-right: 15px;
+	margin-bottom: 30px;
+}
+.descripcion-proveedor-detail p{
+	font-size: 15px;
+	color:#28395a;
+}
+.titulo-especializaciones-detail{
+	font-size: 18px;
+	color: #28395a;
+	font-weight: 600;
+}
+.reformatec-detail-button{
+	background: #28395a;
+	min-width: 175px;
+	display: inline-block;
+	height: 44px;
+	border-radius: 27px;
+	overflow: hidden;
+}
+.reformatec-detail-button a{
+	padding-left: 20px;
+	display: block;
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+	text-transform: uppercase;
+	line-height: 44px;
+	white-space: nowrap;
+}
+.reformatec-detail-button span:first-child {
+	margin-left: 10px;
+}
+.reformatec-detail-button span{
+	display: inline-block;
+	vertical-align: middle;
+	width: 5.75px;
+	height: 5.63px;
+	background: #FFFFFF;
+	border-radius: 50%;
+	margin-right: 2px;
+}
+.reformatec-detail-button:hover{
+	opacity: 0.5;
+	background: #966A08;
+}
+
+.media-detail-proveedor{
+	display: inline-block;
+	width: 44px;
+	height: 44px;
+	font-size: 20px;
+	font-weight: 700;
+	color: #FFFFFF;
+	line-height: 45px;
+	background: #966A08;
+	border-radius: 45%;
+	text-align: center;
 }

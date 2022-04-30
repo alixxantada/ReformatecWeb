@@ -62,6 +62,7 @@ public class UsuarioServlet extends HttpServlet {
 	private static final String PAGE_SIZE_DETAIL = CFGM_PFX + ConfigNames.PAGE_SIZE_DETAIL;
 	private static final String PAGE_SIZE_SEARCH = CFGM_PFX +  ConfigNames.PAGE_SIZE_SEARCH;
 	private static final String PAGE_SIZE_PROVEEDORES_TOP = CFGM_PFX +  ConfigNames.PAGE_SIZE_PROVEEDORES_TOP;
+	private static final String PAGE_SIZE_VALORACION = CFGM_PFX +  ConfigNames.PAGE_SIZE_VALORACION;
 	private static final String PAGE_COUNT = CFGM_PFX + ConfigNames.PAGE_COUNT;
 	private static final String START_INDEX = CFGM_PFX + ConfigNames.START_INDEX;
 	private static final String MAIL = CFGM_PFX + ConfigNames.MAIL;
@@ -252,18 +253,29 @@ public class UsuarioServlet extends HttpServlet {
 			if(!errors.hasErrors()) {
 				try {
 
-
+					Integer currentPage = WebPagingUtils.getCurrentPage(request);
+					
 					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_DETAIL)));
 					request.setAttribute(AttributeNames.USUARIO, usuario);
 
 
 					usuarioService.visualizaUsuario(idUsuario);
 
-					// Por no poner 1,1 en la paginacion sale rentable?
-					Results<ValoracionDTO> valoraciones = valoracionService.findByCriteria(vc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_SEARCH)));
+					
+					Results<ValoracionDTO> valoraciones = valoracionService.findByCriteria(vc, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, START_INDEX)) , Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_VALORACION)));
 
 					request.setAttribute(AttributeNames.VALORACION, valoraciones);
 
+					
+					// Atributos para paginacion
+					Integer totalPages = WebPagingUtils.getTotalPages(valoraciones.getTotal(), Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_SIZE_VALORACION)));
+					request.setAttribute(AttributeNames.TOTAL_PAGES, totalPages);
+					request.setAttribute(AttributeNames.CURRENT_PAGE, currentPage);
+					request.setAttribute(AttributeNames.PAGING_FROM, WebPagingUtils.getPageFrom(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+					request.setAttribute(AttributeNames.PAGING_TO, WebPagingUtils.getPageTo(currentPage, Integer.valueOf(cfgM.getParameter(ConstantConfigUtil.WEB_REFORMATEC_WEB_PROPERTIES, PAGE_COUNT)), totalPages));
+
+
+					
 
 					// Dirigir a...
 					targetView =ViewNames.USUARIO_DETAIL;
@@ -1051,7 +1063,7 @@ public class UsuarioServlet extends HttpServlet {
 			// Recoger los datos que enviamos desde la jsp
 			String idUsuarioStr = request.getParameter(ParameterNames.ID_USUARIO);
 			String idEstadoStr = request.getParameter(ParameterNames.ID_STATUS_CUENTA);
-
+			String codeStr = request.getParameter(ParameterNames.COD_REGISTRO);
 
 			// Validar y convertir los datos
 			Long idUsuario = null;			
@@ -1066,12 +1078,14 @@ public class UsuarioServlet extends HttpServlet {
 			}
 
 
-			if (idUsuario==null || idEstado==null) {
+			if (idUsuario==null || idEstado==null || codeStr==null) {
 				if (logger.isDebugEnabled()) {
 					if (idUsuario==null) {
 						logger.debug("Datos incorrecto idUsuario: "+idUsuarioStr);
-					} else {
+					} else if (idEstado==null) {
 						logger.debug("Datos incorrecto idEstado: "+idEstadoStr);
+					} else {
+						logger.debug("Datos incorrecto codRegisto: "+codeStr);
 					}
 				}
 				errors.addParameterError(ParameterNames.ID_USUARIO, ErroresNames.ERROR_UPDATE_STATUS_CUENTA_INVALIDO);
@@ -1090,24 +1104,39 @@ public class UsuarioServlet extends HttpServlet {
 
 					String url=null;
 
+					
 					usuarioService.updateStatus(idUsuario, idEstado, url);
 
 					UsuarioCriteria uc = new UsuarioCriteria();
 					uc.setIdUsuario(idUsuario);
 					//Meter a config
 					Results<UsuarioDTO> usuario = usuarioService.findByCriteria(uc, 1, 1);
-
+			
+					boolean codeOk = false;
 					for (UsuarioDTO u : usuario.getData()) {
-						SessionManager.set(request, AttributeNames.USUARIO, u);
+						
+						if (u.getCodigoRegistro().equalsIgnoreCase(codeStr)) {
+							codeOk = true;							
+						}
+						
+						if (codeOk==true) {	
+							SessionManager.set(request, AttributeNames.USUARIO, u);
+	
+							Set<Long> usuariosIds = usuarioService.findFavorito(u.getIdUsuario());
+	
+							SessionManager.set(request, AttributeNames.FAVORITOS, usuariosIds);
+							
+							// Dirigir a..
+							targetView =ControllerNames.USUARIO;
+							forward = false;
+						}
 					}
 
+					
+					
 					if (logger.isInfoEnabled()) {
 						logger.info("Usuario actualizado: "+idUsuario);
 					}
-
-					// Dirigir a..
-					targetView =ControllerNames.USUARIO;
-					forward = false;
 
 
 				}catch (DataException de) {
