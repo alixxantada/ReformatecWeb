@@ -34,8 +34,8 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="email" name="<%=ParameterNames.EMAIL%>" id="usuario-email" autocomplete="off" size="256" class="contact2_form_subject input_field" 
-									placeholder="E-mail*" data-error="Necesitamos tu E-mail... " required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.EMAIL))%>">
+									<input type="email" name="<%=ParameterNames.EMAIL%>" id="usuario-email" required autocomplete="off" size="256" class="contact2_form_subject input_field" 
+									placeholder="E-mail*" data-error="Necesitamos tu E-mail... "  value="<%=ParameterUtils.print(request.getParameter(ParameterNames.EMAIL))%>">
 									<%
 			                  		parameterError = errors.getParameterError(ParameterNames.EMAIL_2);
 			                  		if (parameterError!=null) {
@@ -77,7 +77,7 @@
 				                  	<%
 				                  		}
 				                  	%>
-									<input type="text" name="<%=ParameterNames.DNI%>" maxlength="10" size="10" id="usuario-cif" class="contact2_form_subject input_field" 
+									<input type="text" name="<%=ParameterNames.DNI%>" maxlength="10" size="10" id="usuario-dni" class="contact2_form_subject input_field" 
 									placeholder="D.N.I*" data-error="Necesitamos tu DNI..." required value="<%=ParameterUtils.print(request.getParameter(ParameterNames.DNI))%>">
 									<%
 			                  		parameterError = errors.getParameterError(ParameterNames.NOMBRE);

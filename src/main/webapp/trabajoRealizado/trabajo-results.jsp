@@ -145,7 +145,8 @@
 								<div class="row">
 									<div class="resultado_foto2">
 										<div class="offers2_image_container">
-											<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-1.jpg)" alt="Foto Principal Trabajo"></div>
+											<a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_TRABAJO%>&<%=ParameterNames.ID_TRABAJO_REALIZADO%>=<%=tr.getIdTrabajoRealizado()%>">
+											<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_TRABAJO_PATH+tr.getIdTrabajoRealizado()%>/id-1.jpg)" alt="Foto Principal Trabajo"></div></a>
 											<div class="offer2_name"><a href="<%=context+ControllerNames.TRABAJO_REALIZADO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_TRABAJO%>&<%=ParameterNames.ID_TRABAJO_REALIZADO%>=<%=tr.getIdTrabajoRealizado()%>">Ver Detalle</a></div>									
 										</div>
 									</div>

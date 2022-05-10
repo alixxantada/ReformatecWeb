@@ -842,7 +842,7 @@ public class UsuarioServlet extends HttpServlet {
 					}
 
 
-					//TODO como seria recomendable validar esto?
+					
 					usuario.setDescripcion(descripcionStr);
 
 

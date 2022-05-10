@@ -91,7 +91,8 @@
 			</div>
 		</div>
 		<div class="col-lg-12 nombre_perfil_resultados">
-			<div id="caja-corazon-<%=u.getIdUsuario()%>">
+		
+			<div class="caja-favorito" id="caja-corazon-<%=u.getIdUsuario()%>">
 			<%
 			//usuario en sesion
 			if (usuario!=null) {
@@ -109,15 +110,17 @@
 				}			
 				%>
 			</div>
+			<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePerfil() %></a><span></span>
 		</div>
 		<div class="row">
 			<div class="resultado_foto">
 				<div class="offers2_image_container">
-					<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)" alt="Foto portada proveedor"></div>
+					<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>">
+					<div class="offers2_image_background" style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)" alt="Foto portada proveedor"></div></a>
 					<div class="offer_name"><a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePoblacion()%></a></div>
 				</div>
 			</div>
-			<div class=" col-lg-8 resultado_datos">									
+			<div class=" col-lg-7 resultado_datos">									
 				<div class="col-lg-12 caja_detalles">													
 					<div class="col-lg-12 caja_descripcion">													
 					<p class="offers2_text"><%=u.getDescripcion()%></p>

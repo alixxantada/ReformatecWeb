@@ -88,29 +88,6 @@
 											}
 										}
 										%>
-										<div class="proveedor_detail_visu">
-											<%
-												if (tr.getNumVisualizaciones()==0){
-											%>
-											<div class="offer2_reviews_content">
-												<div class="offer2_reviews_subtitle">Sin visualizaciones</div>
-											</div>
-											<%
-												}else if (tr.getNumVisualizaciones()==1){
-											%>
-											<div class="offer2_reviews_content">
-												<div class="offer2_reviews_subtitle"><%=tr.getNumVisualizaciones() %> visualización</div>
-											</div>
-											<%
-												}else if (tr.getNumVisualizaciones()>=2){
-											%>
-											<div class="offer2_reviews_content">
-												<div class="offer2_reviews_subtitle"><%=tr.getNumVisualizaciones() %> visualizaciones</div>
-											</div>
-											<%
-												}
-											%>
-										</div>
 										<div class="hotel_location"><%=tr.getNombrePoblacion()%> (<%=tr.getNombreProvincia()%>)</div>
 									</div>
 									<div class="hotel_title_button ml-lg-auto text-lg-right">

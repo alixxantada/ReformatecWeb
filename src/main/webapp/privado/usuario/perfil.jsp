@@ -34,32 +34,32 @@
 											%>
 										</div>
 										<div class="infoPerfil">
-										<div class="form-group">
+										<div class="col-lg-6 form-group">
 												<label for="hue-demo">Nombre De Perfil: </label>
 												<p><%=ParameterUtils.print(usuario.getNombrePerfil())%></p>
 											</div>
-											<div class="form-group">
+											<div class="col-lg-6 form-group perfilinput">
 												<label for="position-bottom-left">Dirección: </label>
 												<p><%=ParameterUtils.print(usuario.getNombreCalle())%></p>
 											</div>
-											<div class="form-group">
+											<div class="col-lg-6 form-group perfilinput">
 												<label for="position-top-right">Población: </label>
-												<p><%=ParameterUtils.print(usuario.getNombrePoblacion())%></p>
+												<p><%=ParameterUtils.print(usuario.getNombrePoblacion())%> ( <%=ParameterUtils.print(usuario.getNombreProvincia())%> )</p>
 											</div>
-											<div class="form-group">
+											<div class="col-lg-6 form-group perfilinput">
 												<label for="position-top-right">Código Postal: </label>
 												<p><%=ParameterUtils.print(usuario.getCodigoPostal())%></p>
 											</div>
-											<div class="form-group">
-												<label for="position-top-right">Teléfono 1: </label>
+											<div class="col-lg-6 form-group perfilinput">
+												<label for="position-top-right">Teléfono: </label>
 												<p><%=ParameterUtils.print(usuario.getTelefono1())%></p>
 											</div>										
 											<%
 												if (usuario.getTelefono2()!=null){												
 												
 											%>
-											<div class="form-group">
-												<label for="position-top-right">Teléfono 2: </label>
+											<div class="form-group perfilinput">
+												<label for="position-top-right">Teléfono opcional: </label>
 												<p><%=ParameterUtils.print(usuario.getTelefono2())%></p>
 											</div>
 											<%

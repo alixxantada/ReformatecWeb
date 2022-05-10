@@ -284,6 +284,9 @@ Registro Cliente/Proveedor - avanzar paso 1
 function initPaso1()
 {
 	$("#paso1").click(function(){
+		
+		
+		
 		$(".formregistro1").hide(500);
 		$(".formregistro2").show(500);
 	});

@@ -21,19 +21,9 @@
 			%>
 			<!-- Offers Item -->
 			<div class="col-lg-6 offers_col">
+			
 				<div class="offers_item">
-					<div class="row">
-						<div class="col-lg-6">
-							<div class="offers_image_container">
-								<div class="offers_image_background"
-									style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)"></div>
-								<div class="offer_name">
-									<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePoblacion() %></a>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div class="offers_price">
+				<div class="offers_price">
 								<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePerfil()%></a><span></span>
 							</div>
 							<div class="offers2_item rating_5">
@@ -71,6 +61,19 @@
 											}
 										%>
 									</div>
+					<div class="row" style="height: 450px;">
+						<div class="col-lg-12">
+							<div class="offers_image_container" style="height: 300px;">
+								<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>">
+								<div class="offers_image_background"
+									style="background-image:url(<%=context+ConstantWebUtil.WEB_USER_PATH+u.getIdUsuario()%>/perfil.jpg)"></div></a>
+								<div class="offer_name">
+									<a href="<%=context+ControllerNames.USUARIO%>?<%=ParameterNames.ACTION%>=<%=ActionNames.DETAIL_USUARIO%>&<%=ParameterNames.ID_USUARIO%>=<%=u.getIdUsuario()%>"><%=u.getNombrePoblacion() %></a>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-12">
+							
 									<p class="offers_text"><%=u.getDescripcion()%></p>
 									<div class="offers_icons">
 										<ul class="offers_icons_list">
